@@ -415,23 +415,24 @@ foreach ($manages as $manage) {
                                                     <thead class="bg-light">
                                                         <tr>
                                                             <th colspan="4">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
-                                                            <th colspan="4">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
+                                                            <th colspan="5">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
                                                             <th colspan="5">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
                                                         </tr>
                                                         <tr>
-                                                            <th width="5%">เวลารับ</th>
-                                                            <th width="15%">โปรแกรม</th>
-                                                            <th width="10%">เอเยนต์</th>
-                                                            <th width="10%" class="text-center">V/C</th>
-                                                            <th width="15%">โรงแรม</th>
-                                                            <th width="6%">ห้อง</th>
-                                                            <th width="15%">ชื่อลูกค้า</th>
+                                                            <th class="cell-fit">เวลารับ</th>
+                                                            <th>โปรแกรม</th>
+                                                            <th>เอเยนต์</th>
+                                                            <th class="cell-fit text-center">V/C</th>
+                                                            <th>โรงแรม</th>
+                                                            <th>โซน</th>
+                                                            <th>ห้อง</th>
+                                                            <th>ชื่อลูกค้า</th>
                                                             <th>ภาษา (ไกด์)</th>
-                                                            <th width="1%" class="text-center">A</th>
-                                                            <th width="1%" class="text-center">C</th>
-                                                            <th width="1%" class="text-center">Inf</th>
-                                                            <th width="1%" class="text-center">FOC</th>
-                                                            <th width="15%">Remark</th>
+                                                            <th width="1%" class="cell-fit text-center">A</th>
+                                                            <th width="1%" class="cell-fit text-center">C</th>
+                                                            <th width="1%" class="cell-fit text-center">Inf</th>
+                                                            <th width="1%" class="cell-fit text-center">FOC</th>
+                                                            <th>Remark</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -462,16 +463,8 @@ foreach ($manages as $manage) {
                                                                         echo ')'; ?></td>
                                                                     <td><?php echo $agent_name[$id]; ?></td>
                                                                     <td class="text-center"><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
-                                                                    <td style="padding: 5px;">
-                                                                        <?php
-                                                                        if ($cate_transfer[$id] == 1) {
-                                                                            echo (!empty($hotel_name[$id][1])) ? '<b>Pickup : </b>' . $hotel_name[$id][1] . ' (' . $zone_name[$id][1] . ')' : '<b>Pickup : </b>' . $outside[$id][1] . ' (' . $zone_name[$id][1] . ')';
-                                                                            echo (!empty($hotel_name[$id][2])) ? '</br><b>Dropoff : </b>' . $hotel_name[$id][2] . ' (' . $zone_name[$id][2] . ')' : '</br><b>Dropoff : </b>' . $outside[$id][2] . ' (' . $zone_name[$id][2] . ')';
-                                                                        } else {
-                                                                            echo 'เดินทางมาเอง';
-                                                                        }
-                                                                        ?>
-                                                                    </td>
+                                                                    <td style="padding: 5px;"><?php echo ($cate_transfer[$id] == 1) ? (!empty($hotel_name[$id][1])) ? $hotel_name[$id][1] : $outside[$id][1] : 'เดินทางมาเอง'; ?></td>
+                                                                    <td style="padding: 5px;"><?php echo (!empty($zone_name[$id][1])) ? $zone_name[$id][1] : ''; ?></td>
                                                                     <td><?php echo $room_no[$id][$mange_retrun]; ?></td>
                                                                     <td><?php echo !empty($telephone[$id][0]) ? $cus_name[$id][0] . ' <br>(TEL : ' . $telephone[$id][0] . ') ' : $cus_name[$id][0]; ?></td>
                                                                     <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
@@ -483,7 +476,7 @@ foreach ($manages as $manage) {
                                                                 </tr>
                                                             <?php } ?>
                                                             <tr>
-                                                                <td colspan="13" style="padding: 10px;"><b>Remark : </b><?php echo $mange['note'][$i]; ?></td>
+                                                                <td colspan="14" style="padding: 10px;"><b>Remark : </b><?php echo $mange['note'][$i]; ?></td>
                                                             </tr>
                                                         <?php } ?>
                                                     </tbody>
@@ -595,20 +588,20 @@ foreach ($manages as $manage) {
                                             <table class="table table-striped text-uppercase table-vouchure-t2">
                                                 <thead class="bg-light">
                                                     <tr>
-                                                        <th width="5%">เวลารับ</th>
-                                                        <!-- <th width="15%">โปรแกรม</th> -->
-                                                        <th>รถ</th>
-                                                        <th width="15%">เอเยนต์</th>
-                                                        <th width="10%" class="text-center">V/C</th>
-                                                        <th width="20%">โรงแรม</th>
-                                                        <th width="6%">ห้อง</th>
-                                                        <th width="20%">ชื่อลูกค้า</th>
+                                                        <th class="cell-fit">เวลารับ</th>
+                                                        <th>โปรแกรม</th>
+                                                        <th>เอเยนต์</th>
+                                                        <th class="cell-fit text-center">V/C</th>
+                                                        <th>โรงแรม</th>
+                                                        <th>โซน</th>
+                                                        <th>ห้อง</th>
+                                                        <th>ชื่อลูกค้า</th>
                                                         <th>ภาษา (ไกด์)</th>
-                                                        <th width="1%" class="text-center">A</th>
-                                                        <th width="1%" class="text-center">C</th>
-                                                        <th width="1%" class="text-center">Inf</th>
-                                                        <th width="1%" class="text-center">FOC</th>
-                                                        <th width="15%">Remark</th>
+                                                        <th width="1%" class="cell-fit text-center">A</th>
+                                                        <th width="1%" class="cell-fit text-center">C</th>
+                                                        <th width="1%" class="cell-fit text-center">Inf</th>
+                                                        <th width="1%" class="cell-fit text-center">FOC</th>
+                                                        <th>Remark</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -632,16 +625,8 @@ foreach ($manages as $manage) {
                                                                 <td><?php echo $car_pickup[$id] ?></td>
                                                                 <td><?php echo $agent_name[$id]; ?></td>
                                                                 <td class="text-center"><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
-                                                                <td style="padding: 5px;">
-                                                                    <?php
-                                                                    if ($cate_transfer[$id] == 1) {
-                                                                        echo (!empty($hotel_name[$id][1])) ? '<b>Pickup : </b>' . $hotel_name[$id][1] . ' (' . $zone_name[$id][1] . ')' : '<b>Pickup : </b>' . $outside[$id][1] . ' (' . $zone_name[$id][1] . ')';
-                                                                        echo (!empty($hotel_name[$id][2])) ? '</br><b>Dropoff : </b>' . $hotel_name[$id][2] . ' (' . $zone_name[$id][2] . ')' : '</br><b>Dropoff : </b>' . $outside[$id][2] . ' (' . $zone_name[$id][2] . ')';
-                                                                    } else {
-                                                                        echo 'เดินทางมาเอง';
-                                                                    }
-                                                                    ?>
-                                                                </td>
+                                                                <td style="padding: 5px;"><?php echo ($cate_transfer[$id] == 1) ? (!empty($hotel_name[$id][2])) ? $hotel_name[$id][2] : $outside[$id][2] : 'เดินทางมาเอง'; ?></td>
+                                                                <td style="padding: 5px;"><?php echo (!empty($zone_name[$id][2])) ? $zone_name[$id][2] : ''; ?></td>
                                                                 <td><?php echo (!empty($room_no[$id][$retrun])) ? $room_no[$id][$retrun] : ''; ?></td>
                                                                 <td><?php echo !empty($telephone[$id][0]) ? $cus_name[$id][0] . ' <br>(TEL : ' . $telephone[$id][0] . ') ' : $cus_name[$id][0]; ?></td>
                                                                 <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>

@@ -235,7 +235,7 @@ function check_in($var)
                                     $pickup_time[$order['mange_id']][] = $order['start_pickup'] != '00:00:00' ? $order['end_pickup'] != '00:00:00' ? date('H:i', strtotime($order['start_pickup'])) . '-' . date('H:i', strtotime($order['end_pickup'])) : date('H:i', strtotime($order['start_pickup'])) : '-';
                                     $room_no[$order['mange_id']][] = !empty($order['room_no']) ? $order['room_no'] : '-';
                                     $hotel_pickup[$order['mange_id']][] = !empty($order['pickup_name']) ? $order['pickup_name'] : $order['outside'];
-                                    $zone_pickup[$order['mange_id']][] = !empty($order['zonep_name']) ? ' (' . $order['zonep_name'] . ')' : '';
+                                    $zone_pickup[$order['mange_id']][] = !empty($order['zonep_name']) ? $order['zonep_name'] : '';
                                     $hotel_dropoff[$order['mange_id']][] = !empty($order['dropoff_name']) ? $order['dropoff_name'] : $order['outside_dropoff'];
                                     $zone_dropoff[$order['mange_id']][] = !empty($order['zoned_name']) ? ' (' . $order['zoned_name'] . ')' : '';
                                     $bp_note[$order['mange_id']][] = !empty($order['bp_note']) ? $order['bp_note'] : '';
@@ -376,7 +376,7 @@ function check_in($var)
                                                 <tr>
                                                     <th colspan="6">ไกด์ : <?php echo $order_guide_name[$i]; ?></th>
                                                     <th colspan="7">เคาน์เตอร์ : <?php echo $order_counter[$i]; ?></th>
-                                                    <th colspan="3" style="background-color: <?php echo $color_hex[$i]; ?>; <?php echo $text_color[$i] != '' ? 'color: ' . $text_color[$i] . ';' : ''; ?>">
+                                                    <th colspan="4" style="background-color: <?php echo $color_hex[$i]; ?>; <?php echo $text_color[$i] != '' ? 'color: ' . $text_color[$i] . ';' : ''; ?>">
                                                         สี : <?php echo $color_name[$i]; ?>
                                                     </th>
                                                 </tr>
@@ -394,7 +394,8 @@ function check_in($var)
                                                     <th width="15%">ชื่อลูกค้า</th>
                                                     <th>ภาษา (ไกด์)</th>
                                                     <th width="5%">V/C</th>
-                                                    <th width="20%">โรงแรม</th>
+                                                    <th width="15%">โรงแรม</th>
+                                                    <th width="5%">โซน</th>
                                                     <th width="9%">ห้อง</th>
                                                     <th class="text-center" width="1%">A</th>
                                                     <th class="text-center" width="1%">C</th>
@@ -443,14 +444,8 @@ function check_in($var)
                                                             <td><?php echo !empty($telephone[$bo_id[$mange_id[$i]][$a]][0]) ? $cus_name[$bo_id[$mange_id[$i]][$a]][0] . ' <br>(' . $telephone[$bo_id[$mange_id[$i]][$a]][0] . ')' . $nation_name[$bo_id[$mange_id[$i]][$a]][0] : $cus_name[$bo_id[$mange_id[$i]][$a]][0] . ' ' . $nation_name[$bo_id[$mange_id[$i]][$a]][0]; ?></td>
                                                             <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                                             <td><?php echo !empty($voucher_no[$mange_id[$i]][$a]) ? $voucher_no[$mange_id[$i]][$a] : $book_full[$mange_id[$i]][$a]; ?></td>
-                                                            <td style="padding: 5px;">
-                                                                <?php if ($pickup_type[$mange_id[$i]][$a] == 1) {
-                                                                    echo (!empty($hotel_pickup[$mange_id[$i]][$a])) ? '<b>Pickup : </b>' . $hotel_pickup[$mange_id[$i]][$a] . $zone_pickup[$mange_id[$i]][$a] : '';
-                                                                    echo (!empty($hotel_dropoff[$mange_id[$i]][$a])) ? '</br><b>Dropoff : </b>' . $hotel_dropoff[$mange_id[$i]][$a] . $zone_dropoff[$mange_id[$i]][$a] : '';
-                                                                } else {
-                                                                    echo 'เดินทางมาเอง';
-                                                                } ?>
-                                                            </td>
+                                                            <td style="padding: 5px;"><?php echo ($pickup_type[$mange_id[$i]][$a] == 1) ? (!empty($hotel_pickup[$mange_id[$i]][$a])) ? $hotel_pickup[$mange_id[$i]][$a] : '' : 'เดินทางมาเอง'; ?></td>
+                                                            <td style="padding: 5px;"><?php echo ($pickup_type[$mange_id[$i]][$a] == 1) ? (!empty($zone_pickup[$mange_id[$i]][$a])) ? $zone_pickup[$mange_id[$i]][$a] : '' : 'เดินทางมาเอง'; ?></td>
                                                             <td><?php echo $room_no[$mange_id[$i]][$a]; ?></td>
                                                             <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                                             <td class="text-center"><?php echo array_sum($child[$id]); ?></td>

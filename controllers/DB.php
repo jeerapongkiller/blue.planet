@@ -1,8 +1,8 @@
 <?php
 class DB
 {
-    // private $host = 'ftp.shambhala.work';
-    private $host = 'localhost';
+    private $host = 'ftp.shambhala.work';
+    // private $host = 'localhost';
     private $username = 'uodaxwdlggpfl';
     private $password = 'ytb8[1{|533A';
     private $database = 'dbggvyzddr7xtk';

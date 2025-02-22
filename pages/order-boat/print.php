@@ -236,8 +236,6 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                 <th width="15%">ชื่อลูกค้า</th>
                                 <th>ภาษา (ไกด์)</th>
                                 <th width="5%">V/C</th>
-                                <th width="24%">โรงแรม</th>
-                                <th width="5%">ห้อง</th>
                                 <th class="text-center" width="1%">A</th>
                                 <th class="text-center" width="1%">C</th>
                                 <th class="text-center" width="1%">Inf</th>
@@ -282,15 +280,6 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                         <td><?php echo !empty($book['telephone'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . ' <br>(' . $book['telephone'][$mange['id'][$i]][$a] . ') ' . $book['nation_name'][$mange['id'][$i]][$a] . $language[$id] : $book['cus_name'][$mange['id'][$i]][$a] . $book['nation_name'][$mange['id'][$i]][$a] ; ?></td>
                                         <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                         <td><?php echo !empty($book['voucher'][$mange['id'][$i]][$a]) ? $book['voucher'][$mange['id'][$i]][$a] : $book['book_full'][$mange['id'][$i]][$a]; ?></td>
-                                        <td style="padding: 5px;">
-                                            <?php if ($pickup_type[$id] == 1) {
-                                                echo (!empty($hotel_name[$id])) ? '<b>Pickup : </b>' . $hotel_name[$id] . $zone_pickup[$id] . '</br>' : '<b>Pickup : </b>' . $outside[$id] . $zone_pickup[$id] . '</br>';
-                                                echo (!empty($dropoff_name[$id])) ? '<b>Dropoff : </b>' . $dropoff_name[$id] . $zone_dropoff[$id] : '<b>Dropoff : </b>' . $outside_dropoff[$id]  . $zone_dropoff[$id];
-                                            } else {
-                                                echo 'เดินทางมาเอง';
-                                            } ?>
-                                        </td>
-                                        <td><?php echo $book['room_no'][$mange['id'][$i]][$a]; ?></td>
                                         <td class="text-center bg-warning bg-lighten-3"><?php echo array_sum($adult[$id]); ?></td>
                                         <td class="text-center bg-info bg-lighten-3"><?php echo array_sum($child[$id]); ?></td>
                                         <td class="text-center bg-warning bg-lighten-3"><?php echo array_sum($infant[$id]); ?></td>

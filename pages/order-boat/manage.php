@@ -392,14 +392,12 @@ if (!empty($programed)) {
                                                     <th>Driver</th>
                                                     <th>Time</th>
                                                     <th width="22%">Programe</th>
-                                                    <!-- <th>Room</th> -->
                                                     <th>Client</th>
                                                     <th>ภาษา (ไกด์)</th>
                                                     <th class="text-center">A</th>
                                                     <th class="text-center">C</th>
                                                     <th class="text-center">Inf</th>
                                                     <th class="text-center">FOC</th>
-                                                    <!-- <th class="text-center">รวม</th> -->
                                                     <th>AGENT</th>
                                                     <th>SENDER</th>
                                                     <th>V/C</th>

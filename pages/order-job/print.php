@@ -186,7 +186,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print") {
                             <tr>
                                 <td colspan="7">ไกด์ : <?php echo $order_guide_name[$i]; ?></td>
                                 <td colspan="6">เคาน์เตอร์ : <?php echo $order_counter[$i]; ?></td>
-                                <td colspan="3" style="background-color: <?php echo $color_hex[$i]; ?>; <?php echo $text_color[$i] != '' ? 'color: ' . $text_color[$i] . ';' : ''; ?>">
+                                <td colspan="4" style="background-color: <?php echo $color_hex[$i]; ?>; <?php echo $text_color[$i] != '' ? 'color: ' . $text_color[$i] . ';' : ''; ?>">
                                     สี : <?php echo $color_name[$i]; ?>
                                 </td>
                             </tr>
@@ -200,7 +200,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print") {
                                 <th width="14%">ชื่อลูกค้า</th>
                                 <th>ภาษา (ไกด์)</th>
                                 <th width="2%">V/C</th>
-                                <th width="24%">โรงแรม</th>
+                                <th width="15%">โรงแรม</th>
+                                <th width="10%">โซน</th>
                                 <th width="5%">ห้อง</th>
                                 <th class="text-center" width="1%">A</th>
                                 <th class="text-center" width="1%">C</th>
@@ -245,14 +246,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print") {
                                         <td><?php echo !empty($telephone[$bo_id[$mange_id[$i]][$a]][0]) ? $cus_name[$bo_id[$mange_id[$i]][$a]][0] . ' <br>(' . $telephone[$bo_id[$mange_id[$i]][$a]][0] . ')' . $nation_name[$bo_id[$mange_id[$i]][$a]][0] : $cus_name[$bo_id[$mange_id[$i]][$a]][0] . ' ' . $nation_name[$bo_id[$mange_id[$i]][$a]][0]; ?></td>
                                         <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                         <td><?php echo !empty($voucher_no[$mange_id[$i]][$a]) ? $voucher_no[$mange_id[$i]][$a] : $book_full[$mange_id[$i]][$a]; ?></td>
-                                        <td style="padding: 5px;">
-                                            <?php if ($pickup_type[$mange_id[$i]][$a] == 1) {
-                                                echo (!empty($hotel_pickup[$mange_id[$i]][$a])) ? '<b>Pickup : </b>' . $hotel_pickup[$mange_id[$i]][$a] . $zone_pickup[$mange_id[$i]][$a] : '';
-                                                echo (!empty($hotel_dropoff[$mange_id[$i]][$a])) ? '</br><b>Dropoff : </b>' . $hotel_dropoff[$mange_id[$i]][$a] . $zone_dropoff[$mange_id[$i]][$a] : '';
-                                            } else {
-                                                echo 'เดินทางมาเอง';
-                                            } ?>
-                                        </td>
+                                        <td style="padding: 5px;"><?php echo ($pickup_type[$mange_id[$i]][$a] == 1) ? (!empty($hotel_pickup[$mange_id[$i]][$a])) ? $hotel_pickup[$mange_id[$i]][$a] : '' : 'เดินทางมาเอง'; ?></td>
+                                        <td style="padding: 5px;"><?php echo ($pickup_type[$mange_id[$i]][$a] == 1) ? (!empty($zone_pickup[$mange_id[$i]][$a])) ? $zone_pickup[$mange_id[$i]][$a] : '' : 'เดินทางมาเอง'; ?></td>
                                         <td><?php echo $room_no[$mange_id[$i]][$a]; ?></td>
                                         <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                         <td class="text-center"><?php echo array_sum($child[$id]); ?></td>

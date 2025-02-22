@@ -158,15 +158,15 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
     if (!empty($mange_id)) {
         $row = 4;
         for ($i = 0; $i < count($mange_id); $i++) {
-            $objPHPExcel->getActiveSheet()->mergeCells('A' . $row . ':N' . $row);
+            $objPHPExcel->getActiveSheet()->mergeCells('A' . $row . ':L' . $row);
             $columnName[] = [$boat_name[$i]];
             $row++;
             $objPHPExcel->getActiveSheet()->mergeCells('A' . $row . ':D' . $row);
             $objPHPExcel->getActiveSheet()->mergeCells('E' . $row . ':H' . $row);
-            $objPHPExcel->getActiveSheet()->mergeCells('I' . $row . ':N' . $row);
-            $columnName[] = ['ไกด์ : ' . $guide_name[$i], '', '', '', 'เคาน์เตอร์ : ' . $counter[$i], '', '', '', 'สี : ' . $text_color[$i], '', '', '', '', '',];
+            $objPHPExcel->getActiveSheet()->mergeCells('I' . $row . ':L' . $row);
+            $columnName[] = ['ไกด์ : ' . $guide_name[$i], '', '', '',  'เคาน์เตอร์ : ' . $counter[$i], '', '', '',  'สี : ' . $text_color[$i], '', '', '', ];
             $row++;
-            $columnName[] = ['เวลารับ', 'Driver', 'โปรแกรม', 'เอเยนต์', 'ชื่อลูกค้า', 'ภาษา (ไกด์)', 'V/C', 'โรงแรม', 'ห้อง', 'A', 'C', 'INF', 'FOC', 'Remark',];
+            $columnName[] = ['เวลารับ', 'Driver', 'โปรแกรม', 'เอเยนต์', 'ชื่อลูกค้า', 'ภาษา (ไกด์)', 'V/C', 'A', 'C', 'INF', 'FOC', 'Remark',];
             $row++;
 
             $total_tourist = 0;
@@ -191,13 +191,7 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
                         }
                     }
                     $category_text .= ')';
-                    $hotel_text = '';
-                    if ($pickup_type[$id] == 1) {
-                        $hotel_text .= (!empty($hotel_name[$id])) ? 'Pickup : ' . $hotel_name[$id] . $zone_pickup[$id] : 'Pickup : ' . $outside[$id] . $zone_pickup[$id];
-                        $hotel_text .= (!empty($dropoff_name[$id])) ? ' | Dropoff : ' . $dropoff_name[$id] . $zone_dropoff[$id] : ' | Dropoff : ' . $outside_dropoff[$id]  . $zone_dropoff[$id];
-                    } else {
-                        $hotel_text .= 'เดินทางมาเอง';
-                    }
+
                     
                     $columnName[] = [
                         !empty($start_pickup[$id]) ? !empty($end_pickup[$id]) ? $start_pickup[$id] . ' - ' . $end_pickup[$id] : $start_pickup[$id] : '',
@@ -207,8 +201,6 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
                         !empty($telephone[$id][0]) ? $cus_name[$id][0] . '  (TEL : ' . $telephone[$id][0] . ') ' : $cus_name[$id][0],
                         !empty($language[$id]) ? $language[$id] : '',
                         !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id],
-                        $hotel_text,
-                        $room_no[$id],
                         !empty($adult[$id]) ? array_sum($adult[$id]) : 0,
                         !empty($child[$id]) ? array_sum($child[$id]) : 0,
                         !empty($infant[$id]) ? array_sum($infant[$id]) : 0,

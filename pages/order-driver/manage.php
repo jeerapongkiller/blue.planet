@@ -370,21 +370,19 @@ foreach ($manages as $manage) {
                                                         <th colspan="4">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
                                                     </tr>
                                                     <tr>
-                                                        <!-- <th class="cell-fit text-center">รถ</th> -->
-                                                        <!-- <th class="cell-fit text-center">เรือ</th> -->
-                                                        <th>Programe</th>
-                                                        <th>Time</th>
-                                                        <th>Hotel</th>
-                                                        <th>Room</th>
-                                                        <th>Client</th>
+                                                        <th class="cell-fit">เวลารับ</th>
+                                                        <th>โปรแกรม</th>
+                                                        <th>เอเยนต์</th>
+                                                        <th class="cell-fit text-center">V/C</th>
+                                                        <th>โรงแรม</th>
+                                                        <th>โซน</th>
+                                                        <th>ห้อง</th>
+                                                        <th>ชื่อลูกค้า</th>
                                                         <th>ภาษา (ไกด์)</th>
-                                                        <th class="text-center">A</th>
-                                                        <th class="text-center">C</th>
-                                                        <th class="text-center">Inf</th>
-                                                        <th class="text-center">FOC</th>
-                                                        <th>AGENT</th>
-                                                        <th>SENDER</th>
-                                                        <th>V/C</th>
+                                                        <th width="1%" class="cell-fit text-center">A</th>
+                                                        <th width="1%" class="cell-fit text-center">C</th>
+                                                        <th width="1%" class="cell-fit text-center">Inf</th>
+                                                        <th width="1%" class="cell-fit text-center">FOC</th>
                                                         <th>Remark</th>
                                                     </tr>
                                                 </thead>
@@ -406,9 +404,7 @@ foreach ($manages as $manage) {
                                                         ?>
                                                             <a href="javascripy:void(0);">
                                                                 <tr class="<?php echo ($a % 2 == 1) ? 'table-active' : 'bg-white'; ?>">
-                                                                    <!-- <td><a href="javascript:void(0);" data-toggle="modal" data-target="#edit_manage_transfer" onclick="modal_manage_transfer(<?php echo $bt_id[$id][$mange_retrun]; ?>, <?php echo $return; ?>, <?php echo $mange['id'][$i]; ?>);"><span class="badge badge-pill badge-light-success text-capitalized"><?php echo $mange['driver'][$i]; ?></span></a></td> -->
-                                                                    <!-- <td><?php echo $mange['driver'][$i]; ?></td> -->
-                                                                    <!-- <td><?php echo $boat_name[$id]; ?></td> -->
+                                                                    <td><?php echo $start_pickup[$id][$mange_retrun] != '00:00' ? date('H:i', strtotime($start_pickup[$id][$mange_retrun])) . ' - ' . date('H:i', strtotime($end_pickup[$id][$mange_retrun])) : ''; ?></td>
                                                                     <td><?php echo $product_name[$id];
                                                                         if (!empty($category_name[$id])) {
                                                                             echo ' (';
@@ -418,17 +414,10 @@ foreach ($manages as $manage) {
                                                                         }
                                                                         echo ')'; ?>
                                                                     </td>
-                                                                    <td><?php echo $start_pickup[$id][$mange_retrun] != '00:00' ? date('H:i', strtotime($start_pickup[$id][$mange_retrun])) . ' - ' . date('H:i', strtotime($end_pickup[$id][$mange_retrun])) : ''; ?></td>
-                                                                    <td style="padding: 5px;">
-                                                                        <?php
-                                                                        if ($cate_transfer[$id] == 1) {
-                                                                            echo (!empty($hotel_pickup[$id][1])) ? '<b>Pickup : </b>' . $hotel_pickup[$id][1] . ' (' . $zone_name[$id][1] . ')' : '<b>Pickup : </b>' . $outside[$id][1] . ' (' . $zone_name[$id][1] . ')';
-                                                                            echo (!empty($hotel_dropoff[$id][2])) ? '</br><b>Dropoff : </b>' . $hotel_dropoff[$id][2] . ' (' . $zone_name[$id][2] . ')' : '</br><b>Dropoff : </b>' . $outside[$id][2] . ' (' . $zone_name[$id][2] . ')';
-                                                                        } else {
-                                                                            echo 'เดินทางมาเอง';
-                                                                        }
-                                                                        ?>
-                                                                    </td>
+                                                                    <td><?php echo $agent_name[$id]; ?></td>
+                                                                    <td><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
+                                                                    <td style="padding: 5px;"><?php echo ($cate_transfer[$id] == 1) ? (!empty($hotel_name[$id][1])) ? $hotel_name[$id][1] : $outside[$id][1] : 'เดินทางมาเอง'; ?></td>
+                                                                    <td style="padding: 5px;"><?php echo (!empty($zone_name[$id][1])) ? $zone_name[$id][1] : ''; ?></td>
                                                                     <td><?php echo $room_no[$id][$mange_retrun]; ?></td>
                                                                     <td><?php echo !empty($cus_name[$id]) ? $cus_name[$id][0] : ''; ?></td>
                                                                     <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
@@ -436,9 +425,6 @@ foreach ($manages as $manage) {
                                                                     <td class="text-center"><?php echo $bt_child[$id][$mange_retrun]; ?></td>
                                                                     <td class="text-center"><?php echo $bt_infant[$id][$mange_retrun]; ?></td>
                                                                     <td class="text-center"><?php echo $bt_foc[$id][$mange_retrun]; ?></td>
-                                                                    <td><?php echo $agent_name[$id]; ?></td>
-                                                                    <td><?php echo $sender[$id]; ?></td>
-                                                                    <td><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
                                                                     <td><b class="text-info"><?php echo $note[$id]; ?></b></td>
                                                                 </tr>
                                                             </a>
@@ -486,21 +472,20 @@ foreach ($manages as $manage) {
                                             <table class="table table-bordered table-striped">
                                                 <thead class="bg-light">
                                                     <tr>
-                                                        <th class="cell-fit text-center">STATUS</th>
-                                                        <th class="text-nowrap">CATEGORY</th>
-                                                        <th class="text-nowrap">TRAVEL DATE</th>
-                                                        <th class="text-nowrap">TIME</th>
-                                                        <th>HOTEL</th>
-                                                        <th class="text-nowrap">ROOM</th>
-                                                        <th class="text-nowrap">Name</th>
-                                                        <th>A</th>
-                                                        <th>C</th>
-                                                        <th>INF</th>
-                                                        <th>FOC</th>
-                                                        <th class="text-nowrap">AGENT</th>
-                                                        <th class="text-nowrap">V/C</th>
-                                                        <th class="text-nowrap">COT</th>
-                                                        <th>REMARKE</th>
+                                                        <th class="cell-fit">เวลารับ</th>
+                                                        <th>Category</th>
+                                                        <th>เอเยนต์</th>
+                                                        <th class="cell-fit text-center">V/C</th>
+                                                        <th>โรงแรม</th>
+                                                        <th>โซน</th>
+                                                        <th>ห้อง</th>
+                                                        <th>ชื่อลูกค้า</th>
+                                                        <th>ภาษา (ไกด์)</th>
+                                                        <th width="1%" class="cell-fit text-center">A</th>
+                                                        <th width="1%" class="cell-fit text-center">C</th>
+                                                        <th width="1%" class="cell-fit text-center">Inf</th>
+                                                        <th width="1%" class="cell-fit text-center">FOC</th>
+                                                        <th>Remark</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -513,14 +498,14 @@ foreach ($manages as $manage) {
                                                     for ($i = 0; $i < count($bo_id[$programe_id[$a]]); $i++) {
                                                         if (empty($check_book[1]) || !empty($check_book[1]) && in_array($bo_id[$programe_id[$a]][$i], $check_book[1]) == false) {
                                                             $id = $bo_id[$programe_id[$a]][$i];
-                                                            $total_tourist = $total_tourist + $bt_adult[$bo_id[$programe_id[$a]][$i]][$retrun] + $bt_child[$bo_id[$programe_id[$a]][$i]][$retrun] + $bt_infant[$bo_id[$programe_id[$a]][$i]][$retrun] + $bt_foc[$bo_id[$programe_id[$a]][$i]][$retrun];
-                                                            $total_adult = $total_adult + $bt_adult[$bo_id[$programe_id[$a]][$i]][$retrun];
-                                                            $total_child = $total_child + $bt_child[$bo_id[$programe_id[$a]][$i]][$retrun];
-                                                            $total_infant = $total_infant + $bt_infant[$bo_id[$programe_id[$a]][$i]][$retrun];
-                                                            $total_foc = $total_foc + $bt_foc[$bo_id[$programe_id[$a]][$i]][$retrun];
+                                                            $total_tourist = $total_tourist + $bt_adult[$id][$retrun] + $bt_child[$id][$retrun] + $bt_infant[$id][$retrun] + $bt_foc[$id][$retrun];
+                                                            $total_adult = $total_adult + $bt_adult[$id][$retrun];
+                                                            $total_child = $total_child + $bt_child[$id][$retrun];
+                                                            $total_infant = $total_infant + $bt_infant[$id][$retrun];
+                                                            $total_foc = $total_foc + $bt_foc[$id][$retrun];
                                                     ?>
                                                             <tr class="<?php echo ($i % 2 == 1) ? 'table-active' : 'bg-white'; ?>">
-                                                                <td><?php echo $status[$bo_id[$programe_id[$a]][$i]]; ?></td>
+                                                                <td><?php echo !empty($start_pickup[$id][$retrun]) ? date("H:i", strtotime($start_pickup[$id][$retrun])) . ' - ' . date("H:i", strtotime($end_pickup[$id][$retrun])) : '00:00'; ?></td>
                                                                 <td><?php if (!empty($category_name[$id])) {
                                                                         echo ' (';
                                                                         for ($c = 0; $c < count($category_name[$id]); $c++) {
@@ -528,28 +513,18 @@ foreach ($manages as $manage) {
                                                                         }
                                                                     }
                                                                     echo ')'; ?></td>
-                                                                <td><span class="text-nowrap"><?php echo (!empty($bp_id[$bo_id[$programe_id[$a]][$i]])) ? date('j F Y', strtotime($travel_date[$bo_id[$programe_id[$a]][$i]])) : 'ไม่มีสินค้า'; ?></span></td>
-                                                                <td><?php echo !empty($start_pickup[$bo_id[$programe_id[$a]][$i]][$retrun]) ? date("H:i", strtotime($start_pickup[$bo_id[$programe_id[$a]][$i]][$retrun])) . ' - ' . date("H:i", strtotime($end_pickup[$bo_id[$programe_id[$a]][$i]][$retrun])) : '00:00'; ?></td>
-                                                                <td style="padding: 5px;">
-                                                                    <?php
-                                                                    if ($cate_transfer[$id] == 1) {
-                                                                        echo (!empty($hotel_pickup[$id][1])) ? '<b>Pickup : </b>' . $hotel_pickup[$id][1] . ' (' . $zone_pickup[$id][1] . ')' : '<b>Pickup : </b>' . $outside[$id][1] . ' (' . $zone_name[$id][1] . ')';
-                                                                        echo (!empty($hotel_dropoff[$id][2])) ? '</br><b>Dropoff : </b>' . $hotel_dropoff[$id][2] . ' (' . $zone_dropoff[$id][2] . ')' : '</br><b>Dropoff : </b>' . $outside[$id][2] . ' (' . $zone_name[$id][2] . ')';
-                                                                    } else {
-                                                                        echo 'เดินทางมาเอง';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td><?php echo (!empty($room_no[$bo_id[$programe_id[$a]][$i]][$retrun])) ? $room_no[$bo_id[$programe_id[$a]][$i]][$retrun] : ''; ?></td>
-                                                                <td><?php echo !empty($cus_name[$bo_id[$programe_id[$a]][$i]][0]) ? !empty($language[$id]) ? $cus_name[$bo_id[$programe_id[$a]][$i]][0] . ' (' . $language[$id] . ')' : $cus_name[$bo_id[$programe_id[$a]][$i]][0] : ''; ?></td>
-                                                                <td class="text-center"><?php echo $bt_adult[$bo_id[$programe_id[$a]][$i]][$retrun]; ?></td>
-                                                                <td class="text-center"><?php echo $bt_child[$bo_id[$programe_id[$a]][$i]][$retrun]; ?></td>
-                                                                <td class="text-center"><?php echo $bt_infant[$bo_id[$programe_id[$a]][$i]][$retrun]; ?></td>
-                                                                <td class="text-center"><?php echo $bt_foc[$bo_id[$programe_id[$a]][$i]][$retrun]; ?></td>
-                                                                <td><?php echo $agent_name[$bo_id[$programe_id[$a]][$i]]; ?></a></td>
-                                                                <td><?php echo !empty($voucher_no[$bo_id[$programe_id[$a]][$i]]) ? $voucher_no[$bo_id[$programe_id[$a]][$i]] : $book_full[$bo_id[$programe_id[$a]][$i]]; ?></td>
-                                                                <td class="text-nowrap"><?php echo number_format($cot[$bo_id[$programe_id[$a]][$i]]); ?></td>
-                                                                <td><?php echo $note[$bo_id[$programe_id[$a]][$i]]; ?></td>
+                                                                <td><?php echo $agent_name[$id]; ?></a></td>
+                                                                <td><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
+                                                                <td style="padding: 5px;"><?php echo ($cate_transfer[$id] == 1) ? (!empty($hotel_name[$id][1])) ? $hotel_name[$id][1] : $outside[$id][1] : 'เดินทางมาเอง'; ?></td>
+                                                                <td style="padding: 5px;"><?php echo (!empty($zone_name[$id][1])) ? $zone_name[$id][1] : ''; ?></td>
+                                                                <td><?php echo $room_no[$id][$mange_retrun]; ?></td>
+                                                                <td><?php echo !empty($cus_name[$id]) ? $cus_name[$id][0] : ''; ?></td>
+                                                                <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
+                                                                <td class="text-center"><?php echo $bt_adult[$id][$retrun]; ?></td>
+                                                                <td class="text-center"><?php echo $bt_child[$id][$retrun]; ?></td>
+                                                                <td class="text-center"><?php echo $bt_infant[$id][$retrun]; ?></td>
+                                                                <td class="text-center"><?php echo $bt_foc[$id][$retrun]; ?></td>
+                                                                <td><?php echo $note[$id]; ?></td>
                                                             </tr>
                                                     <?php }
                                                     } ?>

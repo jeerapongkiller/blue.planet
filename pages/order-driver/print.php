@@ -221,11 +221,11 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
         ?>
 
 
-                    <div class="table-responsive" id="order-job-search-table">
+                    <div class="table-responsive pb-1" id="order-job-search-table">
                         <table class="tableprint">
                             <thead class="">
                                 <tr>
-                                    <th colspan="13" style="background-color: #FFF;">
+                                    <th colspan="14" style="background-color: #FFF;">
                                         <div class="card-body pb-0">
                                             <div class="row">
                                                 <span class="col-6 brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>
@@ -253,17 +253,18 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                 <tr>
                                     <th colspan="4" style="border-bottom: 1px solid #fff;">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
                                     <th colspan="4" style="border-bottom: 1px solid #fff;">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
-                                    <th colspan="5" style="border-bottom: 1px solid #fff;">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
+                                    <th colspan="6" style="border-bottom: 1px solid #fff;">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
                                 </tr>
                                 <tr>
                                     <th width="5%">เวลารับ</th>
                                     <th width="15%">โปรแกรม</th>
                                     <th width="10%">เอเยนต์</th>
                                     <th width="10%" class="text-center">V/C</th>
-                                    <th width="20%">โรงแรม</th>
+                                    <th width="15%">โรงแรม</th>
+                                    <th width="5%">โซน</th>
                                     <th width="6%">ห้อง</th>
                                     <th width="15%">ชื่อลูกค้า</th>
-                                    <th width="15%">ชื่อลูกค้า</th>
+                                    <th width="15%">ภาษา (ไกด์)</th>
                                     <th width="1%" class="text-center">A</th>
                                     <th width="1%" class="text-center">C</th>
                                     <th width="1%" class="text-center">Inf</th>
@@ -299,16 +300,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                                 echo ')'; ?></td>
                                             <td><?php echo $agent_name[$id]; ?></td>
                                             <td class="text-center"><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
-                                            <td style="padding: 5px;">
-                                                <?php
-                                                if ($cate_transfer[$id] == 1) {
-                                                    echo (!empty($hotel_name[$id][1])) ? '<b>Pickup : </b>' . $hotel_name[$id][1] . ' (' . $zone_name[$id][1] . ')' : '<b>Pickup : </b>' . $outside[$id][1] . ' (' . $zone_name[$id][1] . ')';
-                                                    echo (!empty($hotel_name[$id][2])) ? '</br><b>Dropoff : </b>' . $hotel_name[$id][2] . ' (' . $zone_name[$id][2] . ')' : '</br><b>Dropoff : </b>' . $outside[$id][2] . ' (' . $zone_name[$id][2] . ')';
-                                                } else {
-                                                    echo 'เดินทางมาเอง';
-                                                }
-                                                ?>
-                                            </td>
+                                            <td style="padding: 5px;"><?php echo ($cate_transfer[$id] == 1) ? (!empty($hotel_name[$id][1])) ? $hotel_name[$id][1] : $outside[$id][1] : 'เดินทางมาเอง'; ?></td>
+                                            <td style="padding: 5px;"><?php echo (!empty($zone_name[$id][1])) ? $zone_name[$id][1] : ''; ?></td>
                                             <td><?php echo $room_no[$id][$mange_retrun]; ?></td>
                                             <td><?php echo !empty($telephone[$id][0]) ? $cus_name[$id][0] . ' <br>(TEL : ' . $telephone[$id][0] . ') ' : $cus_name[$id][0]; ?></td>
                                             <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
@@ -320,11 +313,11 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                         </tr>
                                     <?php } ?>
                                     <tr>
-                                        <td colspan="13" style="padding: 10px;"><b>Remark : </b><?php echo $mange['note'][$i]; ?></td>
+                                        <td colspan="14" style="padding: 10px;"><b>Remark : </b><?php echo $mange['note'][$i]; ?></td>
                                     </tr>
                                 <?php } ?>
                                 <tr>
-                                    <td colspan="13" class="p-0" style="border: 0;">
+                                    <td colspan="14" class="p-0" style="border: 0;">
                                         <div class="text-center mt-50">
                                             <h4>
                                                 <div class="badge badge-pill badge-light-warning">
@@ -352,7 +345,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
 
                     </div>
 
-                    <!-- <div class="pagebreak"></div> -->
+                    <div class="pagebreak"></div>
             <?php }
             } ?>
             <?php } elseif (!empty($programe_id) && $search_retrun == 2) {
@@ -391,8 +384,10 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                 <th width="10%">เอเยนต์</th>
                                 <th width="10%" class="text-center">V/C</th>
                                 <th width="15%">โรงแรม</th>
+                                <th width="5%">โซน</th>
                                 <th width="6%">ห้อง</th>
                                 <th width="15%">ชื่อลูกค้า</th>
+                                <th width="5%">ภาษา (ไกด์)</th>
                                 <th width="1%" class="text-center">A</th>
                                 <th width="1%" class="text-center">C</th>
                                 <th width="1%" class="text-center">Inf</th>
@@ -421,16 +416,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                         <td><?php echo $car_pickup[$id] ?></td>
                                         <td><?php echo $agent_name[$id]; ?></a></td>
                                         <td><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
-                                        <td style="padding: 5px;">
-                                            <?php
-                                            if ($cate_transfer[$id] == 1) {
-                                                echo (!empty($hotel_name[$id][1])) ? '<b>Pickup : </b>' . $hotel_name[$id][1] . ' (' . $zone_name[$id][1] . ')' : '<b>Pickup : </b>' . $outside[$id][1] . ' (' . $zone_name[$id][1] . ')';
-                                                echo (!empty($hotel_name[$id][2])) ? '</br><b>Dropoff : </b>' . $hotel_name[$id][2] . ' (' . $zone_name[$id][2] . ')' : '</br><b>Dropoff : </b>' . $outside[$id][2] . ' (' . $zone_name[$id][2] . ')';
-                                            } else {
-                                                echo 'เดินทางมาเอง';
-                                            }
-                                            ?>
-                                        </td>
+                                        <td style="padding: 5px;"><?php echo ($cate_transfer[$id] == 1) ? (!empty($hotel_name[$id][2])) ? $hotel_name[$id][2] : $outside[$id][2] : 'เดินทางมาเอง'; ?></td>
+                                        <td style="padding: 5px;"><?php echo (!empty($zone_name[$id][2])) ? $zone_name[$id][2] : ''; ?></td>
                                         <td><?php echo (!empty($room_no[$id][$retrun])) ? $room_no[$id][$retrun] : ''; ?></td>
                                         <td><?php echo !empty($telephone[$id][0]) ? $cus_name[$id][0] . ' <br>(' . $telephone[$id][0] . ') ' . $language[$id] : $cus_name[$id][0] . $language[$id]; ?></td>
                                         <td class="text-center"><?php echo $bt_adult[$id][$retrun]; ?></td>
