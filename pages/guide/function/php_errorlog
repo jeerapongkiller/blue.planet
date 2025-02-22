@@ -1,0 +1,20 @@
+[22-Jan-2025 18:43:40 Asia/Bangkok] PHP Fatal error:  Uncaught TypeError: Guide::insert_data_language(): Argument #2 ($languageArray) must be of type array, null given, called in /home/customer/www/blue.planet.shambhala.work/public_html/pages/guide/function/create.php on line 33 and defined in /home/customer/www/blue.planet.shambhala.work/public_html/controllers/Guide.php:114
+Stack trace:
+#0 /home/customer/www/blue.planet.shambhala.work/public_html/pages/guide/function/create.php(33): Guide->insert_data_language(1, NULL)
+#1 {main}
+  thrown in /home/customer/www/blue.planet.shambhala.work/public_html/controllers/Guide.php on line 114
+[22-Jan-2025 18:43:43 Asia/Bangkok] PHP Fatal error:  Uncaught TypeError: Guide::insert_data_language(): Argument #2 ($languageArray) must be of type array, null given, called in /home/customer/www/blue.planet.shambhala.work/public_html/pages/guide/function/create.php on line 33 and defined in /home/customer/www/blue.planet.shambhala.work/public_html/controllers/Guide.php:114
+Stack trace:
+#0 /home/customer/www/blue.planet.shambhala.work/public_html/pages/guide/function/create.php(33): Guide->insert_data_language(2, NULL)
+#1 {main}
+  thrown in /home/customer/www/blue.planet.shambhala.work/public_html/controllers/Guide.php on line 114
+[22-Jan-2025 18:43:48 Asia/Bangkok] PHP Fatal error:  Uncaught TypeError: Guide::insert_data_language(): Argument #2 ($languageArray) must be of type array, null given, called in /home/customer/www/blue.planet.shambhala.work/public_html/pages/guide/function/create.php on line 33 and defined in /home/customer/www/blue.planet.shambhala.work/public_html/controllers/Guide.php:114
+Stack trace:
+#0 /home/customer/www/blue.planet.shambhala.work/public_html/pages/guide/function/create.php(33): Guide->insert_data_language(3, NULL)
+#1 {main}
+  thrown in /home/customer/www/blue.planet.shambhala.work/public_html/controllers/Guide.php on line 114
+[22-Jan-2025 18:44:22 Asia/Bangkok] PHP Fatal error:  Uncaught TypeError: Guide::insert_data_language(): Argument #2 ($languageArray) must be of type array, null given, called in /home/customer/www/blue.planet.shambhala.work/public_html/pages/guide/function/create.php on line 33 and defined in /home/customer/www/blue.planet.shambhala.work/public_html/controllers/Guide.php:114
+Stack trace:
+#0 /home/customer/www/blue.planet.shambhala.work/public_html/pages/guide/function/create.php(33): Guide->insert_data_language(5, NULL)
+#1 {main}
+  thrown in /home/customer/www/blue.planet.shambhala.work/public_html/controllers/Guide.php on line 114
