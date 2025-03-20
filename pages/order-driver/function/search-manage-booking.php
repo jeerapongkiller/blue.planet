@@ -55,6 +55,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && isset($_POST['tra
                 $start_pickup[$booking['id']] = !empty($booking['start_pickup']) && $booking['start_pickup'] != '00:00' ? $booking['start_pickup'] : '00:00';
                 $end_pickup[$booking['id']] = !empty($booking['end_pickup']) && $booking['end_pickup'] != '00:00' ? $booking['end_pickup'] : '00:00';
                 $zone_name[$booking['id']] = !empty($booking['zonep_name']) ? $booking['zonep_name'] : '';
+                $zone_dropoff[$booking['id']] = !empty($booking['zoned_name']) ? $booking['zoned_name'] : '';
+                $cate_transfer[$booking['id']] = !empty($booking['category_transfer']) ? $booking['category_transfer'] : 0;
                 $language[$booking['id']] = !empty($booking['lang_name']) ? ' (' . $booking['lang_name'] . ')' : '';
             }
 
@@ -168,6 +170,19 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && isset($_POST['tra
                             if (empty($bomange_bo[1][$bo_id[$b]])) {
                                 $id = $bo_id[$b];
                                 if ($product[$id] == $programe_id[$a]) {
+                                    $text_hotel = '';
+                                    $text_zone = '';
+                                    if ($cate_transfer[$id] == 1) {
+                                        if (!empty($zone_name[$id])) {
+                                            $text_zone = $zone_name[$id] != $zone_dropoff[$id] ? $zone_name[$id] . '<br>(D: ' . $zone_dropoff[$id] . ')' : $zone_name[$id];
+                                        }
+                                        if (!empty($hotel_name[$id])) {
+                                            $text_hotel = $hotel_name[$id] != $hotel_dropoff[$id] ? $hotel_name[$id] . '<br>(D: ' . $hotel_dropoff[$id] . ')' : $hotel_name[$id];
+                                        }
+                                    } else {
+                                        $text_hotel = 'เดินทางมาเอง';
+                                        $text_zone = 'เดินทางมาเอง';
+                                    }
                         ?>
                                     <tr>
                                         <td>
@@ -178,8 +193,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && isset($_POST['tra
                                         </td>
                                         <td><?php echo $start_pickup[$id] != '00:00' ? date('H:i', strtotime($start_pickup[$id])) . ' - ' . date('H:i', strtotime($end_pickup[$id])) : ''; ?></td>
                                         <td><span class="fw-bold"><?php echo $category_name[$id]; ?></span></td>
-                                        <td><?php echo $zone_name[$id]; ?></td>
-                                        <td><?php echo $hotel_name[$id]; ?></td>
+                                        <td><?php echo $text_zone; ?></td>
+                                        <td><?php echo $text_hotel; ?></td>
                                         <td><span class="fw-bold"><?php echo $cus_name[$id] . $language[$id]; ?></span></td>
                                         <td class="text-center" id="toc-bookings<?php echo $bt_id[$id]; ?>"><?php echo $adult[$id] + $child[$id] + $infant[$id] + $foc[$id]; ?></td>
                                         <td class="text-center" id="adult<?php echo $bt_id[$id]; ?>"><?php echo $adult[$id]; ?></td>

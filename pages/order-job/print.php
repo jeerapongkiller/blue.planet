@@ -6,7 +6,7 @@ $orderObj = new Order();
 if (isset($_GET['action']) && $_GET['action'] == "print") {
     // get value from ajax
     $search_boat = $_GET['search_boat'] != "" ? $_GET['search_boat'] : 'all';
-    $date_travel_form = $_GET['date_travel_form'] != "" ? $_GET['date_travel_form'] : '0000-00-00';
+    $date_travel = $_GET['date_travel'] != "" ? $_GET['date_travel'] : '0000-00-00';
     $search_status = $_GET['search_status'] != "" ? $_GET['search_status'] : 'all';
     $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';
     $search_product = $_GET['search_product'] != "" ? $_GET['search_product'] : 'all';
@@ -30,9 +30,9 @@ if (isset($_GET['action']) && $_GET['action'] == "print") {
     $sum_inf = 0;
     $name_img = 'Job Guide';
     $name_img .= $search_boat != 'all' ? ' [' . $search_boat_name . '] ' : '';
-    $name_img .= $date_travel_form != '0000-00-00' ? ' [' . date('j F Y', strtotime($date_travel_form)) . '] ' : '';
+    $name_img .= $date_travel != '0000-00-00' ? ' [' . date('j F Y', strtotime($date_travel)) . '] ' : '';
     # --- get data --- #
-    $orders = $orderObj->showlistboats('job', 0, $date_travel_form, $search_boat, 'all', $search_status, $search_agent, $search_product, $search_voucher_no, $refcode, $name, '');
+    $orders = $orderObj->showlistboats('job', 0, $date_travel, $search_boat, 'all', $search_status, $search_agent, $search_product, $search_voucher_no, $refcode, $name, '');
     # --- Check products --- #
     if (!empty($orders)) {
         foreach ($orders as $order) {
@@ -166,7 +166,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print") {
             </div>
             <div class="text-center card-text">
                 <h4 class="font-weight-bolder">ใบงาน</h4>
-                <h5 class="font-weight-bolder"><?php echo date('j F Y', strtotime($date_travel_form)); ?></h5>
+                <h5 class="font-weight-bolder"><?php echo date('j F Y', strtotime($date_travel)); ?></h5>
             </div>
         </div>
         <?php
@@ -227,6 +227,19 @@ if (isset($_GET['action']) && $_GET['action'] == "print") {
                                     $total_child = $total_child + array_sum($child[$id]);
                                     $total_infant = $total_infant + array_sum($infant[$id]);
                                     $total_foc = $total_foc + array_sum($foc[$id]);
+                                    $text_hotel = '';
+                                    $text_zone = '';
+                                    if ($pickup_type[$mange_id[$i]][$a] == 1) {
+                                        if (!empty($zone_pickup[$mange_id[$i]][$a])) {
+                                            $text_zone = $zone_pickup[$mange_id[$i]][$a] != $zone_dropoff[$mange_id[$i]][$a] ? $zone_pickup[$mange_id[$i]][$a] . '<br>(D: ' . $zone_dropoff[$mange_id[$i]][$a] . ')' : $zone_pickup[$mange_id[$i]][$a];
+                                        }
+                                        if (!empty($hotel_pickup[$mange_id[$i]][$a])) {
+                                            $text_hotel = $hotel_pickup[$mange_id[$i]][$a] != $hotel_dropoff[$mange_id[$i]][$a] ? $hotel_pickup[$mange_id[$i]][$a] . '<br>(D: ' . $hotel_dropoff[$mange_id[$i]][$a] . ')' : $hotel_pickup[$mange_id[$i]][$a];
+                                        }
+                                    } else {
+                                        $text_hotel = 'เดินทางมาเอง';
+                                        $text_zone = 'เดินทางมาเอง';
+                                    }
                             ?>
                                     <tr class="<?php echo $class_tr; ?>">
                                         <td class="text-center"><?php echo $check_id[$mange_id[$i]][$a] > 0 ? '<i data-feather="check"></i>' : ''; ?></td>
@@ -246,8 +259,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print") {
                                         <td><?php echo !empty($telephone[$bo_id[$mange_id[$i]][$a]][0]) ? $cus_name[$bo_id[$mange_id[$i]][$a]][0] . ' <br>(' . $telephone[$bo_id[$mange_id[$i]][$a]][0] . ')' . $nation_name[$bo_id[$mange_id[$i]][$a]][0] : $cus_name[$bo_id[$mange_id[$i]][$a]][0] . ' ' . $nation_name[$bo_id[$mange_id[$i]][$a]][0]; ?></td>
                                         <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                         <td><?php echo !empty($voucher_no[$mange_id[$i]][$a]) ? $voucher_no[$mange_id[$i]][$a] : $book_full[$mange_id[$i]][$a]; ?></td>
-                                        <td style="padding: 5px;"><?php echo ($pickup_type[$mange_id[$i]][$a] == 1) ? (!empty($hotel_pickup[$mange_id[$i]][$a])) ? $hotel_pickup[$mange_id[$i]][$a] : '' : 'เดินทางมาเอง'; ?></td>
-                                        <td style="padding: 5px;"><?php echo ($pickup_type[$mange_id[$i]][$a] == 1) ? (!empty($zone_pickup[$mange_id[$i]][$a])) ? $zone_pickup[$mange_id[$i]][$a] : '' : 'เดินทางมาเอง'; ?></td>
+                                        <td style="padding: 5px;"><?php echo $text_hotel; ?></td>
+                                        <td style="padding: 5px;"><?php echo $text_zone; ?></td>
                                         <td><?php echo $room_no[$mange_id[$i]][$a]; ?></td>
                                         <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                         <td class="text-center"><?php echo array_sum($child[$id]); ?></td>

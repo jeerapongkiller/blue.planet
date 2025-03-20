@@ -513,10 +513,12 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                     <input type="hidden" id="bo_id" name="bo_id" value="0" />
                                     <input type="hidden" id="bp_id" name="bp_id" value="0" />
                                     <input type="hidden" id="pror_id" name="pror_id" value="0" />
-                                    <input type="hidden" id="open-rates" name="open_rates" value="<?php echo $open_rates; ?>" />
+                                    <input type="hidden" id="open-rates" name="open_rates" value="<?php echo 1; ?>" />
                                     <!-- <input type="hidden" id="book_status" name="book_status" value="" /> -->
                                     <input type="hidden" id="book_date" name="book_date" value="<?php echo $today; ?>" />
                                     <input type="hidden" id="book_time" name="book_time" value="<?php echo $times; ?>" />
+                                    <input type="hidden" id="customer_thai" name="customer_thai" value="0" />
+                                    <input type="hidden" id="customer_foreign" name="customer_foreign" value="0" />
                                     <div class="row">
                                         <div class="form-group col-xl-2 col-md-4 col-12">
                                             <label for="travel_date">Travel Date</label>
@@ -557,9 +559,14 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                                 <?php } ?>
                                             </select>
                                         </div>
-                                        <div class="form-group col-xl-2 col-md-4 col-12">
+                                        <!-- <div class="form-group col-xl-2 col-md-4 col-12">
                                             <label for="category_id">Categorys (สินค้ารอง)</label>
                                             <select class="form-control select2" id="category_id" name="category_id" onchange="check_category();">
+                                            </select>
+                                        </div> -->
+                                        <div class="form-group col-xl-2 col-md-4 col-12">
+                                            <label for="category_id">Categorys (สินค้ารอง)</label>
+                                            <select class="form-control select2" id="category_id" name="category_id[]" multiple="multiple" multiple onchange="check_category();">
                                             </select>
                                         </div>
                                         <div class="form-group col-xl-2 col-md-4 col-12">
@@ -570,91 +577,6 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                         <div class="form-group col-xl-2 col-md-4 col-12">
                                             <label class="form-label" for="sender">Sender</label>
                                             <input type="text" id="sender" name="sender" class="form-control" />
-                                        </div>
-                                        <div class="form-group col-md-2 col-12">
-                                            <div class="form-group" id="div-adult">
-                                                <label class="form-label" for="adult">Adult</label>
-                                                <input type="text" class="form-control numeral-mask" id="adult" name="adult" value="0" oninput="rows_customer();" />
-                                            </div>
-                                            <table width="100%" id="table-adult">
-                                                <tr>
-                                                    <td width="30%">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="cover-adult">Adult</label>
-                                                            <input type="text" class="form-control numeral-mask" id="cover-adult" name="adult" value="0" oninput="rows_customer();" />
-                                                        </div>
-                                                    </td>
-                                                    <td width="1%"><i data-feather='x' class="m-1 font-medium-4"></i></td>
-                                                    <td width="69%">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="rate_adult">Rate Adult</label>
-                                                            <input type="text" id="rate_adult" name="rate_adult" class="form-control numeral-mask" value="0" oninput="check_rate();">
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="form-group col-md-2 col-12">
-                                            <div class="form-group" id="div-child">
-                                                <label class="form-label" for="child">Children</label>
-                                                <input type="text" class="form-control numeral-mask" id="child" name="child" value="0" oninput="rows_customer();" />
-                                            </div>
-                                            <table width="100%" id="table-child">
-                                                <tr>
-                                                    <td width="30%">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="cover-child">Children</label>
-                                                            <input type="text" class="form-control numeral-mask" id="cover-child" name="child" value="0" oninput="rows_customer();" />
-                                                        </div>
-                                                    </td>
-                                                    <td width="1%"><i data-feather='x' class="m-1 font-medium-4"></i></td>
-                                                    <td width="69%">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="rate_child">Rate Children</label>
-                                                            <input type="text" id="rate_child" name="rate_child" class="form-control numeral-mask" value="0" oninput="check_rate();">
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="form-group col-md-2 col-12">
-                                            <div class="form-group" id="div-infant">
-                                                <label class="form-label" for="infant">Infant</label>
-                                                <input type="text" class="form-control numeral-mask" id="infant" name="infant" value="0" oninput="rows_customer();" />
-                                            </div>
-                                            <table width="100%" id="table-infant">
-                                                <tr>
-                                                    <td width="30%">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="cover-infant">Infant</label>
-                                                            <input type="text" class="form-control numeral-mask" id="cover-infant" name="infant" value="0" oninput="rows_customer();" />
-                                                        </div>
-                                                    </td>
-                                                    <td width="1%"><i data-feather='x' class="m-1 font-medium-4"></i></td>
-                                                    <td width="69%">
-                                                        <div class="form-group">
-                                                            <label class="form-label" for="rate_infant">Rate Infant</label>
-                                                            <input type="text" id="rate_infant" name="rate_infant" class="form-control numeral-mask" value="0" oninput="check_rate();">
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="form-group col-xl-2 col-md-4 col-12" id="div-total">
-                                            <label for="rate_total">Total Price</label>
-                                            <input type="text numeral-mask" class="form-control" id="rate_total" name="rate_total" value="0" />
-                                        </div>
-                                        <div class="form-group col-md-2 col-12">
-                                            <label class="form-label" for="foc">FOC</label>
-                                            <input type="text" class="form-control numeral-mask" id="foc" name="foc" value="0" oninput="rows_customer();" />
-                                        </div>
-                                        <!-- <div class="form-group col-xl-2 col-md-4 col-12">
-                                            <label for="cus_name">Customer Name</label>
-                                            <input type="text" class="form-control" id="cus_name" name="cus_name" value="" />
-                                        </div> -->
-                                        <div class="form-group col-xl-2 col-md-4 col-12">
-                                            <label for="cot">Cash on tour</label>
-                                            <input type="text numeral-mask" class="form-control" id="cot" name="cot" value="" />
                                         </div>
                                         <div class="form-group col-xl-2 col-md-4 col-12">
                                             <label for="telephone">Telephone</label>
@@ -675,6 +597,21 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                         <div class="form-group col-xl-4 col-md-4 col-12">
                                             <label class="form-label" for="bp_note">Remark</label>
                                             <textarea class="form-control" name="bp_note" id="bp_note" rows="1"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="div-thai" hidden>
+                                    </div>
+                                    <div class="row" id="div-foreign" hidden>
+                                    </div>
+                                    <div class="row" id="div-price">
+                                        <div class="form-group col-xl-2 col-md-4 col-12">
+                                            <label for="cot">Cash on tour</label>
+                                            <input type="text numeral-mask" class="form-control" id="cot" name="cot" value="0" />
+                                        </div>
+                                        <div class="form-group col-xl-2 col-md-4 col-12" id="div-total">
+                                            <label for="rate_total">Total Price</label>
+                                            <p id="text-total-price"></p>
+                                            <input type="hidden" id="rate_total" name="rate_total" value="0" />
                                         </div>
                                     </div>
                                     <div class="row" id="div-transfer">

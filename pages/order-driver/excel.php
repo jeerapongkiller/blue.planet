@@ -137,21 +137,29 @@ if (!empty($mange_id)) {
                         }
                     }
                     $category_text .= ')';
-                    // $hotel_text = '';
-                    // if ($cate_transfer[$id] == 1) {
-                    //     $hotel_text .= (!empty($hotel_name[$id][1])) ? 'Pickup : ' . $hotel_name[$id][1] . ' (' . $zone_name[$id][1] . ')' : 'Pickup : ' . $outside[$id][1] . ' (' . $zone_name[$id][1] . ')';
-                    //     $hotel_text .= (!empty($hotel_name[$id][2])) ? ' | Dropoff : ' . $hotel_name[$id][2] . ' (' . $zone_name[$id][2] . ')' : ' | Dropoff : ' . $outside[$id][2] . ' (' . $zone_name[$id][2] . ')';
-                    // } else {
-                    //     $hotel_text .= 'เดินทางมาเอง';
-                    // }
+                    $text_hotel = '';
+                    $text_zone = '';
+                    if ($cate_transfer[$id] == 1) {
+                        if (!empty($zone_name[$id][1])) {
+                            $text_zone = $zone_name[$id][1] != $zone_name[$id][2] ? $zone_name[$id][1] . '<br>(D: ' . $zone_name[$id][2] . ')' : $zone_name[$id][1];
+                        }
+                        if (!empty($hotel_name[$id][1])) {
+                            $text_hotel = $hotel_name[$id][1] != $hotel_name[$id][2] ? $hotel_name[$id][1] . '<br>(D: ' . $hotel_name[$id][2] . ')' : $hotel_name[$id][1];
+                        } else {
+                            $text_hotel = $outside[$id][1] != $outside[$id][2] ? $outside[$id][1] . '<br>(D: ' . $outside[$id][2] . ')' : $outside[$id][1];
+                        }
+                    } else {
+                        $text_hotel = 'เดินทางมาเอง';
+                        $text_zone = 'เดินทางมาเอง';
+                    }
 
                     $columnName[] = [
                         $start_pickup[$id][$mange_retrun] != '00:00' ? date('H:i', strtotime($start_pickup[$id][$mange_retrun])) . ' - ' . date('H:i', strtotime($end_pickup[$id][$mange_retrun])) : '',
                         $product_name[$id] . $category_text,
                         $agent_name[$id],
                         !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id],
-                        ($cate_transfer[$id] == 1) ? (!empty($hotel_name[$id][1])) ? $hotel_name[$id][1] : $outside[$id][1] : 'เดินทางมาเอง',
-                        (!empty($zone_name[$id][1])) ? $zone_name[$id][1] : '',
+                        $text_hotel,
+                        $text_zone,
                         $room_no[$id][$mange_retrun],
                         !empty($telephone[$id][0]) ? $cus_name[$id][0] . '  (TEL : ' . $telephone[$id][0] . ') ' : $cus_name[$id][0],
                         !empty($language[$id]) ? $language[$id] : '',

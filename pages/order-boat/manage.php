@@ -82,6 +82,17 @@ if (!empty($bookings)) {
             $passport[$booking['id']][] = !empty($booking['id_card']) ? $booking['id_card'] : '';
             $birth_date[$booking['id']][] = !empty($booking['birth_date']) && $booking['birth_date'] != '0000-00-00' ? date('j F Y', strtotime($booking['birth_date'])) : '';
             $nation_name[$booking['id']][] = !empty($booking['nation_name']) ? $booking['nation_name'] : '';
+            if (!empty($booking['cus_name'])) {
+                $customers[$booking['mange_id']]['id'][] = !empty($booking['cus_id']) ? $booking['cus_id'] : 0;
+                $customers[$booking['mange_id']]['age'][] = !empty($booking['cus_age']) ? $booking['cus_age'] : 0;
+                $customers[$booking['mange_id']]['nation_id'][] = !empty($booking['nation_id']) ? $booking['nation_id'] : 0;
+                $customers[$booking['mange_id']]['age_name'][] = !empty($booking['cus_age']) ? $booking['cus_age'] != 1 ? $booking['cus_age'] != 2 ? $booking['cus_age'] != 3 ? $booking['cus_age'] == 4 ? 'FOC' : '' : 'Infant' : 'Children' : 'Adult' : '';
+                $customers[$booking['mange_id']]['name'][] = !empty($booking['cus_name']) ? $booking['cus_name'] : '';
+                $customers[$booking['mange_id']]['passport'][] = !empty($booking['id_card']) ? $booking['id_card'] : '';
+                $customers[$booking['mange_id']]['birth'][] = !empty($booking['birth_date']) && $booking['birth_date'] != '0000-00-00' ? date('j F Y', strtotime($booking['birth_date'])) : '';
+                $customers[$booking['mange_id']]['nation'][] = !empty($booking['nation_name']) ? $booking['nation_name'] : '';
+                $customers[$booking['mange_id']]['voucher_no'][] = !empty($booking['voucher_no_agent']) ? $booking['voucher_no_agent'] : '';
+            }
         }
 
         if (in_array($booking['id'], $first_bo) == false) {
@@ -156,18 +167,6 @@ if (!empty($bookings)) {
             $managet['driver'][$booking['id']][$retrun_t] = !empty($booking['driver_name']) ? $booking['driver_name'] : '';
             $managet['pickup'][$booking['id']][] = !empty($booking['pickup']) ? $booking['pickup'] : 0;
             $managet['dropoff'][$booking['id']][] = !empty($booking['dropoff']) ? $booking['dropoff'] : 0;
-        }
-
-        if (!empty($booking['cus_name'])) {
-            $customers[$booking['mange_id']]['id'][] = !empty($booking['cus_id']) ? $booking['cus_id'] : 0;
-            $customers[$booking['mange_id']]['age'][] = !empty($booking['cus_age']) ? $booking['cus_age'] : 0;
-            $customers[$booking['mange_id']]['nation_id'][] = !empty($booking['nation_id']) ? $booking['nation_id'] : 0;
-            $customers[$booking['mange_id']]['age_name'][] = !empty($booking['cus_age']) ? $booking['cus_age'] != 1 ? $booking['cus_age'] != 2 ? $booking['cus_age'] != 3 ? $booking['cus_age'] == 4 ? 'FOC' : '' : 'Infant' : 'Children' : 'Adult' : '';
-            $customers[$booking['mange_id']]['name'][] = !empty($booking['cus_name']) ? $booking['cus_name'] : '';
-            $customers[$booking['mange_id']]['passport'][] = !empty($booking['id_card']) ? $booking['id_card'] : '';
-            $customers[$booking['mange_id']]['birth'][] = !empty($booking['birth_date']) && $booking['birth_date'] != '0000-00-00' ? date('j F Y', strtotime($booking['birth_date'])) : '';
-            $customers[$booking['mange_id']]['nation'][] = !empty($booking['nation_name']) ? $booking['nation_name'] : '';
-            $customers[$booking['mange_id']]['voucher_no'][] = !empty($booking['voucher_no_agent']) ? $booking['voucher_no_agent'] : '';
         }
     }
 }
@@ -382,22 +381,23 @@ if (!empty($programed)) {
                                                 <tr>
                                                     <th colspan="3">เวลา : <?php echo $mange['time'][$i]; ?></th>
                                                     <th colspan="6">ไกด์ : <?php echo $mange['guide_name'][$i]; ?></th>
-                                                    <th colspan="4">เคาน์เตอร์ : <?php echo $mange['counter'][$i]; ?></th>
+                                                    <th colspan="5">เคาน์เตอร์ : <?php echo $mange['counter'][$i]; ?></th>
                                                     <th colspan="2" style="background-color: <?php echo $mange['color_hex'][$i]; ?>;">
                                                         สี : <?php echo $mange['color_name'][$i]; ?>
                                                     </th>
                                                 </tr>
                                                 <tr>
-                                                    <th>เรือ</th>
                                                     <th>Driver</th>
                                                     <th>Time</th>
                                                     <th width="22%">Programe</th>
                                                     <th>Client</th>
                                                     <th>ภาษา (ไกด์)</th>
-                                                    <th class="text-center">A</th>
-                                                    <th class="text-center">C</th>
-                                                    <th class="text-center">Inf</th>
-                                                    <th class="text-center">FOC</th>
+                                                    <th>โรงแรม</th>
+                                                    <th>โซน</th>
+                                                    <th class="text-center cell-fit">A</th>
+                                                    <th class="text-center cell-fit">C</th>
+                                                    <th class="text-center cell-fit">Inf</th>
+                                                    <th class="text-center cell-fit">FOC</th>
                                                     <th>AGENT</th>
                                                     <th>SENDER</th>
                                                     <th>V/C</th>
@@ -422,8 +422,7 @@ if (!empty($programed)) {
                                                         $total_foc = $total_foc + array_sum($foc[$id]); ?>
                                                         <a href="javascripy:void(0);">
                                                             <tr class="<?php echo ($a % 2 == 1) ? 'table-active' : 'bg-white'; ?>">
-                                                                <td><a href="javascript:void(0);" data-toggle="modal" data-target="#edit_manage_boat" onclick="modal_manage_boat(<?php echo $mange['boat_id'][$i]; ?>, <?php echo $id; ?>, <?php echo $book['bo_mange_id'][$mange['id'][$i]][$a]; ?>, <?php echo $mange['id'][$i]; ?>);"><span class="badge badge-pill badge-light-success text-capitalized"><?php echo $mange['boat_name'][$i]; ?></span></a></td>
-                                                                <td style="padding: 5px;">
+                                                                <td style="padding: 5px;" class="cell-fit">
                                                                     <?php echo (!empty($managet['car'][$id][1])) ? '<b>Pickup : </b>' . $managet['car'][$id][1] : '';
                                                                     echo (!empty($managet['driver'][$id][1])) ? $managet['driver'][$id][1] : '';  ?>
                                                                 </td>
@@ -447,6 +446,8 @@ if (!empty($programed)) {
                                                                 <!-- <td><?php echo $book['room_no'][$mange['id'][$i]][$a]; ?></td> -->
                                                                 <td><?php echo !empty($book['nation_name'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . $book['nation_name'][$mange['id'][$i]][$a] : $book['cus_name'][$mange['id'][$i]][$a]; ?></td>
                                                                 <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
+                                                                <td class="cell-fit"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
+                                                                <td><?php echo (!empty($zone_pickup[$id])) ? $zone_pickup[$id] : ''; ?></td>
                                                                 <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                                                 <td class="text-center"><?php echo array_sum($child[$id]); ?></td>
                                                                 <td class="text-center"><?php echo array_sum($infant[$id]); ?></td>
@@ -470,10 +471,10 @@ if (!empty($programed)) {
                                                 </tbody>
                                                 <tfoot>
                                                     <tr class="<?php echo ($a % 2 == 1) ? 'table-active' : 'bg-white'; ?>">
-                                                        <td colspan="15" style="padding: 5px;"><b>Remark : </b><?php echo $mange['note'][$i]; ?></td>
+                                                        <td colspan="16" style="padding: 5px;"><b>Remark : </b><?php echo $mange['note'][$i]; ?></td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="15" class="text-center h5">Total: <?php echo $total_tourist; ?> | <?php echo $total_adult; ?> <?php echo $total_child; ?> <?php echo $total_infant; ?> <?php echo $total_foc; ?></td>
+                                                        <td colspan="16" class="text-center h5">Total: <?php echo $total_tourist; ?> | <?php echo $total_adult; ?> <?php echo $total_child; ?> <?php echo $total_infant; ?> <?php echo $total_foc; ?></td>
                                                     </tr>
                                                 </tfoot>
                                             <?php } ?>
@@ -497,8 +498,7 @@ if (!empty($programed)) {
                                     for ($p = 0; $p < count($programe_id); $p++) { ?>
                                         <div class="card-body pt-0 p-50 bg-warning bg-lighten-5">
                                             <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75">
-                                                <div class="col-lg-12 col-xl-12 text-center text-bold h4"><?php echo $programe_name[$p]; // (!empty($travel_date[$bo_id[0]])) ? date('j F Y', strtotime($travel_date[$bo_id[0]])) : ''; 
-                                                                                                            ?></div>
+                                                <div class="col-lg-12 col-xl-12 text-center text-bold h4"><?php echo $programe_name[$p]; ?></div>
                                             </div>
                                             <table class="table table-bordered">
                                                 <thead class="bg-light">
@@ -508,6 +508,8 @@ if (!empty($programed)) {
                                                         <th width="5%" class="text-nowrap">TIME</th>
                                                         <th class="text-nowrap">Name</th>
                                                         <th>ภาษา (ไกด์)</th>
+                                                        <th>โรงแรม</th>
+                                                        <th>โซน</th>
                                                         <th width="1%">A</th>
                                                         <th width="1%">C</th>
                                                         <th width="1%">INF</th>
@@ -549,6 +551,8 @@ if (!empty($programed)) {
                                                                 <td><?php echo !empty($start_pickup[$id]) ? date("H:i", strtotime($start_pickup[$id])) : '00:00'; ?></td>
                                                                 <td><?php echo !empty($cus_name[$id][0]) ? !empty($nation_name[$id][0]) ? $cus_name[$id][0] . ' ' . $nation_name[$id][0] : $cus_name[$id][0] . ' ' . $nation_name[$id][0] : ''; ?></td>
                                                                 <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
+                                                                <td class="cell-fit"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
+                                                                <td><?php echo (!empty($zone_pickup[$id])) ? $zone_pickup[$id] : ''; ?></td>
                                                                 <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                                                 <td class="text-center"><?php echo array_sum($child[$id]); ?></td>
                                                                 <td class="text-center"><?php echo array_sum($infant[$id]); ?></td>
@@ -571,7 +575,7 @@ if (!empty($programed)) {
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td colspan="15" class="text-center h5">Total: <?php echo $total_tourist; ?> | <?php echo $total_adult; ?> <?php echo $total_child; ?> <?php echo $total_infant; ?> <?php echo $total_foc; ?></td>
+                                                        <td colspan="17" class="text-center h5">Total: <?php echo $total_tourist; ?> | <?php echo $total_adult; ?> <?php echo $total_child; ?> <?php echo $total_infant; ?> <?php echo $total_foc; ?></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>

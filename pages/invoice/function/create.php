@@ -34,7 +34,7 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && isset($_POST['bo_
     # --- invoice no full --- #
     $inv['no'] = '';
     $inv['full'] = '';
-    $inv_no = $invObj->checkinvno();
+    $inv_no = $invObj->checkinvno($today);
     $no = !empty($inv_no['max_inv_no']) ? $inv_no['max_inv_no'] + 1 : 1;
     $inv['full'] = 'IN' . date("Ymd") . '-' . setNumberLength($no, 3);
     $inv['no'] = $no;

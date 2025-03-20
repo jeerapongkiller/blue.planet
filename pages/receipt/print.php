@@ -329,14 +329,20 @@ if (isset($action) && !empty($id)) {
                         </dt>
                         <dd class="col-sm-6"><?php echo $brch_name[0]; ?></dd>
                     </dl>
-                    <dl class="row" style="margin-bottom: 0;">
+                    <!-- <dl class="row" style="margin-bottom: 0;">
                         <dt class="col-sm-6 text-right">
-                            PAID Date
+                            วันที่ชำระเงิน
                         </dt>
                         <dd class="col-sm-6"><?php echo date('j F Y', strtotime($date_rec[0])); ?></dd>
-                    </dl>
+                    </dl> -->
                 </td>
                 <td width="34%" align="left" colspan="2">
+                    <dl class="row" style="margin-bottom: 0;">
+                        <dt class="col-sm-4 text-right">
+                            วันที่ชำระเงิน
+                        </dt>
+                        <dd class="col-sm-8"><?php echo date('j F Y', strtotime($date_rec[0])); ?></dd>
+                    </dl>
                     <dl class="row" style="margin-bottom: 0;">
                         <dt class="col-sm-4 text-right">
                             เลขใบแจ้งหนี้

@@ -236,6 +236,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                 <th width="15%">ชื่อลูกค้า</th>
                                 <th>ภาษา (ไกด์)</th>
                                 <th width="5%">V/C</th>
+                                <th>โรงแรม</th>
+                                <th>โซน</th>
                                 <th class="text-center" width="1%">A</th>
                                 <th class="text-center" width="1%">C</th>
                                 <th class="text-center" width="1%">Inf</th>
@@ -277,9 +279,11 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                             }
                                             echo ')'; ?></td>
                                         <td><?php echo $book['comp_name'][$mange['id'][$i]][$a]; ?></td>
-                                        <td><?php echo !empty($book['telephone'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . ' <br>(' . $book['telephone'][$mange['id'][$i]][$a] . ') ' . $book['nation_name'][$mange['id'][$i]][$a] . $language[$id] : $book['cus_name'][$mange['id'][$i]][$a] . $book['nation_name'][$mange['id'][$i]][$a] ; ?></td>
+                                        <td><?php echo !empty($book['telephone'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . ' <br>(' . $book['telephone'][$mange['id'][$i]][$a] . ') ' . $book['nation_name'][$mange['id'][$i]][$a] : $book['cus_name'][$mange['id'][$i]][$a] . $book['nation_name'][$mange['id'][$i]][$a]; ?></td>
                                         <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                         <td><?php echo !empty($book['voucher'][$mange['id'][$i]][$a]) ? $book['voucher'][$mange['id'][$i]][$a] : $book['book_full'][$mange['id'][$i]][$a]; ?></td>
+                                        <td class="cell-fit"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
+                                        <td class="cell-fit"><?php echo (!empty($zone_pickup[$id])) ? $zone_pickup[$id] : ''; ?></td>
                                         <td class="text-center bg-warning bg-lighten-3"><?php echo array_sum($adult[$id]); ?></td>
                                         <td class="text-center bg-info bg-lighten-3"><?php echo array_sum($child[$id]); ?></td>
                                         <td class="text-center bg-warning bg-lighten-3"><?php echo array_sum($infant[$id]); ?></td>
@@ -446,7 +450,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                     <th width="15%">ชื่อลูกค้า</th>
                     <th width="5%">V/C</th>
                     <th width="22%">โรงแรม</th>
-                    <th width="5%">ห้อง</th>
+                    <!-- <th width="5%">ห้อง</th> -->
                     <th class="text-center" width="1%">A</th>
                     <th class="text-center" width="1%">C</th>
                     <th class="text-center" width="1%">Inf</th>
@@ -480,7 +484,9 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                             <td><?php echo $book['comp_name'][$manage_id][$a]; ?></td>
                             <td><?php echo !empty($book['telephone'][$manage_id][$a]) ? $book['cus_name'][$manage_id][$a] . ' <br>(' . $book['telephone'][$manage_id][$a] . ') ' . $book['language'][$manage_id][$a] : $book['cus_name'][$manage_id][$a] . $book['language'][$manage_id][$a]; ?></td>
                             <td><?php echo !empty($book['voucher'][$manage_id][$a]) ? $book['voucher'][$manage_id][$a] : $book['book_full'][$manage_id][$a]; ?></td>
-                            <td style="padding: 5px;">
+                            <td class="cell-fit"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
+                            <td class="cell-fit"><?php echo (!empty($zone_pickup[$id])) ? $zone_pickup[$id] : ''; ?></td>
+                            <!-- <td style="padding: 5px;">
                                 <?php if ($pickup_type[$id] == 1) {
                                     echo (!empty($hotel_name[$id])) ? '<b>Pickup : </b>' . $hotel_name[$id] . $zone_pickup[$id] . '</br>' : '<b>Pickup : </b>' . $outside[$id] . $zone_pickup[$id] . '</br>';
                                     echo (!empty($dropoff_name[$id])) ? '<b>Dropoff : </b>' . $dropoff_name[$id] . $zone_dropoff[$id] : '<b>Dropoff : </b>' . $outside_dropoff[$id]  . $zone_dropoff[$id];
@@ -488,7 +494,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                     echo 'เดินทางมาเอง';
                                 } ?>
                             </td>
-                            <td><?php echo $book['room_no'][$manage_id][$a]; ?></td>
+                            <td><?php echo $book['room_no'][$manage_id][$a]; ?></td> -->
                             <td class="text-center bg-warning bg-lighten-3"><?php echo $book['adult'][$manage_id][$a]; ?></td>
                             <td class="text-center bg-info bg-lighten-3"><?php echo $book['child'][$manage_id][$a]; ?></td>
                             <td class="text-center bg-warning bg-lighten-3"><?php echo $book['infant'][$manage_id][$a]; ?></td>
@@ -539,6 +545,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                 $boat_name = !empty($booking['boat_name']) ? $booking['boat_name'] : 0;
 
                 if (in_array($booking['cus_id'], $first_cus) == false) {
+                    $first_cus[] = $booking['cus_id'];
                     $cus_id[] = !empty($booking['cus_id']) ? $booking['cus_id'] : 0;
                     $cus_age[] = !empty($booking['cus_age']) ? $booking['cus_age'] : 0;
                     $nation_id[] = !empty($booking['nation_id']) ? $booking['nation_id'] : 0;

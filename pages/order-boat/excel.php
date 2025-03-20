@@ -24,6 +24,7 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
                 $product_name = !empty($booking['product_name']) ? $booking['product_name'] : '';
 
                 if (in_array($booking['cus_id'], $first_cus) == false) {
+                    $first_cus[] = $booking['cus_id'];
                     $cus_id[] = !empty($booking['cus_id']) ? $booking['cus_id'] : 0;
                     $cus_age[] = !empty($booking['cus_age']) ? $booking['cus_age'] : 0;
                     $nation_id[] = !empty($booking['nation_id']) ? $booking['nation_id'] : 0;
@@ -161,12 +162,12 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
             $objPHPExcel->getActiveSheet()->mergeCells('A' . $row . ':L' . $row);
             $columnName[] = [$boat_name[$i]];
             $row++;
-            $objPHPExcel->getActiveSheet()->mergeCells('A' . $row . ':D' . $row);
-            $objPHPExcel->getActiveSheet()->mergeCells('E' . $row . ':H' . $row);
-            $objPHPExcel->getActiveSheet()->mergeCells('I' . $row . ':L' . $row);
+            $objPHPExcel->getActiveSheet()->mergeCells('A' . $row . ':E' . $row);
+            $objPHPExcel->getActiveSheet()->mergeCells('F' . $row . ':J' . $row);
+            $objPHPExcel->getActiveSheet()->mergeCells('K' . $row . ':N' . $row);
             $columnName[] = ['ไกด์ : ' . $guide_name[$i], '', '', '',  'เคาน์เตอร์ : ' . $counter[$i], '', '', '',  'สี : ' . $text_color[$i], '', '', '', ];
             $row++;
-            $columnName[] = ['เวลารับ', 'Driver', 'โปรแกรม', 'เอเยนต์', 'ชื่อลูกค้า', 'ภาษา (ไกด์)', 'V/C', 'A', 'C', 'INF', 'FOC', 'Remark',];
+            $columnName[] = ['เวลารับ', 'Driver', 'โปรแกรม', 'เอเยนต์', 'ชื่อลูกค้า', 'ภาษา (ไกด์)', 'V/C',  'โรงแรม', 'โซน', 'A', 'C', 'INF', 'FOC', 'Remark',];
             $row++;
 
             $total_tourist = 0;
@@ -201,6 +202,8 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
                         !empty($telephone[$id][0]) ? $cus_name[$id][0] . '  (TEL : ' . $telephone[$id][0] . ') ' : $cus_name[$id][0],
                         !empty($language[$id]) ? $language[$id] : '',
                         !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id],
+                        (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id],
+                        (!empty($zone_pickup[$id])) ? $zone_pickup[$id] : '',
                         !empty($adult[$id]) ? array_sum($adult[$id]) : 0,
                         !empty($child[$id]) ? array_sum($child[$id]) : 0,
                         !empty($infant[$id]) ? array_sum($infant[$id]) : 0,

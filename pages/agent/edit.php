@@ -172,7 +172,7 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                             <form id="product-rates-form" name="product-rates-form" method="post" enctype="multipart/form-data">
                                 <input type="hidden" id="company_id" name="company_id" value="<?php echo $id; ?>">
                                 <?php
-                                $programs = $agObj->showprograms(1);
+                                $programs = $agObj->showprograms();
                                 if ($programs) {
                                     foreach ($programs as $program) {
                                 ?>

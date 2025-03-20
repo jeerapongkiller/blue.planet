@@ -384,7 +384,7 @@ if (!empty($programed)) {
                     <div id="div-boat-job-image" style="background-color: #FFF;">
                         <!-- Header starts -->
                         <div class="card-body pb-0">
-                            <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing">
+                            <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing text-black">
                                 <span class="brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>
                                 <span style="color: #000;">
                                     บริษัท บลู แพลนเน็ต ฮอลิเดย์ จํากัด </br>
@@ -392,7 +392,7 @@ if (!empty($programed)) {
                                 </span>
                             </div>
                             <div class="text-center card-text">
-                                <h4 class="font-weight-bolder">ใบจัดเรือ</h4>
+                                <h4 class="font-weight-bolder text-black">ใบจัดเรือ</h4>
                                 <div class="badge badge-pill badge-light-danger">
                                     <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($get_date)); ?></h5>
                                 </div>
@@ -406,36 +406,37 @@ if (!empty($programed)) {
 
                         ?>
                                 <textarea id="<?php echo 'customers' . $mange['id'][$i]; ?>" hidden><?php echo json_encode($customers[$mange['id'][$i]], true); ?></textarea>
-                                <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75 pt-1">
-                                    <div class="col-4 text-left text-bold h4"></div>
-                                    <div class="col-4 text-center text-bold h4"><?php echo $mange['boat_name'][$i]; ?></div>
+                                <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75 pt-1 text-black">
+                                    <div class="col-4 text-left h4"></div>
+                                    <div class="col-4 text-center font-weight-bolder h4 text-black"><?php echo $mange['boat_name'][$i]; ?></div>
                                     <div class="col-4 text-right mb-50"><button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-dark waves-effect btn-page-block-spinner" data-toggle="modal" data-target="#modal-customers" onclick="modal_customers(<?php echo $mange['id'][$i]; ?>, '<?php echo date('j F Y', strtotime($get_date)); ?>', '<?php echo $mange['boat_name'][$i]; ?>');">รายชื่อลูกค้า</button></div>
                                 </div>
 
-                                <table class="table table-striped text-uppercase table-vouchure-t2">
+                                <table class="table table-striped text-uppercase table-vouchure-t2 text-black" style="font-size: 16px;" width="100%">
                                     <thead class="bg-light">
                                         <tr>
-                                            <th colspan="6">ไกด์ : <?php echo $mange['guide_name'][$i]; ?></th>
-                                            <th colspan="6">เคาน์เตอร์ : <?php echo $mange['counter'][$i]; ?></th>
-                                            <th colspan="3" style="background-color: <?php echo $mange['color_hex'][$i]; ?>; <?php echo $mange['text_color'][$i] != '' ? 'color: ' . $mange['text_color'][$i] . ';' : ''; ?>">
+                                            <th colspan="5">ไกด์ : <?php echo $mange['guide_name'][$i]; ?></th>
+                                            <th colspan="5">เคาน์เตอร์ : <?php echo $mange['counter'][$i]; ?></th>
+                                            <th colspan="5" style="background-color: <?php echo $mange['color_hex'][$i]; ?>; <?php echo $mange['text_color'][$i] != '' ? 'color: ' . $mange['text_color'][$i] . ';' : ''; ?>">
                                                 สี : <?php echo $mange['color_name'][$i]; ?>
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th width="5%">เวลารับ</th>
-                                            <th width="5%">Driver</th>
-                                            <th width="20%">โปรแกรม</th>
-                                            <th width="15%">เอเยนต์</th>
-                                            <th width="15%">ชื่อลูกค้า</th>
-                                            <th>ภาษา (ไกด์)</th>
-                                            <th width="5%">V/C</th>
+                                            <th width="4%">เวลารับ</th>
+                                            <th width="4%">Driver</th>
+                                            <th width="10%">โปรแกรม</th>
+                                            <th width="10%">เอเยนต์</th>
+                                            <th width="6%">ชื่อลูกค้า</th>
+                                            <th width="4%">ภาษา (ไกด์)</th>
+                                            <th width="3%">V/C</th>
+                                            <th width="15%">โรงแรม</th>
                                             <th class="text-center" width="1%">A</th>
                                             <th class="text-center" width="1%">C</th>
                                             <th class="text-center" width="1%">Inf</th>
                                             <th class="text-center" width="1%">FOC</th>
                                             <!-- <th class="text-center">รวม</th> -->
                                             <th width="5%">COT</th>
-                                            <th>Remark</th>
+                                            <th width="15%">Remark</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -460,7 +461,7 @@ if (!empty($programed)) {
                                                         <?php echo (!empty($managet['car'][$id][1])) ? '<b>Pickup : </b>' . $managet['car'][$id][1] : '';
                                                         echo (!empty($managet['driver'][$id][1])) ? $managet['driver'][$id][1] : '';  ?>
                                                     </td>
-                                                    <td><?php echo $product_name[$id];
+                                                    <td style="padding: 5px;"><?php echo $product_name[$id] . '<br>';
                                                         if (!empty($category_name[$id])) {
                                                             echo ' (';
                                                             for ($c = 0; $c < count($category_name[$id]); $c++) {
@@ -469,16 +470,16 @@ if (!empty($programed)) {
                                                         }
                                                         echo ')'; ?></td>
                                                     <td><?php echo $book['comp_name'][$mange['id'][$i]][$a]; ?></td>
-                                                    <td><?php echo !empty($book['telephone'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . ' <br>(' . $book['telephone'][$mange['id'][$i]][$a] . ') ' . $book['nation_name'][$mange['id'][$i]][$a] : $book['cus_name'][$mange['id'][$i]][$a]; ?></td>
-                                                    <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
+                                                    <td class="wrapword"><?php echo !empty($book['telephone'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . ' <br>(' . $book['telephone'][$mange['id'][$i]][$a] . ') ' . $book['nation_name'][$mange['id'][$i]][$a] : $book['cus_name'][$mange['id'][$i]][$a]; ?></td>
+                                                    <td><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                                     <td><?php echo !empty($book['voucher'][$mange['id'][$i]][$a]) ? $book['voucher'][$mange['id'][$i]][$a] : $book['book_full'][$mange['id'][$i]][$a]; ?></td>
+                                                    <td class="font-weight-bolder text-danger wrapword"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
                                                     <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                                     <td class="text-center"><?php echo array_sum($child[$id]); ?></td>
                                                     <td class="text-center"><?php echo array_sum($infant[$id]); ?></td>
                                                     <td class="text-center"><?php echo array_sum($foc[$id]); ?></td>
-                                                    <!-- <td class="text-center"><?php echo !empty($bec_rate_total[$id]) ? number_format($book['total'][$mange['id'][$i]][$a] + array_sum($bec_rate_total[$id])) : number_format($book['total'][$mange['id'][$i]][$a]); ?></td> -->
                                                     <td class="text-nowrap"><b class="text-danger"><?php echo $book['cot'][$mange['id'][$i]][$a] > 0 ? number_format($book['cot'][$mange['id'][$i]][$a]) : ''; ?></b></td>
-                                                    <td><b class="text-info">
+                                                    <td class="wrapword"><b class="text-info">
                                                             <?php if (!empty($bec_id[$id])) {
                                                                 for ($e = 0; $e < count($bec_name[$id]); $e++) {
                                                                     echo $e == 0 ? $bec_name[$id][$e] : ' : ' . $bec_name[$id][$e];

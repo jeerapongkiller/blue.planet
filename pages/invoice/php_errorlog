@@ -1,1 +1,0 @@
-[20-Feb-2025 16:47:33 Asia/Bangkok] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in /home/customer/www/blue.planet.shambhala.work/public_html/pages/invoice/print.php on line 491

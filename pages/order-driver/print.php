@@ -192,23 +192,6 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
     }
 ?>
     <div id="div-driver-job-image" style="background-color: #FFF;">
-        <!-- Header starts -->
-        <!-- <div class="card-body pb-0">
-            <div class="row">
-                <span class="col-6 brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>
-                <span class="col-6 text-right" style="color: #000;">
-                    บริษัท บลู แพลนเน็ต ฮอลิเดย์ จํากัด </br>
-                                            124/343 หมู่ที่ 5 ตำบลรัษฎา อําเภอเมือง จังหวัดภูเก็ต 83000
-                </span>
-            </div>
-            <div class="text-center card-text">
-                <h4 class="font-weight-bolder">ใบจัดรถ</h4>
-                <div class="badge badge-pill badge-light-danger">
-                    <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($date_travel)); ?></h5>
-                </div>
-            </div>
-        </div> -->
-        <!-- Header ends -->
         <!-- Body starts -->
         <?php
         if (!empty($mange['id']) && $search_retrun == 1) {
@@ -225,7 +208,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                         <table class="tableprint">
                             <thead class="">
                                 <tr>
-                                    <th colspan="14" style="background-color: #FFF;">
+                                    <th colspan="15" style="background-color: #FFF;">
                                         <div class="card-body pb-0">
                                             <div class="row">
                                                 <span class="col-6 brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>
@@ -251,11 +234,12 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th colspan="4" style="border-bottom: 1px solid #fff;">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
+                                    <th colspan="5" style="border-bottom: 1px solid #fff;">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
                                     <th colspan="4" style="border-bottom: 1px solid #fff;">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
                                     <th colspan="6" style="border-bottom: 1px solid #fff;">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
                                 </tr>
                                 <tr>
+                                    <th>เรือ</th>
                                     <th width="5%">เวลารับ</th>
                                     <th width="15%">โปรแกรม</th>
                                     <th width="10%">เอเยนต์</th>
@@ -287,8 +271,24 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                         $total_child = $total_child + $bt_child[$id][$mange_retrun];
                                         $total_infant = $total_infant + $bt_infant[$id][$mange_retrun];
                                         $total_foc = $total_foc + $bt_foc[$id][$mange_retrun];
+                                        $text_hotel = '';
+                                        $text_zone = '';
+                                        if ($cate_transfer[$id] == 1) {
+                                            if (!empty($zone_name[$id][1])) {
+                                                $text_zone = $zone_name[$id][1] != $zone_name[$id][2] ? $zone_name[$id][1] . '<br>(D: ' . $zone_name[$id][2] . ')' : $zone_name[$id][1];
+                                            }
+                                            if (!empty($hotel_name[$id][1])) {
+                                                $text_hotel = $hotel_name[$id][1] != $hotel_name[$id][2] ? $hotel_name[$id][1] . '<br>(D: ' . $hotel_name[$id][2] . ')' : $hotel_name[$id][1];
+                                            } else {
+                                                $text_hotel = $outside[$id][1] != $outside[$id][2] ? $outside[$id][1] . '<br>(D: ' . $outside[$id][2] . ')' : $outside[$id][1];
+                                            }
+                                        } else {
+                                            $text_hotel = 'เดินทางมาเอง';
+                                            $text_zone = 'เดินทางมาเอง';
+                                        }
                                 ?>
                                         <tr>
+                                            <td class="cell-fit"><?php echo $boat_name[$id]; ?></td>
                                             <td class="bg-primary bg-lighten-4"><?php echo $start_pickup[$id][$mange_retrun] != '00:00' ? date('H:i', strtotime($start_pickup[$id][$mange_retrun])) . ' - ' . date('H:i', strtotime($end_pickup[$id][$mange_retrun])) : ''; ?></td>
                                             <td><?php echo $product_name[$id];
                                                 if (!empty($category_name[$id])) {
@@ -300,8 +300,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                                 echo ')'; ?></td>
                                             <td><?php echo $agent_name[$id]; ?></td>
                                             <td class="text-center"><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
-                                            <td style="padding: 5px;"><?php echo ($cate_transfer[$id] == 1) ? (!empty($hotel_name[$id][1])) ? $hotel_name[$id][1] : $outside[$id][1] : 'เดินทางมาเอง'; ?></td>
-                                            <td style="padding: 5px;"><?php echo (!empty($zone_name[$id][1])) ? $zone_name[$id][1] : ''; ?></td>
+                                            <td style="padding: 5px;"><?php echo $text_hotel; ?></td>
+                                            <td style="padding: 5px;"><?php echo $text_zone; ?></td>
                                             <td><?php echo $room_no[$id][$mange_retrun]; ?></td>
                                             <td><?php echo !empty($telephone[$id][0]) ? $cus_name[$id][0] . ' <br>(TEL : ' . $telephone[$id][0] . ') ' : $cus_name[$id][0]; ?></td>
                                             <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
@@ -313,11 +313,11 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                         </tr>
                                     <?php } ?>
                                     <tr>
-                                        <td colspan="14" style="padding: 10px;"><b>Remark : </b><?php echo $mange['note'][$i]; ?></td>
+                                        <td colspan="15" style="padding: 10px;"><b>Remark : </b><?php echo $mange['note'][$i]; ?></td>
                                     </tr>
                                 <?php } ?>
                                 <tr>
-                                    <td colspan="14" class="p-0" style="border: 0;">
+                                    <td colspan="15" class="p-0" style="border: 0;">
                                         <div class="text-center mt-50">
                                             <h4>
                                                 <div class="badge badge-pill badge-light-warning">
@@ -378,6 +378,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                     <table class="tableprint">
                         <thead class="">
                             <tr>
+                                <th>เรือ</th>
                                 <th width="5%">เวลารับ</th>
                                 <!-- <th width="15%">โปรแกรม</th> -->
                                 <th>รถ</th>
@@ -412,6 +413,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                     $total_foc = $total_foc + $foc[$id];
                             ?>
                                     <tr>
+                                        <td class="cell-fit"><?php echo $boat_name[$id]; ?></td>
                                         <td><?php echo !empty($start_pickup[$id][$retrun]) ? date("H:i", strtotime($start_pickup[$id][$retrun])) . ' - ' . date('H:i', strtotime($end_pickup[$id][$mange_retrun])) : '00:00'; ?></td>
                                         <td><?php echo $car_pickup[$id] ?></td>
                                         <td><?php echo $agent_name[$id]; ?></a></td>

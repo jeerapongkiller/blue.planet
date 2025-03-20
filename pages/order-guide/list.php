@@ -237,7 +237,7 @@ function check_in($var)
                                     $hotel_pickup[$order['mange_id']][] = !empty($order['pickup_name']) ? $order['pickup_name'] : $order['outside'];
                                     $zone_pickup[$order['mange_id']][] = !empty($order['zonep_name']) ? $order['zonep_name'] : '';
                                     $hotel_dropoff[$order['mange_id']][] = !empty($order['dropoff_name']) ? $order['dropoff_name'] : $order['outside_dropoff'];
-                                    $zone_dropoff[$order['mange_id']][] = !empty($order['zoned_name']) ? ' (' . $order['zoned_name'] . ')' : '';
+                                    $zone_dropoff[$order['mange_id']][] = !empty($order['zoned_name']) ? $order['zoned_name'] : '';
                                     $bp_note[$order['mange_id']][] = !empty($order['bp_note']) ? $order['bp_note'] : '';
                                     $product_name[$order['mange_id']][] = !empty($order['product_name']) ? $order['product_name'] : '';
                                     $booking_type[$order['mange_id']][] = !empty($order['bp_private_type']) && $order['bp_private_type'] == 2 ? 'Private' : 'Join';
@@ -339,7 +339,7 @@ function check_in($var)
                         <div id="order-guide-image-table" style="background-color: #FFF;">
                             <!-- Header starts -->
                             <div class="card-body pb-0">
-                                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing">
+                                <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing  text-black">
                                     <span class="brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>
                                     <span style="color: #000;">
                                     บริษัท บลู แพลนเน็ต ฮอลิเดย์ จํากัด </br>
@@ -347,7 +347,7 @@ function check_in($var)
                                     </span>
                                 </div>
                                 <div class="text-center card-text">
-                                    <h4 class="font-weight-bolder">ใบไกด์ - Daily Guide Report</h4>
+                                    <h4 class="font-weight-bolder text-black">ใบไกด์ - Daily Guide Report</h4>
                                     <div class="badge badge-pill badge-light-danger">
                                         <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($get_date)); ?></h5>
                                     </div>
@@ -366,12 +366,12 @@ function check_in($var)
                                         }
                                 ?>
                                         <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75 pt-1">
-                                            <div class="col-4 text-left text-bold h4"></div>
-                                            <div class="col-4 text-center text-bold h4"><?php echo $order_boat_name[$i]; ?></div>
+                                            <div class="col-4 text-left h4"></div>
+                                            <div class="col-4 text-center font-weight-bolder h4 text-black"><?php echo $order_boat_name[$i]; ?></div>
                                             <div class="col-4 text-right mb-50"></div>
                                         </div>
 
-                                        <table class="table table-striped text-uppercase table-vouchure-t2">
+                                        <table class="table table-striped text-uppercase table-vouchure-t2 text-black" style="font-size: 16px;">
                                             <thead class="bg-light">
                                                 <tr>
                                                     <th colspan="6">ไกด์ : <?php echo $order_guide_name[$i]; ?></th>
@@ -421,6 +421,19 @@ function check_in($var)
                                                         $total_child = $total_child + array_sum($child[$id]);
                                                         $total_infant = $total_infant + array_sum($infant[$id]);
                                                         $total_foc = $total_foc + array_sum($foc[$id]);
+                                                        $text_hotel = '';
+                                                        $text_zone = '';
+                                                        if ($pickup_type[$mange_id[$i]][$a] == 1) {
+                                                            if (!empty($zone_pickup[$mange_id[$i]][$a])) {
+                                                                $text_zone = $zone_pickup[$mange_id[$i]][$a] != $zone_dropoff[$mange_id[$i]][$a] ? $zone_pickup[$mange_id[$i]][$a] . '<br>(D: ' . $zone_dropoff[$mange_id[$i]][$a] . ')' : $zone_pickup[$mange_id[$i]][$a];
+                                                            }
+                                                            if (!empty($hotel_pickup[$mange_id[$i]][$a])) {
+                                                                $text_hotel = $hotel_pickup[$mange_id[$i]][$a] != $hotel_dropoff[$mange_id[$i]][$a] ? $hotel_pickup[$mange_id[$i]][$a] . '<br>(D: ' . $hotel_dropoff[$mange_id[$i]][$a] . ')' : $hotel_pickup[$mange_id[$i]][$a];
+                                                            }
+                                                        } else {
+                                                            $text_hotel = 'เดินทางมาเอง';
+                                                            $text_zone = 'เดินทางมาเอง';
+                                                        }
                                                 ?>
                                                         <tr>
                                                             <td class="text-center">
@@ -444,8 +457,8 @@ function check_in($var)
                                                             <td><?php echo !empty($telephone[$bo_id[$mange_id[$i]][$a]][0]) ? $cus_name[$bo_id[$mange_id[$i]][$a]][0] . ' <br>(' . $telephone[$bo_id[$mange_id[$i]][$a]][0] . ')' . $nation_name[$bo_id[$mange_id[$i]][$a]][0] : $cus_name[$bo_id[$mange_id[$i]][$a]][0] . ' ' . $nation_name[$bo_id[$mange_id[$i]][$a]][0]; ?></td>
                                                             <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                                             <td><?php echo !empty($voucher_no[$mange_id[$i]][$a]) ? $voucher_no[$mange_id[$i]][$a] : $book_full[$mange_id[$i]][$a]; ?></td>
-                                                            <td style="padding: 5px;"><?php echo ($pickup_type[$mange_id[$i]][$a] == 1) ? (!empty($hotel_pickup[$mange_id[$i]][$a])) ? $hotel_pickup[$mange_id[$i]][$a] : '' : 'เดินทางมาเอง'; ?></td>
-                                                            <td style="padding: 5px;"><?php echo ($pickup_type[$mange_id[$i]][$a] == 1) ? (!empty($zone_pickup[$mange_id[$i]][$a])) ? $zone_pickup[$mange_id[$i]][$a] : '' : 'เดินทางมาเอง'; ?></td>
+                                                            <td style="padding: 5px;" class="font-weight-bolder text-danger"><?php echo $text_hotel; ?></td>
+                                                            <td style="padding: 5px;"><?php echo $text_zone; ?></td>
                                                             <td><?php echo $room_no[$mange_id[$i]][$a]; ?></td>
                                                             <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                                             <td class="text-center"><?php echo array_sum($child[$id]); ?></td>

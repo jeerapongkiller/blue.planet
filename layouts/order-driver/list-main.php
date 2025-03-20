@@ -68,6 +68,23 @@
         .table thead th {
             border-bottom: 1px solid #6E6B7B;
         }
+
+        .wrapword {
+            white-space: -moz-pre-wrap !important;
+            /* Mozilla, since 1999 */
+            white-space: -webkit-pre-wrap;
+            /* Chrome & Safari */
+            white-space: -pre-wrap;
+            /* Opera 4-6 */
+            white-space: -o-pre-wrap;
+            /* Opera 7 */
+            white-space: pre-wrap;
+            /* CSS3 */
+            word-wrap: break-word;
+            /* Internet Explorer 5.5+ */
+            word-break: break-all;
+            white-space: normal;
+        }
     </style>
 </head>
 <!-- END: Head-->

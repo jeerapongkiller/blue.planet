@@ -425,11 +425,12 @@ class Invoice extends DB
         return $data;
     }
 
-    public function checkinvno()
+    public function checkinvno($today)
     {
         $query = "SELECT *,
             MAX(inv_no) as max_inv_no
             FROM invoice_cover 
+            WHERE inv_date = '$today'
         ";
         $statement = $this->connection->prepare($query);
         $statement->execute();

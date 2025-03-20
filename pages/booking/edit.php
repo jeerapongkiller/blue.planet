@@ -95,7 +95,7 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                             <input type="hidden" id="agent_id" name="agent_id" value="<?php echo $agent_id; ?>">
                                             <input type="hidden" id="book_type_id" name="book_type_id" value="<?php echo $book_type; ?>">
                                             <input type="hidden" id="book_full" name="book_full" value="<?php echo $book_full; ?>">
-                                            <input type="hidden" id="open-rates" name="open_rates" value="<?php echo $open_rates; ?>" />
+                                            <input type="hidden" id="open-rates" name="open_rates" value="1" />
                                             <input type="hidden" name="mange_transfer_id" value="<?php echo $mange_transfer_id; ?>" /> <!-- manage transfer booking id -->
                                             <input type="hidden" name="mange_transfer" value="<?php echo $mange_transfer; ?>" /> <!-- manage transfer id -->
                                             <input type="hidden" name="mange_boat_id" value="<?php echo $mange_boat_id; ?>" /> <!-- manage boat booking id -->
@@ -217,15 +217,9 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                             <input type="hidden" id="search_agent" name="search_agent" value="<?php echo !empty($_GET['search_agent']) ? $_GET['search_agent'] : ''; ?>">
                                             <!-- get value default  -->
                                             <input type="hidden" id="prod_id" name="prod_id" value="<?php echo $product_id; ?>">
-                                            <!-- <input type="text" id="cate_id" name="cate_id" value="<?php echo json_encode($rates['category'], true); ?>"> -->
+                                            <input type="hidden" id="cate_id" name="cate_id" value="<?php echo json_encode($rates['category'], true); ?>">
                                             <input type="hidden" id="travel" name="travel" value="<?php echo $travel_date; ?>">
                                             <input type="hidden" id="bpr_array" name="bpr_array" value='<?php echo json_encode($rates); ?>'>
-                                            <input type="hidden" id="cate_id" name="cate_id" value="<?php echo $category_id; ?>">
-                                            <input type="hidden" id="prod_rate_id" name="prod_rate_id" value="<?php echo $prod_rate_id; ?>">
-                                            <input type="hidden" id="rate_ad" value="<?php echo $rates['rate_adult'][0]; ?>">
-                                            <input type="hidden" id="rate_chd" value="<?php echo $rates['rate_child'][0]; ?>">
-                                            <input type="hidden" id="rate_int" value="<?php echo $rates['rate_infant'][0]; ?>">
-                                            <input type="hidden" id="rate_tt" value="<?php echo $rates['rate_total'][0]; ?>">
                                             <div class="row">
                                                 <div class="col-md-3 col-12">
                                                     <div class="form-group">
@@ -250,7 +244,7 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                 <div class="col-md-3 col-12">
                                                     <div class="form-group">
                                                         <label for="category_id">Categorys</label>
-                                                        <select class="form-control select2" id="category_id" name="category_id" onchange="check_category();">
+                                                        <select class="form-control select2" id="category_id" name="category_id[]" multiple="multiple" multiple onchange="check_category();">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -268,76 +262,9 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="row mt-1">
-                                                <div class="form-group col-md-3 col-12">
-                                                    <table>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-group">
-                                                                    <label class="form-label" for="adult">Adult (ผู้ใหญ่)</label>
-                                                                    <input type="text" class="form-control numeral-mask" id="adult" name="adult" oninput="duplicate_pax('adult');" value="<?php echo array_sum($rates['adult']); ?>" />
-                                                                </div>
-                                                            </td>
-                                                            <td class="td-x"><i data-feather='x' class="m-1 font-medium-4"></i></td>
-                                                            <td id="td-adult">
-                                                                <div class="form-group">
-                                                                    <label class="form-label" for="rate_adult">Rate Adult (ราคาผู้ใหญ่)</label>
-                                                                    <input type="text" id="rate_adult" name="rate_adult" class="form-control numeral-mask" oninput="check_rate();" value="<?php echo array_sum(['rate_adult']); ?>">
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                                <div class="form-group col-md-3 col-12">
-                                                    <table>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-group">
-                                                                    <label class="form-label" for="child">Children (เด็ก)</label>
-                                                                    <input type="text" class="form-control numeral-mask" id="child" name="child" oninput="duplicate_pax('child');" value="<?php echo array_sum($rates['child']); ?>" />
-                                                                </div>
-                                                            </td>
-                                                            <td class="td-x"><i data-feather='x' class="m-1 font-medium-4"></i></td>
-                                                            <td id="td-child">
-                                                                <div class="form-group">
-                                                                    <label class="form-label" for="rate_child">Rate Children (ราคาเด็ก)</label>
-                                                                    <input type="text" id="rate_child" name="rate_child" class="form-control numeral-mask" value="<?php echo array_sum($rates['rate_child']); ?>" oninput="check_rate();">
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                                <div class="form-group col-md-3 col-12">
-                                                    <table>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-group">
-                                                                    <label class="form-label" for="infant">Infant (ทารก)</label>
-                                                                    <input type="text" class="form-control numeral-mask" id="infant" name="infant" oninput="duplicate_pax('infant');" value="<?php echo array_sum($rates['infant']); ?>" />
-                                                                </div>
-                                                            </td>
-                                                            <td class="td-x"><i data-feather='x' class="m-1 font-medium-4"></i></td>
-                                                            <td id="td-infant">
-                                                                <div class="form-group">
-                                                                    <label class="form-label" for="rate_infant">Rate Infant (ราคาทารก)</label>
-                                                                    <input type="text" id="rate_infant" name="rate_infant" class="form-control numeral-mask" value="<?php echo array_sum($rates['rate_infant']); ?>" oninput="check_rate();">
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                                <div class="form-group col-md-1 col-12">
-                                                    <table>
-                                                        <tr>
-                                                            <td>
-                                                                <div class="form-group">
-                                                                    <label class="form-label" for="foc">FOC</label>
-                                                                    <input type="text" class="form-control numeral-mask" id="foc" name="foc" oninput="duplicate_pax('infant');" value="<?php echo array_sum($rates['foc']); ?>" />
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
+                                            <div class="row" id="div-thai" hidden>
+                                            </div>
+                                            <div class="row" id="div-foreign" hidden>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12 col-12">
@@ -359,11 +286,10 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                         <input type="text" class="form-control numeral-mask" id="discount" name="discount" value="<?php echo number_format($discount); ?>" />
                                                     </div>
                                                 </div>
-                                                <div class="form-group col-md-4" id="div-total">
-                                                    <div class="form-group">
-                                                        <label class="form-label" for="rate_total">Total Price (Program)</label>
-                                                        <input type="text" class="form-control numeral-mask" id="rate_total" name="rate_total" onchange="check_rate('input');" value="<?php echo number_format($rate_total); ?>" />
-                                                    </div>
+                                                <div class="form-group col-md-2" id="div-total">
+                                                    <label for="rate_total">Total Price</label>
+                                                    <p id="text-total-price"></p>
+                                                    <input type="text" class="form-control numeral-mask" id="rate_total" name="rate_total" value="0" hidden/>
                                                 </div>
                                             </div>
                                         </div>

@@ -29,7 +29,7 @@ if (isset($_POST['action']) && $_POST['action'] == "edit" && isset($_POST['bo_id
     $travel_date = !empty($_POST['travel_date']) ? $_POST['travel_date'] : '0000-00-00';
     $before_travel = !empty($_POST['travel']) ? $_POST['travel'] : '0000-00-00';
     $product_id = !empty($_POST['product_id']) ? $_POST['product_id'] : 0;
-    $category_id = !empty($_POST['category_id']) ? $_POST['category_id'] : 0;
+    // $category_id = !empty($_POST['category_id']) ? $_POST['category_id'] : 0;
     $adult = !empty($_POST['adult']) ? $_POST['adult'] : 0;
     $child = !empty($_POST['child']) ? $_POST['child'] : 0;
     $infant = !empty($_POST['infant']) ? $_POST['infant'] : 0;
@@ -37,47 +37,47 @@ if (isset($_POST['action']) && $_POST['action'] == "edit" && isset($_POST['bo_id
     $bp_note = !empty($_POST['bp_note']) ? $_POST['bp_note'] : '';
     $language_id = !empty($_POST['language_id']) ? $_POST['language_id'] : 0;
     # --- get value booking product rate form --- #
-    $bpr_id = !empty($_POST['bpr_id']) ? $_POST['bpr_id'] : 0;
-    $pror_id = !empty($_POST['pror_id']) ? $_POST['pror_id'] : 0;
-    $rate_adult = !empty($_POST['rate_adult']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_adult']) : 0;
-    $rate_child = !empty($_POST['rate_child']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_child']) : 0;
-    $rate_infant = !empty($_POST['rate_infant']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_infant']) : 0;
-    $rate_total = !empty($_POST['rate_total']) ? preg_replace('(,)', '', $_POST['rate_total']) : 0;
-    # --- check status rates charge --- #
-    if ($book_status == 4 || $book_status == 2) {
-        $rate_total = $rates_charge;
-        $rate_adult = 0;
-        $rate_child = 0;
-        $rate_infant = 0;
-    }
+    // $bpr_id = !empty($_POST['bpr_id']) ? $_POST['bpr_id'] : 0;
+    // $pror_id = !empty($_POST['pror_id']) ? $_POST['pror_id'] : 0;
+    // $rate_adult = !empty($_POST['rate_adult']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_adult']) : 0;
+    // $rate_child = !empty($_POST['rate_child']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_child']) : 0;
+    // $rate_infant = !empty($_POST['rate_infant']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_infant']) : 0;
+    // $rate_total = !empty($_POST['rate_total']) ? preg_replace('(,)', '', $_POST['rate_total']) : 0;
+    // # --- check status rates charge --- #
+    // if ($book_status == 4 || $book_status == 2) {
+    //     $rate_total = $rates_charge;
+    //     $rate_adult = 0;
+    //     $rate_child = 0;
+    //     $rate_infant = 0;
+    // }
     # --- get value booking product rate form (thai) --- #
-    // $bpr_thai_id = !empty($_POST['bpr_thai_id']) ? $_POST['bpr_thai_id'] : 0;
-    // $customer_thai = !empty($_POST['customer_thai']) ? $_POST['customer_thai'] : 0;
-    // $category_id_thai = !empty($_POST['category_id_thai']) ? $_POST['category_id_thai'] : 0;
-    // $pror_id_thai = !empty($_POST['pror_id_thai']) ? $_POST['pror_id_thai'] : 0;
-    // $adult_thai = !empty($_POST['adult_thai']) ? $_POST['adult_thai'] : 0;
-    // $child_thai = !empty($_POST['child_thai']) ? $_POST['child_thai'] : 0;
-    // $infant_thai = !empty($_POST['infant_thai']) ? $_POST['infant_thai'] : 0;
-    // $foc_thai = !empty($_POST['foc_thai']) ? $_POST['foc_thai'] : 0;
-    // $rate_adult_thai = !empty($_POST['rate_adult_thai']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_adult_thai']) : 0;
-    // $rate_child_thai = !empty($_POST['rate_child_thai']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_child_thai']) : 0;
-    // $rate_infant_thai = !empty($_POST['rate_infant_thai']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_infant_thai']) : 0;
-    // $rate_total_thai = !empty($_POST['rate_total_thai']) ? preg_replace('(,)', '', $_POST['rate_total_thai']) : 0;
-    // $private_rates_thai = !empty($_POST['private_rates_thai']) ? preg_replace('(,)', '', $_POST['private_rates_thai']) : 0;
-    // # --- get value booking product rate form (thai) --- #
-    // $bpr_foreign_id = !empty($_POST['bpr_foreign_id']) ? $_POST['bpr_foreign_id'] : 0;
-    // $customer_foreign = !empty($_POST['customer_foreign']) ? $_POST['customer_foreign'] : 0;
-    // $category_id_foreign = !empty($_POST['category_id_foreign']) ? $_POST['category_id_foreign'] : 0;
-    // $pror_id_foreign = !empty($_POST['pror_id_foreign']) ? $_POST['pror_id_foreign'] : 0;
-    // $adult_foreign = !empty($_POST['adult_foreign']) ? $_POST['adult_foreign'] : 0;
-    // $child_foreign = !empty($_POST['child_foreign']) ? $_POST['child_foreign'] : 0;
-    // $infant_foreign = !empty($_POST['infant_foreign']) ? $_POST['infant_foreign'] : 0;
-    // $foc_foreign = !empty($_POST['foc_foreign']) ? $_POST['foc_foreign'] : 0;
-    // $rate_adult_foreign = !empty($_POST['rate_adult_foreign']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_adult_foreign']) : 0;
-    // $rate_child_foreign = !empty($_POST['rate_child_foreign']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_child_foreign']) : 0;
-    // $rate_infant_foreign = !empty($_POST['rate_infant_foreign']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_infant_foreign']) : 0;
-    // $rate_total_foreign = !empty($_POST['rate_total_foreign']) ? preg_replace('(,)', '', $_POST['rate_total_foreign']) : 0;
-    // $private_rates_foreign = !empty($_POST['private_rates_foreign']) ? preg_replace('(,)', '', $_POST['private_rates_foreign']) : 0;
+    $bpr_thai_id = !empty($_POST['bpr_thai_id']) ? $_POST['bpr_thai_id'] : 0;
+    $customer_thai = !empty($_POST['customer_thai']) ? $_POST['customer_thai'] : 0;
+    $category_id_thai = !empty($_POST['category_id_thai']) ? $_POST['category_id_thai'] : 0;
+    $pror_id_thai = !empty($_POST['pror_id_thai']) ? $_POST['pror_id_thai'] : 0;
+    $adult_thai = !empty($_POST['adult_thai']) ? $_POST['adult_thai'] : 0;
+    $child_thai = !empty($_POST['child_thai']) ? $_POST['child_thai'] : 0;
+    $infant_thai = !empty($_POST['infant_thai']) ? $_POST['infant_thai'] : 0;
+    $foc_thai = !empty($_POST['foc_thai']) ? $_POST['foc_thai'] : 0;
+    $rate_adult_thai = !empty($_POST['rate_adult_thai']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_adult_thai']) : 0;
+    $rate_child_thai = !empty($_POST['rate_child_thai']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_child_thai']) : 0;
+    $rate_infant_thai = !empty($_POST['rate_infant_thai']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_infant_thai']) : 0;
+    $rate_total_thai = !empty($_POST['rate_total_thai']) ? preg_replace('(,)', '', $_POST['rate_total_thai']) : 0;
+    $private_rates_thai = !empty($_POST['private_rates_thai']) ? preg_replace('(,)', '', $_POST['private_rates_thai']) : 0;
+    # --- get value booking product rate form (thai) --- #
+    $bpr_foreign_id = !empty($_POST['bpr_foreign_id']) ? $_POST['bpr_foreign_id'] : 0;
+    $customer_foreign = !empty($_POST['customer_foreign']) ? $_POST['customer_foreign'] : 0;
+    $category_id_foreign = !empty($_POST['category_id_foreign']) ? $_POST['category_id_foreign'] : 0;
+    $pror_id_foreign = !empty($_POST['pror_id_foreign']) ? $_POST['pror_id_foreign'] : 0;
+    $adult_foreign = !empty($_POST['adult_foreign']) ? $_POST['adult_foreign'] : 0;
+    $child_foreign = !empty($_POST['child_foreign']) ? $_POST['child_foreign'] : 0;
+    $infant_foreign = !empty($_POST['infant_foreign']) ? $_POST['infant_foreign'] : 0;
+    $foc_foreign = !empty($_POST['foc_foreign']) ? $_POST['foc_foreign'] : 0;
+    $rate_adult_foreign = !empty($_POST['rate_adult_foreign']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_adult_foreign']) : 0;
+    $rate_child_foreign = !empty($_POST['rate_child_foreign']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_child_foreign']) : 0;
+    $rate_infant_foreign = !empty($_POST['rate_infant_foreign']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_infant_foreign']) : 0;
+    $rate_total_foreign = !empty($_POST['rate_total_foreign']) ? preg_replace('(,)', '', $_POST['rate_total_foreign']) : 0;
+    $private_rates_foreign = !empty($_POST['private_rates_foreign']) ? preg_replace('(,)', '', $_POST['private_rates_foreign']) : 0;
     # --- get value customer form --- #
     $cus_id = !empty($_POST['cus_id']) ? $_POST['cus_id'] : 0;
     $cus_name = !empty($_POST['cus_name']) ? $_POST['cus_name'] : '';
@@ -142,11 +142,28 @@ if (isset($_POST['action']) && $_POST['action'] == "edit" && isset($_POST['bo_id
     # --- update booking product ---- #
     $response = ($response > 0 && $response != false) ? $bookObj->update_booking_product($bp_id, $travel_date, $bp_note, $language_id, $product_id) : false; // update data booking product
 
-    if ($bpr_id == 0) {
-        $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult, $child, $infant, $foc, $rate_adult, $rate_child, $rate_infant, $rate_total, 0, $category_id, $bp_id, $pror_id) : false; // insert booking products rate
-    } else {
-        $response = ($response > 0 && $response != false) ? $bookObj->update_booking_rate($bpr_id, $adult, $child, $infant, $foc, $rate_adult, $rate_child, $rate_infant, 0, $rate_total, $pror_id, $category_id) : false; // update data booking product rate
+    # --- update booking product rates thai ---- #
+    if ($customer_thai == 1 && $bpr_thai_id > 0) {
+        $response = ($response > 0 && $response != false) ? $bookObj->update_booking_rate($bpr_thai_id, $adult_thai, $child_thai, $infant_thai, $foc_thai, $rate_adult_thai, $rate_child_thai, $rate_infant_thai, $private_rates_thai, $rate_total_thai, $pror_id_thai, $category_id_thai) : false; // update data booking product rate
+    } elseif ($customer_thai == 0 && $bpr_thai_id > 0) {
+        $response = ($response > 0 && $response != false) ? $bookObj->delete_booking_rate($bpr_thai_id) : false; // delete data booking product rate
+    } elseif ($customer_thai == 1 && $bpr_thai_id == 0) {
+        $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult_thai, $child_thai, $infant_thai, $foc_thai, $rate_adult_thai, $rate_child_thai, $rate_infant_thai, $private_rates_thai, $rate_total_thai, $category_id_thai, $bp_id, $pror_id_thai) : $response; // insert booking products rate
     }
+    # --- update booking product rates foreign ---- #
+    if ($customer_foreign == 1 && $bpr_foreign_id > 0) {
+        $response = ($response > 0 && $response != false) ? $bookObj->update_booking_rate($bpr_foreign_id, $adult_foreign, $child_foreign, $infant_foreign, $foc_foreign, $rate_adult_foreign, $rate_child_foreign, $rate_infant_foreign, $private_rates_foreign, $rate_total_foreign, $pror_id_foreign, $category_id_foreign) : false; // update data booking product rate
+    } elseif ($customer_foreign == 0 && $bpr_foreign_id > 0) {
+        $response = ($response > 0 && $response != false) ? $bookObj->delete_booking_rate($bpr_foreign_id) : false; // delete data booking product rate
+    } elseif ($customer_foreign == 1 && $bpr_foreign_id == 0) {
+        $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult_foreign, $child_foreign, $infant_foreign, $foc_foreign, $rate_adult_foreign, $rate_child_foreign, $rate_infant_foreign, $private_rates_foreign, $rate_total_foreign, $category_id_foreign, $bp_id, $pror_id_foreign) : $response; // insert booking products rate
+    }
+
+    // if ($bpr_id == 0) {
+    //     $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult, $child, $infant, $foc, $rate_adult, $rate_child, $rate_infant, $rate_total, 0, $category_id, $bp_id, $pror_id) : false; // insert booking products rate
+    // } else {
+    //     $response = ($response > 0 && $response != false) ? $bookObj->update_booking_rate($bpr_id, $adult, $child, $infant, $foc, $rate_adult, $rate_child, $rate_infant, 0, $rate_total, $pror_id, $category_id) : false; // update data booking product rate
+    // }
 
     # --- update customer ---- #
     // if ($cus_id > 0) {
@@ -162,13 +179,13 @@ if (isset($_POST['action']) && $_POST['action'] == "edit" && isset($_POST['bo_id
                 $response = ($response > 0 && $response != false && !empty($customers[$i]['cus_name'])) ? $bookObj->insert_customer($customers[$i]['cus_name'], $customers[$i]['cus_birth_date'], $customers[$i]['id_card'], $customers[$i]['cus_telephone'], $address = '', !empty($customers[$i]['cus_age']) ? $customers[$i]['cus_age'] : 0, 0, $email = '', !empty($customers[$i]['head']) ? $customers[$i]['head'] : 0, $bo_id, $customers[$i]['cus_nationality_id']) : $response; // insert data customers 
             } elseif ($customers[$i]['cus_id'] > 0 && !empty($customers[$i]['cus_name'])) {
                 $response = ($response > 0 && $response != false) ? $bookObj->update_customer($customers[$i]['cus_id'], $customers[$i]['cus_name'], $customers[$i]['cus_birth_date'], $customers[$i]['id_card'], $customers[$i]['cus_telephone'], !empty($customers[$i]['cus_age']) ? $customers[$i]['cus_age'] : 0, $customers[$i]['head'], $customers[$i]['cus_nationality_id']) : $response; // update data customers
-            } 
+            }
             // elseif ($customers[$i]['cus_id'] > 0 && empty($customers[$i]['cus_name'])) {
             //     $response = ($response > 0 && $response != false) ? $bookObj->delete_customer($customers[$i]['cus_id']) : $response; // delete data customers 
             // }
         }
         if (!empty($before_cus_id)) {
-            for ($i=0; $i < count($before_cus_id); $i++) { 
+            for ($i = 0; $i < count($before_cus_id); $i++) {
                 if (in_array($before_cus_id[$i], $cus_id) == false) {
                     $response = ($response > 0 && $response != false) ? $bookObj->delete_customer($before_cus_id[$i]) : $response; // delete data customers 
                 }

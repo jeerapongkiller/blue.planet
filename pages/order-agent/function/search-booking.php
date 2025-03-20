@@ -88,7 +88,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body" id="order-agent-image-table" style="background-color: #fff;">
+    <div class="modal-body text-black" id="order-agent-image-table" style="background-color: #fff;">
 
         <div class="row mb-50">
             <span class="col-6 brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>
@@ -99,7 +99,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
         </div>
 
         <div class="text-center mt-1 mb-1">
-            <h4 class="font-weight-bolder">Re Confirm Agent</h4>
+            <h4 class="font-weight-bolder text-black">Re Confirm Agent</h4>
             <h4>
                 <div class="badge badge-pill badge-light-warning">
                     <b class="text-danger"><?php echo $agent_name[0]; ?></b> <span class="text-danger">(<?php echo date('j F Y', strtotime($travel_date)); ?>)</span>
@@ -107,7 +107,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
             </h4>
         </div>
 
-        <table class="table table-striped text-uppercase table-vouchure-t2">
+        <table class="table table-striped text-uppercase table-vouchure-t2  text-black">
             <thead class="bg-light">
                 <tr>
                     <th width="7%">Time</th>

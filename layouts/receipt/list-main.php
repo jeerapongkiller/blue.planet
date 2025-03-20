@@ -163,7 +163,12 @@
                                         confirmButton: 'btn btn-success'
                                     }
                                 }).then(function() {
-                                    location.reload(); // refresh page
+                                    var tab = document.getElementsByClassName('tab-pane active')[0].id;
+                                    var travel_date = tab != 'custom' ? tab == 'today' ? '<?php echo $today; ?>' : '<?php echo $tomorrow; ?>' : document.getElementById('travel_date').value;
+                                    search_start_date(tab, travel_date);
+                                    $('#modal-add-receipt').modal('hide');
+                                    search_start_date('today', '<?php echo $today; ?>');
+                                    search_start_date('tomorrow', '<?php echo $tomorrow; ?>');
                                 });
                             } else {
                                 Swal.fire({
@@ -309,7 +314,12 @@
                                         icon: "success",
                                     }).then(function(isConfirm) {
                                         if (isConfirm) {
-                                            location.reload(); // refresh page
+                                            var tab = document.getElementsByClassName('tab-pane active')[0].id;
+                                            var travel_date = tab != 'custom' ? tab == 'today' ? '<?php echo $today; ?>' : '<?php echo $tomorrow; ?>' : document.getElementById('travel_date').value;
+                                            search_start_date(tab, travel_date);
+                                            $('#modal-add-receipt').modal('hide');
+                                            search_start_date('today', '<?php echo $today; ?>');
+                                            search_start_date('tomorrow', '<?php echo $tomorrow; ?>');
                                         }
                                     });
                                 } else {
@@ -344,7 +354,11 @@
                 data: formData,
                 success: function(response) {
                     if (response != 'false') {
-                        $('#' + tabs).html(response);
+                        if (tabs == 'custom') {
+                            $('#div-invoice-custom').html(response);
+                        } else {
+                            $('#' + tabs).html(response);
+                        }
                     }
                 }
             });
@@ -447,8 +461,8 @@
                         for (let y = 0; y < res_rates[id].id.length; y++) {
                             if (y == 0) {
                                 // var customer = res_rates[id].customer[y] == 1 ? ' (Thai)' : ' (Foreign)';
-                                console.log(res[id].status + ' | ' + res_rates[id].category_name[y]);
-                                var customer = res[id].status == 2 || res[id].status == 4 ? ' (' + res_rates[id].category_name[y] + ') '  + res[id].status_name : ' (' + res_rates[id].category_name[y] + ')';
+                                // console.log(res[id].status + ' | ' + res_rates[id].category_name[y]);
+                                var customer = res[id].status == 2 || res[id].status == 4 ? ' (' + res_rates[id].category_name[y] + ') ' + res[id].status_name : ' (' + res_rates[id].category_name[y] + ')';
                                 text_html += '<tr>' +
                                     '<td class="text-center">' + Number(no++) + '</td>' +
                                     '<td class="text-center" rowspan="' + rowspan + '"> ' + res[id].text_date + ' </td>' +

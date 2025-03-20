@@ -37,7 +37,7 @@ if ($bookings[0]['id'] > 0) {
     $bp_id = !empty($bookings[0]['bp_id']) ? $bookings[0]['bp_id'] : 0;
     $product_id = !empty($bookings[0]['product_id']) ? $bookings[0]['product_id'] : 0;
     $product_name = !empty($bookings[0]['product_name']) ? $bookings[0]['product_name'] : 0;
-    $category_id = !empty($bookings[0]['category_id']) ? $bookings[0]['category_id'] : 0;
+    // $category_id = !empty($bookings[0]['category_id']) ? $bookings[0]['category_id'] : 0;
     $category_name = !empty($bookings[0]['category_name']) ? $bookings[0]['category_name'] : 0;
     $travel_date = !empty($bookings[0]['travel_date']) ? $bookings[0]['travel_date'] : '0000-00-00';
     $prod_rate_id = !empty($bookings[0]['pror_id']) ? $bookings[0]['pror_id'] : 0;
@@ -103,7 +103,7 @@ if ($bookings[0]['id'] > 0) {
         if ((in_array($booking['bpr_id'], $first_bpr) == false) && !empty($booking['bpr_id'])) {
             $first_bpr[] = $booking['bpr_id'];
             $rates['id'][] = !empty($booking['bpr_id']) ? $booking['bpr_id'] : 0;
-            // $rates['category'][] = !empty($booking['category_id']) ? $booking['category_id'] : 0;
+            $rates['category'][] = !empty($booking['category_id']) ? $booking['category_id'] : 0;
             $rates['name'][] = !empty($booking['category_name']) ? $booking['category_name'] : 0;
             $rates['customer'][] = !empty($booking['category_cus']) ? $booking['category_cus'] : 0;
             $rates['adult'][] = !empty($booking['bpr_adult']) ? $booking['bpr_adult'] : 0;
@@ -171,8 +171,8 @@ if ($bookings[0]['id'] > 0) {
         }
         $payment_name = !empty($booking['bopay_name']) ? $booking['bopay_name'] : '';
     }
-    $total_sum = ($book_type > 0) ? ($book_type == 1) ?  array_sum($rates['rate_total']) + $total_product + $total_sum : array_sum($rates['rate_private']) + $total_product + $total_sum : $total_product + $total_sum;
-    $total_product = ($book_type > 0) ? ($book_type == 1) ?  array_sum($rates['rate_total']) + $total_product : array_sum($rates['rate_private']) + $total_product : $total_product;
+    $total_sum = (!empty($first_bpr)) ? ($book_type > 0) ? ($book_type == 1) ?  array_sum($rates['rate_total']) + $total_product + $total_sum : array_sum($rates['rate_private']) + $total_product + $total_sum : $total_product + $total_sum : 0;
+    $total_product = (!empty($first_bpr)) ? ($book_type > 0) ? ($book_type == 1) ?  array_sum($rates['rate_total']) + $total_product : array_sum($rates['rate_private']) + $total_product : $total_product : 0;
     $product_total = ($adult * $rate_adult) + ($child * $rate_child) + ($infant * $rate_infant);
     $payment_total = !empty($cot) ? $cot : 0;
     $transfer_total = ($transfer_type == 1) ? ($bt_adult * $btr_rate_adult) + ($bt_child * $btr_rate_child) + ($bt_infant * $btr_rate_infant) : $btr_rate_private;
@@ -181,7 +181,7 @@ if ($bookings[0]['id'] > 0) {
 if (!empty($bookings[0]['bp_id'])) {
 ?>
     <div id="div-inc-print" style="background-color: #fff;">
-        <div class="content-body invoice-print">
+        <div class="content-body invoice-print text-black">
             <div class="p-3">
                 <div class="text-center">
                     <!-- <img src="https://phuketsolution.com/demo/vuexy/img/logo-sawanu.webp" alt="logo" width="255">  -->
@@ -190,7 +190,7 @@ if (!empty($bookings[0]['bp_id'])) {
                 <div class="alert alert-<?php echo ($book_status == 3 || $book_status == 4) ? 'danger' : 'warning'; ?> mb-2 mt-2" role="alert">
                     <h6 class="alert-heading text-center text-uppercase p-1">Booking <?php echo ($book_status == 3 || $book_status == 4) ? 'Canceled' : 'Comfirmation'; ?></h6>
                 </div>
-                <table class="mb-3">
+                <table class="mb-3 text-black">
                     <tbody>
                         <tr>
                             <td class="pr-3"><b>Booking Number: </b></td>
@@ -223,7 +223,7 @@ if (!empty($bookings[0]['bp_id'])) {
                     </tbody>
                 </table>
 
-                <table class="table table-bordered mb-2">
+                <table class="table table-bordered mb-2 text-black">
                     <tr>
                         <th rowspan="2"></th>
                         <th colspan="2" class="text-center">Adult </th>
@@ -306,7 +306,7 @@ if (!empty($bookings[0]['bp_id'])) {
                     </tbody>
                 </table>
 
-                <table class="table mb-3">
+                <table class="table mb-3 text-black">
                     <thead>
                         <tr>
                             <th class="py-1"><span class="pr-1">Payment:</span> Pay before travel</th>
@@ -385,4 +385,5 @@ if (!empty($bookings[0]['bp_id'])) {
         </div>
 
     </div>
+    <input type="hidden" id="booking_full" value="<?php echo $book_full; ?>">
 <?php  } ?>

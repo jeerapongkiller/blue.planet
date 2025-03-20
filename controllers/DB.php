@@ -1,15 +1,15 @@
 <?php
 class DB
 {
-    private $host = 'ftp.shambhala.work';
-    // private $host = 'localhost';
-    private $username = 'uodaxwdlggpfl';
-    private $password = 'ytb8[1{|533A';
-    private $database = 'dbggvyzddr7xtk';
-    // private $host = 'localhost';
-    // private $username = 'root';
-    // private $password = '';
-    // private $database = 'blue.planet';
+    // private $host = 'ftp.shambhala.work';
+    // // private $host = 'localhost';
+    // private $username = 'uodaxwdlggpfl';
+    // private $password = 'ytb8[1{|533A';
+    // private $database = 'dbggvyzddr7xtk';
+    private $host = 'localhost';
+    private $username = 'root';
+    private $password = '';
+    private $database = 'blueplanet';
     protected $connection;
 
     public function __construct()
