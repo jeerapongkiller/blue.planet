@@ -4,8 +4,9 @@ include_once('../../../controllers/Order.php');
 
 $manageObj = new Order();
 
-if (isset($_POST['action']) && $_POST['action'] == "create" && (!empty($_POST['car']) || !empty($_POST['driver']))) {
+if (isset($_POST['action']) && $_POST['action'] == "create" && (!empty($_POST['car']) || !empty($_POST['driver']) && !empty($_POST['island_id']))) {
     // get value from ajax
+    $island_id = !empty($_POST['island_id']) ? $_POST['island_id'] : 0;
     $car = !empty($_POST['car']) ? $_POST['car'] : 0;
     $seat = !empty($_POST['seat']) ? $_POST['seat'] : 0;
     $driver = !empty($_POST['driver'] && $_POST['driver'] != 'outside') ? $_POST['driver'] : 0;
@@ -25,7 +26,7 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && (!empty($_POST['c
         $driver = $manageObj->insert_driver($_POST['outside_driver'], $telephone, $license, $seat);
     }
 
-    $manage_id = $manageObj->insert_manage_transfer($outside_driver, $car, $seat, $driver, $license, $telephone, $travel_date, $note, $pickup, $dropoff);
+    $manage_id = $manageObj->insert_manage_transfer($outside_driver, $island_id, $car, $seat, $driver, $license, $telephone, $travel_date, $note, $pickup, $dropoff);
 
     $response['travel_date'] = $travel_date;
     $response['retrun'] = ($pickup > 0) ? 1 : 2;

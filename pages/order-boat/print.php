@@ -12,9 +12,9 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
     $search_status = $_GET['search_status'] != "" ? $_GET['search_status'] : 'all';
     $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';
     $search_product = $_GET['search_product'] != "" ? $_GET['search_product'] : 'all';
+    $search_island = $_GET['search_island'] != "" ? $_GET['search_island'] : 'all';
     $search_voucher_no = $_GET['search_voucher_no'] != "" ? $_GET['search_voucher_no'] : '';
     $refcode = $_GET['refcode'] != "" ? $_GET['refcode'] : '';
-    $name = $_GET['name'] != "" ? $_GET['name'] : '';
     # --- show list boats booking --- #
     $first_booking = array();
     $first_prod = array();
@@ -25,7 +25,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
     $first_bpr = array();
     $first_bo = [];
     $first_trans = [];
-    $bookings = $manageObj->showlistboats('list', 0, $date_travel, $search_boat, 'all', $search_status, $search_agent, $search_product, $search_voucher_no, $refcode, $name, '');
+    $bookings = $manageObj->showlistboats('list', 0, $date_travel, $search_boat, 'all', $search_status, $search_agent, $search_island, $search_product, $search_voucher_no, $refcode, '');
     # --- Check products --- #
     if (!empty($bookings)) {
         foreach ($bookings as $booking) {
@@ -73,6 +73,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                 $boat_name[$booking['id']] = !empty($booking['boat_name']) ? $booking['boat_name'] : '';
                 $color_id[$booking['id']] = !empty($booking['color_id']) ? $booking['color_id'] : '';
                 $language[$booking['id']] = !empty(!empty($booking['lang_name'])) ? $booking['lang_name'] : '';
+                $darken[$booking['id']] = !empty($booking['island_darken']) ? $booking['island_darken'] : '';
                 # --- array programe --- #
                 $check_mange[$booking['product_id']][] = !empty($booking['mange_id']) ? $booking['mange_id'] : 0;
                 $prod_adult[$booking['product_id']][] = !empty($booking['bpr_adult']) && $booking['mange_id'] == 0 ? $booking['bpr_adult'] : 0;
@@ -197,7 +198,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                     <span class="col-6 brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>
                     <span class="col-6 text-right" style="color: #000;">
                         บริษัท บลู แพลนเน็ต ฮอลิเดย์ จํากัด </br>
-                        124/343 หมู่ที่ 5 ตำบลรัษฎา อําเภอเมือง จังหวัดภูเก็ต 83000
+                        124/343 หมู่ที่ 5 ตำบลรัษฎา อําเภอเมือง จังหวัดภูเก็ต 83000 </br>
+                        <span id="span-time"></span>
                     </span>
                 </div>
                 <div class="text-center card-text">
@@ -220,7 +222,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                     </div>
 
                     <table class="tableprint">
-                        <thead class="">
+                        <thead <?php echo !empty($darken[$book['id'][$mange['id'][$i]][0]]) ? 'bgcolor="#' . $darken[$book['id'][$mange['id'][$i]][0]] . '" style="color: #FFF"' : 'class="bg-light"'; ?>>
                             <tr>
                                 <td colspan="6">ไกด์ : <?php echo $mange['guide_name'][$i]; ?></td>
                                 <td colspan="6">เคาน์เตอร์ : <?php echo $mange['counter'][$i]; ?></td>
@@ -340,7 +342,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
     $first_bomanage = array();
     $first_bo = [];
     $first_trans = [];
-    $bookings = $manageObj->showlistboats('list', 0, $travel_date, 'all', 'all', 'all', 'all', 'all', '', '', '', '');
+    $bookings = $manageObj->showlistboats('list', 0, $travel_date, 'all', 'all', 'all', 'all', 'all', 'all', '', '', '');
     if (!empty($bookings)) {
         foreach ($bookings as $booking) {
             if ($booking['mange_id'] == $manage_id) {
@@ -537,7 +539,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
 
     # --- show list boats booking --- #
     $first_cus = array();
-    $bookings = $manageObj->showlistboats('customer', $manage_id, $travel_date, 'all', 'all', 'all', 'all', 'all', '', '', '', '');
+    $bookings = $manageObj->showlistboats('customer', $manage_id, $travel_date, 'all', 'all', 'all', 'all',  'all', 'all', '', '', '');
     if (!empty($bookings)) {
         foreach ($bookings as $booking) {
             if ($booking['mange_id'] == $manage_id) {
@@ -570,9 +572,9 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                     </span>
                 </div>
                 <div class="text-center card-text">
-                    <h4 class="font-weight-bolder">ใบจัดเรือ</h4>
+                    <h4 class="font-weight-bolder text-black">ใบจัดเรือ</h4>
                     <div class="badge badge-pill badge-light-danger">
-                        <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($travel_date)); ?></h5>
+                        <h4 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($travel_date)); ?></h4>
                     </div>
                 </div>
             </div>
@@ -583,18 +585,20 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
             ?>
             <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75 pt-1">
                 <div class="col-4 text-left text-bold h4"></div>
-                <div class="col-4 text-center text-bold h1"><?php echo $boat_name; ?></div>
-                <div class="col-4 text-right mb-50"></div>
+                <div class="col-4 text-center text-bold h1 text-black"><?php echo $boat_name; ?></div>
+                <div class="col-4 text-right mb-50"><span id="span-time"></span></div>
             </div>
 
             <table class="tableprint">
-                <thead class="">
+                <thead bgcolor="#DE2400" style="color: #FFF">
                     <tr>
-                        <th class="text-center" width="15%">A/C/I/F</th>
-                        <th class="text-center" width="45%">ชื่อ</th>
-                        <th class="text-center" width="20%">V/C</th>
-                        <th class="text-center" width="10%">สัญชาติ</th>
-                        <th class="text-center" width="10%">Birth Date</th>
+                        <th class="text-center font-size-20" width="5%">ลำดับ</th>
+                        <th class="text-center font-size-20" width="20%">ชื่อ</th>
+                        <th class="text-center font-size-20" width="15%">V/C</th>
+                        <th class="text-center font-size-20" width="15%">เซ็นชื่อ</th>
+                        <th class="text-center font-size-20" width="15%">ID Passport/ ID Card</th>
+                        <th class="text-center font-size-20" width="10%">สัญชาติ</th>
+                        <th class="text-center font-size-20" width="10%">Birth Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -604,6 +608,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                     $total_child = 0;
                     $total_infant = 0;
                     $total_foc = 0;
+                    $no = 1;
                     if (!empty($cus_id)) {
                         for ($i = 0; $i < count($cus_id); $i++) {
                             $total_adult = $cus_age[$i] == 1 ? $total_adult + 1 : $total_adult;
@@ -614,13 +619,15 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                             $class_tr = ($i % 2 == 1) ? 'table-active' : '';
                     ?>
                             <tr class="<?php echo $class_tr; ?>">
-                                <td class="text-center" width="15%"><?php echo $age_name[$i]; ?></td>
-                                <td width="45%"><?php echo $cus_name[$i]; ?></td>
-                                <td class="text-center" width="20%"><?php echo $voucher_no_agent[$i]; ?></td>
-                                <td class="text-center" width="10%"><?php echo $nation_name[$i]; ?></td>
-                                <td class="text-center" width="10%"><?php echo $birth_date[$i]; ?></td>
+                                <td class="text-center font-size-25"><?php echo $no; ?></td>
+                                <td class="font-size-25"><?php echo $cus_name[$i]; ?></td>
+                                <td class="font-size-25"><?php echo $voucher_no_agent[$i]; ?></td>
+                                <td class="font-size-25"></td>
+                                <td class="text-center font-size-25"><?php echo $passport[$i]; ?></td>
+                                <td class="text-center font-size-25"><?php echo $nation_name[$i]; ?></td>
+                                <td class="text-center font-size-25"><?php echo $birth_date[$i]; ?></td>
                             </tr>
-                    <?php }
+                    <?php $no++; }
                     } ?>
                 </tbody>
             </table>
@@ -638,7 +645,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
             </div>
 
 
-            <input type="hidden" id="name_img" name="name_img" value="<?php echo 'ใบจัดเรือ - ' . date('j F Y', strtotime($date_travel)); ?>">
+            <input type="hidden" id="name_img" name="name_img" value="<?php echo 'ใบจัดเรือ - ' . date('j F Y', strtotime($travel_date)); ?>">
             <!-- Body ends -->
         </div>
 <?php

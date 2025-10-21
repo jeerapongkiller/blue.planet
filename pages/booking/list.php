@@ -19,7 +19,7 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-9 col-12 mb-2">
+            <div class="content-header-left col-md-9 col-7 mb-2">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
                         <h2 class="content-header-title float-left mb-0">Booking</h2>
@@ -31,7 +31,7 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                     </div>
                 </div>
             </div>
-            <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
+            <div class="content-header-right text-md-right col-md-3 col-5">
                 <div class="form-group breadcrumb-right">
                     <button class="btn btn-success" data-toggle="modal" data-target="#modal-form-booking" onclick="search_program();"><i data-feather='plus'></i> New Booking</button>
                 </div>
@@ -105,7 +105,7 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                             <div class="col-md-2 col-12">
                                 <div class="form-group">
                                     <label class="form-label" for="search_travel">Travel Date</label>
-                                    <input type="text" class="form-control" id="search_travel" name="search_travel" />
+                                    <input type="text" class="form-control" id="search_travel" name="search_travel" value="<?php echo $today; ?>"/>
                                 </div>
                             </div>
                             <div class="col-md-2 col-12">
@@ -229,7 +229,7 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                     $count_confirm = 0;
                     $count_noshow = 0;
                     $count_cancel = 0;
-                    $bookings = $bookObj->showlist($_SESSION["supplier"]["id"], 'all', 'all', 'all', 'all', $tomorrow, '', '', '');
+                    $bookings = $bookObj->showlist($_SESSION["supplier"]["id"], 'all', 'all', 'all', 'all', $today, '', '', '');
                     # --- Check products --- #
                     if (!empty($bookings)) {
                         foreach ($bookings as $booking) {
@@ -528,7 +528,7 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                             <div class="form-group" id="frm-agent">
                                                 <label for="agent">Agent</label>
                                                 <select class="form-control select2" id="agent" name="agent" onchange="search_program();">
-                                                    <option value="0">Please Select Agent...</option>
+                                                    <option value="">Please Select Agent...</option>
                                                     <option value="outside">กรอกข้อมูลเพิ่มเติม</option>
                                                     <?php
                                                     $agents = $bookObj->show_agent();
@@ -606,7 +606,7 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                     <div class="row" id="div-price">
                                         <div class="form-group col-xl-2 col-md-4 col-12">
                                             <label for="cot">Cash on tour</label>
-                                            <input type="text numeral-mask" class="form-control" id="cot" name="cot" value="0" />
+                                            <input type="text" class="form-control numeral-mask" id="cot" name="cot" value="0" />
                                         </div>
                                         <div class="form-group col-xl-2 col-md-4 col-12" id="div-total">
                                             <label for="rate_total">Total Price</label>
@@ -948,7 +948,8 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                     </div>
                                 </div>
                                 <div class="modal-footer d-flex justify-content-between">
-                                    <a href="./?pages=booking/create" type="button" id="btn-more" class="btn btn-flat-secondary waves-effect btn-page-block-spinner">เพิ่มเติม</a>
+                                    <!-- <a href="./?pages=booking/create" type="button" id="btn-more" class="btn btn-flat-secondary waves-effect btn-page-block-spinner">เพิ่มเติม</a> -->
+                                     <span></span>
                                     <button type="submit" class="btn btn-primary waves-effect waves-float waves-light btn-page-block-spinner">Submit</button>
                                 </div>
                             </form>

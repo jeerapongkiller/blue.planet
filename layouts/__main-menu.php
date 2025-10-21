@@ -11,15 +11,14 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            
-            <?php if (in_array(1, $_SESSION["supplier"]["permission"]) == true) { ?>
+           
                 <li class="navigation-header "><span data-i18n="Booking">Booking</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item  <?php echo ((strstr($_GET['pages'], "booking/")) && (strstr($_GET['pages'], "report-booking/") == false)) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=booking/list"><i data-feather='briefcase'></i><span class="menu-title text-truncate" data-i18n="booking">Booking</span></a>
                 </li>
-            <?php } ?>
+ 
 
-            <?php if (in_array(3, $_SESSION["supplier"]["permission"]) == true) { ?>
+           
                 <li class="navigation-header "><span data-i18n="mangement">การจัดการ</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item "><a class="d-flex align-items-center" href="#"><i data-feather='briefcase'></i><span class="menu-title text-truncate" data-i18n="order-driver">จัดรถ</span></a>
                     <ul class="menu-content">
@@ -39,9 +38,9 @@
                         </li>
                     </ul>
                 </li>
-            <?php } ?>
+        
 
-            <?php if (in_array(4, $_SESSION["supplier"]["permission"]) == true) { ?>
+         
                 <li class="navigation-header"><span data-i18n="order">ใบงาน</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item <?php echo ((strstr($_GET['pages'], "order-guide/"))) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=order-guide/list"><i data-feather='briefcase'></i><span class="menu-title text-truncate" data-i18n="order-guide">ใบไกด์</span></a>
@@ -52,9 +51,9 @@
                 <li class="nav-item  <?php echo ((strstr($_GET['pages'], "order-agent/"))) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=order-agent/list"><i data-feather='briefcase'></i><span class="menu-title text-truncate" data-i18n="confirm-agent">RE Confirm Agent</span></a>
                 </li>
-            <?php } ?>
+          
 
-            <?php if (in_array(5, $_SESSION["supplier"]["permission"]) == true) { ?>
+          
                 <li class="navigation-header "><span data-i18n="accounting">Accounting</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item "><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="invoice">Invoice</span></a>
                     <ul class="menu-content">
@@ -72,30 +71,30 @@
                         </li>
                     </ul>
                 </li>
-            <?php } ?>
+        
 
-            <?php if (in_array(6, $_SESSION["supplier"]["permission"]) == true) { ?>
+       
                 <li class="navigation-header"><span data-i18n="Report">Report</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item <?php echo (strstr($_GET['pages'], "report/")) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=report/list"><i data-feather='file-text'></i><span class="menu-title text-truncate" data-i18n="Report">Report</span></a>
                 </li>
-            <?php } ?>
+   
 
-            <?php if (in_array(7, $_SESSION["supplier"]["permission"]) == true) { ?>
+         
                 <li class="navigation-header "><span data-i18n="Product">Programe</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item  <?php echo (strstr($_GET['pages'], "tour/")) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=tour/list"><i data-feather='package'></i><span class="menu-title text-truncate" data-i18n="Tour">Programe</span></a>
                 </li>
-            <?php } ?>
+       
 
-            <?php if (in_array(8, $_SESSION["supplier"]["permission"]) == true) { ?>
+        
                 <li class="navigation-header"><span data-i18n="Supplier &amp; Agent">Supplier &amp; Agent</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item <?php echo (strstr($_GET['pages'], "agent/") && (strstr($_GET['pages'], "order-agent/") == false)) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=agent/list"><i data-feather='users'></i><span class="menu-title text-truncate" data-i18n="Agent">Agent</span></a>
                 </li>
-            <?php } ?>
+   
 
-            <?php if (in_array(9, $_SESSION["supplier"]["permission"]) == true) { ?>
+         
                 <li class="navigation-header"><span data-i18n="Configuration">Configuration</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item <?php echo (strstr($_GET['pages'], "branch/")) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=branch/list"><i data-feather="database"></i><span class="menu-title text-truncate" data-i18n="branch">สาขา</span></a>
@@ -153,14 +152,14 @@
                 <li class="nav-item <?php echo (strstr($_GET['pages'], "bank-account/")) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=bank-account/list"><i data-feather="database"></i><span class="menu-title text-truncate" data-i18n="Bank Account">Bank Account</span></a>
                 </li>
-            <?php } ?>
+      
 
-            <?php if (in_array(10, $_SESSION["supplier"]["permission"]) == true) { ?>
+   
                 <li class="navigation-header"><span data-i18n="User">User</span><i data-feather="more-horizontal"></i></li>
                 <li class="nav-item <?php echo (strstr($_GET['pages'], "user/")) ? 'active' : ''; ?>">
                     <a class="d-flex align-items-center" href="./?pages=user/list"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">User</span></a>
                 </li>
-            <?php } ?>
+       
 
         </ul>
     </div>

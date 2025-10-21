@@ -11,9 +11,9 @@ $search_boat = !empty($_GET['search_boat']) ? $_GET['search_boat'] : 'all';
 $search_status = $_GET['search_status'] != "" ? $_GET['search_status'] : 'all';
 $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';
 $search_product = $_GET['search_product'] != "" ? $_GET['search_product'] : 'all';
+$search_island = $_GET['search_island'] != "" ? $_GET['search_island'] : 'all';
 $search_voucher_no = $_GET['voucher_no'] != "" ? $_GET['voucher_no'] : '';
 $refcode = $_GET['refcode'] != "" ? $_GET['refcode'] : '';
-$name = $_GET['name'] != "" ? $_GET['name'] : '';
 # --- show list boats booking --- #
 $first_booking = array();
 $first_prod = array();
@@ -24,7 +24,7 @@ $first_ext = array();
 $first_bomanage = array();
 $first_bo = [];
 $first_trans = [];
-$bookings = $bookObj->showlistboats('list', 0, $get_date, $search_boat, 'all', $search_status, $search_agent, $search_product, $search_voucher_no, $refcode, $name, '');
+$bookings = $bookObj->showlistboats('list', 0, $get_date, $search_boat, 'all', $search_status, $search_agent, $search_island, $search_product, $search_voucher_no, $refcode, '');
 # --- Check products --- #
 if (!empty($bookings)) {
     foreach ($bookings as $booking) {
@@ -67,6 +67,7 @@ if (!empty($bookings)) {
             $boat_name[$booking['id']] = !empty($booking['boat_name']) ? $booking['boat_name'] : '';
             $color_id[$booking['id']] = !empty($booking['color_id']) ? $booking['color_id'] : '';
             $language[$booking['id']] = !empty($booking['lang_name']) ? $booking['lang_name'] : '';
+            $darken[$booking['id']] = !empty($booking['island_darken']) ? $booking['island_darken'] : '';
             # --- array programe --- #
             $check_mange[$booking['product_id']][] = !empty($booking['mange_id']) ? $booking['mange_id'] : 0;
             $prod_adult[$booking['product_id']][] = !empty($booking['bpr_adult']) && $booking['mange_id'] == 0 ? $booking['bpr_adult'] : 0;
@@ -108,10 +109,6 @@ if (!empty($bookings)) {
             $book['cus_name'][$booking['mange_id']][] = !empty($booking['cus_name']) ? $booking['cus_name'] : '';
             $book['nation_name'][$booking['mange_id']][] = !empty($booking['nation_name']) ? ' (' . $booking['nation_name'] . ')' : '';
             $book['comp_name'][$booking['mange_id']][] = !empty($booking['comp_name']) ? $booking['comp_name'] : '';
-            // $book['adult'][$booking['mange_id']][] = !empty($booking['bpr_adult']) ? $booking['bpr_adult'] : 0;
-            // $book['child'][$booking['mange_id']][] = !empty($booking['bpr_child']) ? $booking['bpr_child'] : 0;
-            // $book['infant'][$booking['mange_id']][] = !empty($booking['bpr_infant']) ? $booking['bpr_infant'] : 0;
-            // $book['foc'][$booking['mange_id']][] = !empty($booking['bpr_foc']) ? $booking['bpr_foc'] : 0;
             $book['rate_adult'][$booking['mange_id']][] = !empty($booking['rate_adult']) ? $booking['rate_adult'] : 0;
             $book['rate_child'][$booking['mange_id']][] = !empty($booking['rate_child']) ? $booking['rate_child'] : 0;
             $book['rate_infant'][$booking['mange_id']][] = !empty($booking['rate_infant']) ? $booking['rate_infant'] : 0;
@@ -306,7 +303,7 @@ if (!empty($programed)) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-12">
+                            <div class="col-md-3 col-12">
                                 <div class="form-group">
                                     <label for="search_product">Programe</label>
                                     <select class="form-control select2" id="search_product" name="search_product">
@@ -318,6 +315,23 @@ if (!empty($programed)) {
                                         ?>
                                             <option value="<?php echo $product['id']; ?>" <?php echo $selected; ?>><?php echo $product['name']; ?></option>
                                         <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <div class="form-group">
+                                    <label for="search_island">Island</label>
+                                    <select class="form-control select2" id="search_island" name="search_island">
+                                        <option value="all">All</option>
+                                        <?php
+                                        $islands = $bookObj->showisland();
+                                        foreach ($islands as $island) {
+                                            $selected = $search_island == $island['id'] ? 'selected' : '';
+                                        ?>
+                                            <option value="<?php echo $island['id']; ?>" <?php echo $selected; ?>><?php echo $island['name']; ?></option>
+                                        <?php
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -333,12 +347,13 @@ if (!empty($programed)) {
                                     <input type="text" class="form-control" id="voucher_no" name="voucher_no" value="<?php echo $search_voucher_no; ?>" />
                                 </div>
                             </div>
-                            <div class="col-md-2 col-12">
+                            <!-- <div class="col-md-2 col-12">
                                 <div class="form-group">
                                     <label class="form-label" for="name">Customer Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="<?php echo $name; ?>" />
+                                    <input type="text" class="form-control" id="name" name="name" value="<?php // echo $name; 
+                                                                                                            ?>" />
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-2 col-12">
                                 <div class="form-group">
                                     <label class="form-label" for="date_travel_booking">วันที่เที่ยว (Travel Date)</label></br>
@@ -377,7 +392,7 @@ if (!empty($programed)) {
                                             </div>
                                         </div>
                                         <table class="table table-bordered">
-                                            <thead class="bg-light">
+                                            <thead <?php echo !empty($darken[$book['id'][$mange['id'][$i]][0]]) ? 'bgcolor="#' . $darken[$book['id'][$mange['id'][$i]][0]] . '" style="color: #FFF"' : 'class="bg-light"'; ?>>
                                                 <tr>
                                                     <th colspan="3">เวลา : <?php echo $mange['time'][$i]; ?></th>
                                                     <th colspan="6">ไกด์ : <?php echo $mange['guide_name'][$i]; ?></th>
@@ -530,11 +545,15 @@ if (!empty($programed)) {
                                                     for ($i = 0; $i < count($book_id[$programe_id[$p]]); $i++) {
                                                         if (empty($mange_id[$book_id[$programe_id[$p]][$i]])) {
                                                             $id = $book_id[$programe_id[$p]][$i];
-                                                            $total_tourist = $total_tourist + array_sum($adult[$id]) + array_sum($child[$id]) + array_sum($infant[$id]) + array_sum($foc[$id]);
-                                                            $total_adult = $total_adult + array_sum($adult[$id]);
-                                                            $total_child = $total_child + array_sum($child[$id]);
-                                                            $total_infant = $total_infant + array_sum($infant[$id]);
-                                                            $total_foc = $total_foc + array_sum($foc[$id]);
+                                                            $total_tourist += !empty($adult[$id]) ? array_sum($adult[$id]) : 0;
+                                                            $total_tourist += !empty($child[$id]) ? array_sum($child[$id]) : 0;
+                                                            $total_tourist += !empty($infant[$id]) ? array_sum($infant[$id]) : 0;
+                                                            $total_tourist += !empty($foc[$id]) ? array_sum($foc[$id]) : 0;
+
+                                                            $total_adult += !empty($adult[$id]) ? array_sum($adult[$id]) : 0;
+                                                            $total_child += !empty($child[$id]) ? array_sum($child[$id]) : 0;
+                                                            $total_infant += !empty($infant[$id]) ? array_sum($infant[$id]) : 0;
+                                                            $total_foc += !empty($foc[$id]) ? array_sum($foc[$id]) : 0;
                                                     ?>
                                                             <tr class="<?php echo ($i % 2 == 1) ? 'table-active' : 'bg-white'; ?>">
                                                                 <!-- <td><a href="javascript:void(0);" data-toggle="modal" data-target="#edit_manage_boat" onclick="modal_manage_boat(0, <?php echo $id; ?>, 0, 0);"><span class="badge badge-light-danger">ไม่มีการจัดเรือ</span></a></td> -->
@@ -553,10 +572,10 @@ if (!empty($programed)) {
                                                                 <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                                                 <td class="cell-fit"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
                                                                 <td><?php echo (!empty($zone_pickup[$id])) ? $zone_pickup[$id] : ''; ?></td>
-                                                                <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
-                                                                <td class="text-center"><?php echo array_sum($child[$id]); ?></td>
-                                                                <td class="text-center"><?php echo array_sum($infant[$id]); ?></td>
-                                                                <td class="text-center"><?php echo array_sum($foc[$id]); ?></td>
+                                                                <td class="text-center"><?php echo !empty($adult[$id]) ? array_sum($adult[$id]) : 0; ?></td>
+                                                                <td class="text-center"><?php echo !empty($child[$id]) ? array_sum($child[$id]) : 0; ?></td>
+                                                                <td class="text-center"><?php echo !empty($infant[$id]) ? array_sum($infant[$id]) : 0; ?></td>
+                                                                <td class="text-center"><?php echo !empty($foc[$id]) ? array_sum($foc[$id]) : 0; ?></td>
                                                                 <td><?php echo $agent_name[$id]; ?></a></td>
                                                                 <td><?php echo !empty($voucher_no[$id]) ? $voucher_no[$id] : $book_full[$id]; ?></td>
                                                                 <td class="text-nowrap"><?php echo number_format($cot[$id]); ?></td>
@@ -773,25 +792,26 @@ if (!empty($programed)) {
                             </div>
                             <div class="modal-body" id="div-park-job-image" style="background-color: #FFF !important;">
                                 <div class="table-responsive">
-                                    <div class="text-center mb-50">
-                                        <div class="badge-light-orange"><b id="text-travel-customer">Travel date</b></div>
-                                    </div>
-                                    <div class="text-center mb-50">
-                                        <div class="badge-light-sky"><b id="text-boat">เรือ</b></div>
-                                        <!-- <div class="badge-light-green-2"><b id="text-programe">โปรแกรม</b></div> -->
-                                        <div class="badge-light-purple"><b id="text-prak">อุทยาน</b></div>
-                                    </div>
-                                    <table class="table table-bordered table-striped table-vouchure-t2" style="table-layout: inherit; width: 100%; overflow: hidden; text-overflow: ellipsis;">
-                                        <thead class="bg-light">
-                                            <tr>
-                                                <th class="text-center" width="10%">A/C/I/F</th>
-                                                <th class="text-center" width="45%">ชื่อ</th>
-                                                <th class="text-center" width="10%">V/C</th>
-                                                <th class="text-center" width="15%">สัญชาติ</th>
-                                                <th class="text-center" width="15%">Birth Date</th>
+                                    <table class="table table-bordered table-striped table-vouchure-t2" style="table-layout: inherit; width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 22px !important;">
+                                        <thead>
+                                            <tr bgcolor="#FFCEC7">
+                                                <th colspan="7" class="text-center"><h4 class="m-0 text-black" id="text-travel-customer">Travel date</h4></th>
+                                            </tr>
+                                            <tr bgcolor="#FFCEC7">
+                                                <th colspan="4" class="text-center"><h4 class="m-0 text-black" id="text-boat">เรือ</h4></th>
+                                                <th colspan="3" class="text-center"><h4 class="m-0 text-black" id="text-prak">อุทยาน</h4></th>
+                                            </tr>
+                                            <tr bgcolor="#DE2400" style="color: #FFF;">
+                                                <th class="text-center" width="5%" style="font-size: 18px !important;">ลำดับ</th>
+                                                <th class="text-center" width="20%" style="font-size: 18px !important;">ชื่อ</th>
+                                                <th class="text-center" width="15%" style="font-size: 18px !important;">V/C</th>
+                                                <th class="text-center" width="15%" style="font-size: 18px !important;">เซ็นชื่อ</th>
+                                                <th class="text-center" width="15%" style="font-size: 18px !important;">ID Passport/ ID Card</th>
+                                                <th class="text-center" width="10%" style="font-size: 18px !important;">สัญชาติ</th>
+                                                <th class="text-center" width="10%" style="font-size: 18px !important;">Birth Date</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="table-tbody-customers">
+                                        <tbody id="table-tbody-customers" class="text-black">
                                         </tbody>
                                     </table>
                                 </div>
@@ -804,7 +824,7 @@ if (!empty($programed)) {
                                 <div>
                                     <button type="button" class="btn btn-info btn-page-block-spinner" onclick="download_image('customers');">Image</button>
                                     <a href='./?pages=order-boat/print&date_travel=<?php echo $get_date; ?>&action=customer' target="_blank" id="print-customer"><button class="btn btn-warning">Print</button></a>
-                                    <a href='./?pages=order-boat/excel&date_travel=<?php echo $get_date; ?>' target="_blank" id="excel-customer"><button class="btn btn-success">Excel</button></a>
+                                    <a href='./?pages=order-boat/excel&date_travel=<?php echo $get_date; ?>&action=customer' target="_blank" id="excel-customer"><button class="btn btn-success">Excel</button></a>
                                 </div>
                             </div>
                         </div>

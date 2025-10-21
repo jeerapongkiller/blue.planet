@@ -25,7 +25,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search") {
     $search_inv_form = !empty($_POST['search_inv_form']) ? $_POST['search_inv_form'] : '0000-00-00';
     $search_inv_to = !empty($_POST['search_inv_to']) ? $_POST['search_inv_to'] : '0000-00-00';
     $search_agent = $_POST['search_agent'] != "" ? $_POST['search_agent'] : 0;
-    echo $search_status;
+   
 
     $a = 0;
     $total = 0;
@@ -216,7 +216,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search") {
                         <td><a <?php echo $href; ?>><?php echo $voucher_no_agent[$i]; ?></a></td>
                         <td class="text-nowrap"><a <?php echo $href; ?>><?php echo $vat_name[$i]; ?></a></td>
                         <td><a <?php echo $href; ?>><?php echo $withholding[$i]; ?></a></td>
-                        <td class="text-right"><a <?php echo $href; ?>><?php echo number_format($total); ?></a></td>
+                        <td class="text-right"><a <?php echo $href; ?>><?php echo number_format($total); ?> </a></td>
                     </tr>
             <?php }
             } ?>

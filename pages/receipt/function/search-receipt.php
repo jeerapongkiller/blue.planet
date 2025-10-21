@@ -24,13 +24,15 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
     // get value from ajax
     $agent_id = $_POST['agent_id'] != "" ? $_POST['agent_id'] : 0;
     $travel_date = $_POST['travel_date'] != "" ? $_POST['travel_date'] : '0000-00-00';
+    $search_product = !empty($_POST['search_product']) ? $_POST['search_product'] : 'all';
+    $search_island = !empty($_POST['search_island']) ? $_POST['search_island'] : 'all';
 
     $first_rec = array();
     $first_cover = array();
     $first_booking = array();
     $first_bpr = array();
     $first_extar = array();
-    $receipts = $recObj->showlist('receipts', $travel_date, $agent_id, 0);
+    $receipts = $recObj->showlist('receipts', $travel_date, $search_island, $search_product, $agent_id, 0);
     if (!empty($receipts)) {
         foreach ($receipts as $receipt) {
             # --- get value receipt --- #
@@ -109,6 +111,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
                 // $arr_bo[$receipt['id']]['foc'] = !empty($receipt['bpr_foc']) ? $receipt['bpr_foc'] : '-';
                 $arr_bo[$receipt['id']]['discount'] = !empty($receipt['discount']) ? $receipt['discount'] : '-';
                 $arr_bo[$receipt['id']]['cot'] = !empty($receipt['total_paid']) ? $receipt['total_paid'] : '-';
+                $arr_bo[$receipt['id']]['color'] = !empty($receipt['island_color']) ? $receipt['island_color'] : '';
+                $arr_bo[$receipt['id']]['darken'] = !empty($receipt['island_darken']) ? $receipt['island_darken'] : '';
                 // $arr_bo[$receipt['id']]['total'] = $receipt['bp_private_type'] == 1 ? ($receipt['bpr_adult'] * $receipt['rate_adult']) + ($receipt['bpr_child'] * $receipt['rate_child']) : $receipt['rate_total'];
             }
             # --- get value rates --- #

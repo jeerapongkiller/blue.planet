@@ -13,8 +13,9 @@ if (isset($_POST['action']) && $_POST['action'] == "edit" && isset($_POST['produ
     $refcode = $_POST['refcode'] != "" ? $_POST['refcode'] : '';
     $pax = $_POST['pax'] != "" ? $_POST['pax'] : 0;
     $park_id = $_POST['park'] != "" ? $_POST['park'] : 0;
+    $island_id = $_POST['island_id'] != "" ? $_POST['island_id'] : 0;
 
-    $response = $prodObj->update_data($is_approved, $name, $note, $pax, $park_id, $id);
+    $response = $prodObj->update_data($is_approved, $name, $note, $pax, $island_id, $park_id, $id);
 
     echo $response;
 } else {

@@ -21,12 +21,14 @@ function diff_date($today, $diff_date)
 if (isset($_POST['action']) && $_POST['action'] == "search-invoice" && !empty($_POST['travel_date'])) {
     // get value from ajax
     $travel_date = $_POST['travel_date'] != "" ? $_POST['travel_date'] : '0000-00-00';
+    $search_product = !empty($_POST['search_product']) ? $_POST['search_product'] : 'all';
+    $search_island = !empty($_POST['search_island']) ? $_POST['search_island'] : 'all';
 
     $first_booking = array();
     $first_cover = array();
     $first_bpr = array();
     $first_company = array();
-    $invoices = $recObj->showlist('invoices', $travel_date, 'all', 0);
+    $invoices = $recObj->showlist('invoices', $travel_date, $search_island, $search_product, 'all', 0);
     if (!empty($invoices)) {
         foreach ($invoices as $invoice) {
             # --- get value agent --- #
@@ -85,7 +87,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search-invoice" && !empty($_
             </thead>
             <tbody>
                 <?php for ($i = 0; $i < count($agent_id); $i++) { ?>
-                    <tr onclick="modal_detail(<?php echo $agent_id[$i]; ?>, '<?php echo addslashes($agent_name[$i]); ?>', '<?php echo $travel_date; ?>');" data-toggle="modal" data-target="#modal-detail">
+                    <tr onclick="modal_detail(<?php echo $agent_id[$i]; ?>, '<?php echo addslashes($agent_name[$i]); ?>', '<?php echo $travel_date; ?>', '<?php echo $search_product; ?>', '<?php echo $search_island; ?>');" data-toggle="modal" data-target="#modal-detail">
                         <td><?php echo $agent_name[$i]; ?></td>
                         <td class="text-center"><?php echo !empty($cover_id[$agent_id[$i]]) ? count($cover_id[$agent_id[$i]]) : 0; ?></td>
                         <td class="text-center"><?php echo !empty($tourrist[$agent_id[$i]]) ? array_sum($tourrist[$agent_id[$i]]) : 0; ?></td>
@@ -104,6 +106,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search-invoice" && !empty($_
 } elseif (isset($_POST['action']) && $_POST['action'] == "search-receipt" && !empty($_POST['travel_date'])) {
     // get value from ajax
     $travel_date = $_POST['travel_date'] != "" ? $_POST['travel_date'] : '0000-00-00';
+    $search_product = !empty($_POST['search_product']) ? $_POST['search_product'] : 'all';
+    $search_island = !empty($_POST['search_island']) ? $_POST['search_island'] : 'all';
 
     $first_rec = array();
     $first_cover = array();
@@ -111,7 +115,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search-invoice" && !empty($_
     $first_booking = array();
     $first_bpr = array();
     $first_extar = array();
-    $invoices = $recObj->showlist('receipts', $travel_date, 'all', 0);
+    $invoices = $recObj->showlist('receipts', $travel_date, $search_island, $search_product, 'all', 0);
     if (!empty($invoices)) {
         foreach ($invoices as $invoice) {
             # --- get value booking --- #
@@ -165,6 +169,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search-invoice" && !empty($_
                 $arr_bo[$invoice['id']]['voucher_no'] = !empty($invoice['voucher_no']) ? $invoice['voucher_no'] : $invoice['book_full'];
                 $arr_bo[$invoice['id']]['discount'] = !empty($invoice['discount']) ? $invoice['discount'] : '-';
                 $arr_bo[$invoice['id']]['cot'] = !empty($invoice['total_paid']) ? $invoice['total_paid'] : '-';
+                $arr_bo[$invoice['id']]['color'] = !empty($invoice['island_color']) ? $invoice['island_color'] : '';
+                $arr_bo[$invoice['id']]['darken'] = !empty($invoice['island_darken']) ? $invoice['island_darken'] : '';
             }
             # --- get value rates --- #
             if ((in_array($invoice['bpr_id'], $first_bpr) == false) && !empty($invoice['bpr_id'])) {
@@ -178,8 +184,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search-invoice" && !empty($_
                 $infant[$invoice['comp_id']][] = !empty($invoice['bpr_infant']) ? $invoice['bpr_infant'] : 0;
                 $foc[$invoice['comp_id']][] = !empty($invoice['bpr_foc']) ? $invoice['bpr_foc'] : 0;
                 $tourrist[$invoice['comp_id']][] = $invoice['bpr_adult'] + $invoice['bpr_child'] + $invoice['bpr_infant'] + $invoice['bpr_foc'];
-                $total_comp[$invoice['comp_id']][] = $invoice['bp_private_type'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_total'];
-                $total_rec[$invoice['rec_id']][] = $invoice['bp_private_type'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_total'];
+                $total_comp[$invoice['comp_id']][] = $invoice['booktye_id'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_private'];
+                $total_rec[$invoice['rec_id']][] = $invoice['booktye_id'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_private'];
 
                 $arr_rates[$invoice['id']]['id'][] = !empty($invoice['bpr_id']) ? $invoice['bpr_id'] : 0;
                 $arr_rates[$invoice['id']]['category_name'][] = !empty($invoice['category_name']) ? $invoice['category_name'] : '';
@@ -272,7 +278,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search-invoice" && !empty($_
             </thead>
             <tbody>
                 <?php for ($i = 0; $i < count($agent_id); $i++) { ?>
-                    <tr onclick="modal_detail(<?php echo $agent_id[$i]; ?>, '<?php echo addslashes($agent_name[$i]); ?>', '<?php echo $travel_date; ?>');" data-toggle="modal" data-target="#modal-detail">
+                    <tr onclick="modal_detail(<?php echo $agent_id[$i]; ?>, '<?php echo addslashes($agent_name[$i]); ?>', '<?php echo $travel_date; ?>', '<?php echo $search_product; ?>', '<?php echo $search_island; ?>');" data-toggle="modal" data-target="#modal-detail">
                         <td><?php echo $agent_name[$i]; ?></td>
                         <td class="text-center"><?php echo !empty($rec_id[$agent_id[$i]]) ? count($rec_id[$agent_id[$i]]) : 0; ?></td>
                         <td class="text-center"><?php echo !empty($tourrist[$agent_id[$i]]) ? array_sum($tourrist[$agent_id[$i]]) : 0; ?></td>

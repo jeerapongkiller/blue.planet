@@ -50,14 +50,14 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                             </button>
                         </div>
                         <div class="step" data-target="#time-zone">
-                                <button type="button" class="step-trigger">
-                                    <span class="bs-stepper-box">2</span>
-                                    <span class="bs-stepper-label">
-                                        <span class="bs-stepper-title">Time Zone</span>
-                                        <span class="bs-stepper-subtitle">Please fill out</span>
-                                    </span>
-                                </button>
-                            </div>
+                            <button type="button" class="step-trigger">
+                                <span class="bs-stepper-box">2</span>
+                                <span class="bs-stepper-label">
+                                    <span class="bs-stepper-title">Time Zone</span>
+                                    <span class="bs-stepper-subtitle">Please fill out</span>
+                                </span>
+                            </button>
+                        </div>
                         <div class="step" data-target="#period">
                             <button type="button" class="step-trigger">
                                 <span class="bs-stepper-box">3</span>
@@ -110,21 +110,34 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-3">
-                                        <div class="form-group">
-                                            <label for="Park">อุทยาน (Park)</label>
-                                            <select class="form-control select2" id="park" name="park">
-                                                <option value="">Please Select Park...</option>
-                                                <?php
-                                                $parks = $prodObj->showpark();
-                                                foreach ($parks as $park) {
-                                                    $park_selected = $park['id'] == $prod['park_id'] ? 'selected' : '';
-                                                ?>
-                                                    <option value="<?php echo $park['id']; ?>" <?php echo $park_selected; ?>><?php echo $park['name']; ?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
+                                        <label for="island_id">เกาะ (Island)</label>
+                                        <select class="form-control select2" id="island_id" name="island_id">
+                                            <option value="0">Please Select Island...</option>
+                                            <?php
+                                            $islands = $prodObj->showisland();
+                                            foreach ($islands as $island) {
+                                                $selected = $island['id'] == $prod['island_id'] ? 'selected' : '';
+                                            ?>
+                                                <option value="<?php echo $island['id']; ?>" <?php echo $selected; ?>><?php echo $island['name']; ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="Park">อุทยาน (Park)</label>
+                                        <select class="form-control select2" id="park" name="park">
+                                            <option value="">Please Select Park...</option>
+                                            <?php
+                                            $parks = $prodObj->showpark();
+                                            foreach ($parks as $park) {
+                                                $park_selected = $park['id'] == $prod['park_id'] ? 'selected' : '';
+                                            ?>
+                                                <option value="<?php echo $park['id']; ?>" <?php echo $park_selected; ?>><?php echo $park['name']; ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <hr>

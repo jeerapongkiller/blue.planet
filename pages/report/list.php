@@ -113,7 +113,7 @@ function diff_date($today, $diff_date)
                         $first_boboat = array();
                         $first_pay = array();
                         $first_extar = array();
-                        $bookings = $repObj->showlist('all', '0000-00-00', '0000-00-00', 'all', 'all');
+                        $bookings = $repObj->showlist('all', $today, $today, 'all', 'all');
                         foreach ($bookings as $booking) {
                             # --- get value booking --- #
                             if (in_array($booking['id'], $first_book) == false) {
@@ -884,7 +884,7 @@ function diff_date($today, $diff_date)
                                                     foreach ($ortran_id as $x => $val) {  ?>
                                                         <tr>
                                                             <td>
-                                                                <div class="font-weight-bolder text-primary"><?php echo !empty($car_name[$ortran_id[$x]]) ? !empty($driver_name[$ortran_id[$x]]) ? $car_name[$ortran_id[$x]] . ' / ' . $driver_name[$ortran_id[$x]] : $car_name[$ortran_id[$x]] : ''; ?></div>
+                                                                <div class="font-weight-bolder text-primary"><?php echo $driver_name[$ortran_id[$x]]; ?></div>
                                                             </td>
                                                             <td><?php echo (!empty($ortran_travel[$ortran_id[$x]])) ? date('j F Y', strtotime($ortran_travel[$ortran_id[$x]])) : ''; ?></td>
                                                             <td class="text-center"><?php echo !empty($bot_id[$val]) ? count($bot_id[$val]) : 0; ?></td>

@@ -21,12 +21,14 @@ function diff_date($today, $diff_date)
 if (isset($_POST['action']) && $_POST['action'] == "search-booking" && !empty($_POST['travel_date'])) {
     // get value from ajax
     $travel_date = $_POST['travel_date'] != "" ? $_POST['travel_date'] : '0000-00-00';
+    $search_product = !empty($_POST['search_product']) ? $_POST['search_product'] : 'all';
+    $search_island = !empty($_POST['search_island']) ? $_POST['search_island'] : 'all';
 
     $first_booking = array();
     $first_company = array();
     $first_bpr = array();
     $first_extar = array();
-    $bookings = $invObj->showlist('bookings', $travel_date, 'all', 0);
+    $bookings = $invObj->showlist('bookings', $travel_date, $search_island, $search_product, 'all', 0);
     if (!empty($bookings)) {
         foreach ($bookings as $booking) {
             # --- get value agent --- #
@@ -58,7 +60,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search-booking" && !empty($_
                 $infant[$booking['comp_id']][] = !empty($booking['bpr_infant']) ? $booking['bpr_infant'] : 0;
                 $foc[$booking['comp_id']][] = !empty($booking['bpr_foc']) ? $booking['bpr_foc'] : 0;
                 $tourrist[$booking['comp_id']][] = $booking['bpr_adult'] + $booking['bpr_child'] + $booking['bpr_infant'] + $booking['bpr_foc'];
-                $rate_total[$booking['comp_id']][] = $booking['bp_private_type'] == 1 ? ($booking['booksta_id'] != 2 && $booking['booksta_id'] != 4) ? ($booking['bpr_adult'] * $booking['rate_adult']) + ($booking['bpr_child'] * $booking['rate_child']) : $booking['rate_total'] : $booking['rate_total'];
+                $rate_total[$booking['comp_id']][] = ($booking['booktye_id'] > 0) ? ($booking['booktye_id'] == 1) ? ($booking['bpr_adult'] * $booking['rate_adult']) + ($booking['bpr_child'] * $booking['rate_child']) : $booking['rate_private'] : $booking['rate_total'];
+                 // $booking['bp_private_type'] == 1 ? ($booking['booksta_id'] != 2 && $booking['booksta_id'] != 4) ? ($booking['bpr_adult'] * $booking['rate_adult']) + ($booking['bpr_child'] * $booking['rate_child']) : $booking['rate_total'] : $booking['rate_total'];
             }
             # --- get value booking --- #
             if (in_array($booking['bec_id'], $first_extar) == false && (!empty($booking['extra_id']) || !empty($booking['bec_name']))) {
@@ -98,8 +101,13 @@ if (isset($_POST['action']) && $_POST['action'] == "search-booking" && !empty($_
                     if (!empty($rate_total[$agent_id[$i]])) {
                         $total = !empty($cot[$agent_id[$i]]) ? array_sum($rate_total[$agent_id[$i]]) - array_sum($cot[$agent_id[$i]]) : array_sum($rate_total[$agent_id[$i]]); // booking
                         $total = !empty($total_extar[$agent_id[$i]]) ? $total + array_sum($total_extar[$agent_id[$i]]) : $total; // extar charge
-                    } ?>
-                    <tr onclick="modal_detail(<?php echo $agent_id[$i]; ?>, '<?php echo addslashes($agent_name[$i]); ?>', '<?php echo $travel_date; ?>');" data-toggle="modal" data-target="#modal-detail">
+                    }
+                    // if ($_SESSION["supplier"]["id"] == 1) {
+                    //     print_r($rate_total[$agent_id[$i]]);
+                    //     // echo $_SESSION["supplier"]["id"] == 1 ? $arr_rates[$id]['total'] : '';
+                    // }
+                     ?>
+                    <tr onclick="modal_detail(<?php echo $agent_id[$i]; ?>, '<?php echo addslashes($agent_name[$i]); ?>', '<?php echo $travel_date; ?>', '<?php echo $search_product; ?>', '<?php echo $search_island; ?>');" data-toggle="modal" data-target="#modal-detail">
                         <td><?php echo $agent_name[$i]; ?></td>
                         <td class="text-center"><?php echo !empty($bo_id[$agent_id[$i]]) ? count($bo_id[$agent_id[$i]]) : 0; ?></td>
                         <td class="text-center"><?php echo !empty($tourrist[$agent_id[$i]]) ? array_sum($tourrist[$agent_id[$i]]) : 0; ?></td>
@@ -108,7 +116,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search-booking" && !empty($_
                         <td class="text-center"><?php echo !empty($infant[$agent_id[$i]]) ? array_sum($infant[$agent_id[$i]]) : 0; ?></td>
                         <td class="text-center"><?php echo !empty($foc[$agent_id[$i]]) ? array_sum($foc[$agent_id[$i]]) : 0; ?></td>
                         <td class="text-center"><?php echo !empty($cot[$agent_id[$i]]) ? number_format(array_sum($cot[$agent_id[$i]])) : 0; ?></td>
-                        <td class="text-center"><?php echo number_format($total, 2);  ?></td>
+                        <td class="text-center"><?php echo number_format($total, 2); ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
@@ -119,13 +127,15 @@ if (isset($_POST['action']) && $_POST['action'] == "search-booking" && !empty($_
 } elseif (isset($_POST['action']) && $_POST['action'] == "search-invoice" && !empty($_POST['travel_date'])) {
     // get value from ajax
     $travel_date = $_POST['travel_date'] != "" ? $_POST['travel_date'] : '0000-00-00';
+    $search_product = !empty($_POST['search_product']) ? $_POST['search_product'] : 'all';
+    $search_island = !empty($_POST['search_island']) ? $_POST['search_island'] : 'all';
 
     $first_cover = array();
     $first_company = array();
     $first_booking = array();
     $first_bpr = array();
     $first_extar = array();
-    $invoices = $invObj->showlist('invoices', $travel_date, 'all', 0);
+    $invoices = $invObj->showlist('invoices', $travel_date, $search_island, $search_product, 'all', 0);
     if (!empty($invoices)) {
         foreach ($invoices as $invoice) {
             # --- get value booking --- #
@@ -166,8 +176,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search-booking" && !empty($_
                 $infant[$invoice['comp_id']][] = !empty($invoice['bpr_infant']) ? $invoice['bpr_infant'] : 0;
                 $foc[$invoice['comp_id']][] = !empty($invoice['bpr_foc']) ? $invoice['bpr_foc'] : 0;
                 $tourrist[$invoice['comp_id']][] = $invoice['bpr_adult'] + $invoice['bpr_child'] + $invoice['bpr_infant'] + $invoice['bpr_foc'];
-                $total_comp[$invoice['comp_id']][] = $invoice['bp_private_type'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_total'];
-                $total_inv[$invoice['cover_id']][] = $invoice['bp_private_type'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_total'];
+                $total_comp[$invoice['comp_id']][] = $invoice['booktye_id'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_private'];
+                $total_inv[$invoice['cover_id']][] = $invoice['booktye_id'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_private'];
             }
             # --- get value booking --- #
             if (in_array($invoice['bec_id'], $first_extar) == false && (!empty($invoice['extra_id']) || !empty($invoice['bec_name']))) {

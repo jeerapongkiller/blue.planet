@@ -10,7 +10,7 @@ class Receipt extends DB
         parent::__construct();
     }
 
-    public function showlist($type, $travel_date, $agent, $rec_id)
+    public function showlist($type, $travel_date, $island, $product, $agent, $rec_id)
     {
         $bind_types = "";
         $params = array();
@@ -25,8 +25,9 @@ class Receipt extends DB
                     BP.id as bp_id, BP.travel_date as travel_date,  BP.note as bp_note,
                     BP.private_type as bp_private_type,
                     BPR.id as bpr_id, BPR.adult as bpr_adult, BPR.child as bpr_child, BPR.infant as bpr_infant, BPR.foc as bpr_foc, 
-                    BPR.rate_adult as rate_adult, BPR.rate_child as rate_child, BPR.rate_infant as rate_infant, BPR.rate_total as rate_total,  
+                    BPR.rate_adult as rate_adult, BPR.rate_child as rate_child, BPR.rate_infant as rate_infant, BPR.rate_private as rate_private, BPR.rate_total as rate_total,  
                     PROD.id as product_id, PROD.name as product_name,
+                    island.id as island_id, island.name as island_name, island.color as island_color, island.color_darken as island_darken,
                     CATE.id as category_id, CATE.name as category_name, CATE.customer as category_cus, CATE.transfer as category_transfer,  
                     CUS.id as cus_id, CUS.name as cus_name, CUS.head as cus_head,
                     BT.id as bt_id, BT.adult as bt_adult, BT.child as bt_child, BT.infant as bt_infant, BT.foc as bt_foc, BT.start_pickup as start_pickup, BT.end_pickup as end_pickup,
@@ -91,6 +92,8 @@ class Receipt extends DB
                     ON BO.id = BEC.booking_id
                 LEFT JOIN products PROD
                     ON BP.product_id = PROD.id
+                LEFT JOIN island
+                    ON PROD.island_id = island.id
                 LEFT JOIN product_category CATE
                     ON BPR.category_id = CATE.id
                 LEFT JOIN customers CUS
@@ -148,6 +151,18 @@ class Receipt extends DB
                 array_push($params, $agent);
             }
 
+            if (isset($product) && $product != "all") {
+                $query .= " AND BP.product_id = ?";
+                $bind_types .= "i";
+                array_push($params, $product);
+            }
+
+            if (isset($island) && $island != "all") {
+                $query .= " AND PROD.island_id = ?";
+                $bind_types .= "i";
+                array_push($params, $island);
+            }
+
             $query .= " ORDER BY COMP.name ASC, BP.travel_date ASC, INV.no ASC, BT.pickup_type DESC, CATE.name DESC";
         }
 
@@ -164,6 +179,18 @@ class Receipt extends DB
                 $query .= " AND REC.id = ?";
                 $bind_types .= "i";
                 array_push($params, $rec_id);
+            }
+
+            if (isset($product) && $product != "all") {
+                $query .= " AND BP.product_id = ?";
+                $bind_types .= "i";
+                array_push($params, $product);
+            }
+
+            if (isset($island) && $island != "all") {
+                $query .= " AND PROD.island_id = ?";
+                $bind_types .= "i";
+                array_push($params, $island);
             }
 
             $query .= " ORDER BY COMP.name ASC, INV.no ASC, BP.travel_date ASC, BT.pickup_type DESC, CATE.name DESC";
@@ -422,6 +449,36 @@ class Receipt extends DB
                 ON companies.company_type_id = companies_type.id
             WHERE companies.is_deleted = 0 AND companies.company_type_id = 2
         ";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $result = $statement->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $data;
+    }
+
+    public function showlistproduct()
+    {
+        $query = "SELECT *
+            FROM products 
+            WHERE is_deleted = 0
+        ";
+        $query .= " ORDER BY id ASC";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $result = $statement->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $data;
+    }
+
+    public function showisland()
+    {
+        $query = "SELECT id, name, is_approved
+            FROM island 
+            WHERE is_approved = 1
+        ";
+        $query .= " ORDER BY name ASC";
         $statement = $this->connection->prepare($query);
         $statement->execute();
         $result = $statement->get_result();

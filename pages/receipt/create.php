@@ -49,6 +49,37 @@ $tomorrow = date("Y-m-d", strtotime(" +1 day"));
                                                         <input type="text" class="form-control flatpickr-range" id="travel_date" name="travel_date" value="<?php echo $today; ?>" />
                                                     </div>
                                                 </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="form-group">
+                                                        <label for="search_product">Programe</label>
+                                                        <select class="form-control select2" id="search_product" name="search_product">
+                                                            <option value="all">All</option>
+                                                            <?php
+                                                            $products = $recObj->showlistproduct();
+                                                            foreach ($products as $product) {
+                                                            ?>
+                                                                <option value="<?php echo $product['id']; ?>"><?php echo $product['name']; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12">
+                                                    <div class="form-group">
+                                                        <label for="search_island">Island</label>
+                                                        <select class="form-control select2" id="search_island" name="search_island">
+                                                            <option value="all">All</option>
+                                                            <?php
+                                                            $islands = $recObj->showisland();
+                                                            foreach ($islands as $island) {
+                                                                $selected = $island['id'] == $prod['island_id'] ? 'selected' : '';
+                                                            ?>
+                                                                <option value="<?php echo $island['id']; ?>" <?php echo $selected; ?>><?php echo $island['name']; ?></option>
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-2 col-12">
                                                     <button type="submit" class="btn btn-primary">Search</button>
                                                 </div>
@@ -266,7 +297,7 @@ $tomorrow = date("Y-m-d", strtotime(" +1 day"));
 
                                     <table class="table table-bordered">
                                         <thead class="bg-darken-2 text-white">
-                                            <tr class="table-black">
+                                            <tr id="tr-darken">
                                                 <td class="text-center" style="border-radius: 15px 0px 0px 0px; padding: 5px 0;" width="3%"><b>เลขที่</b></td>
                                                 <td class="text-center"><b>วันที่เดินทาง</b></td>
                                                 <td class="text-center"><b>ชื่อลูกค้า</b></td>
@@ -278,7 +309,7 @@ $tomorrow = date("Y-m-d", strtotime(" +1 day"));
                                                 <td class="text-center"><b>จำนวนเงิน</b></td>
                                                 <td class="text-center" style="border-radius: 0px 15px 0px 0px;"><b>Cash on tour</b></td>
                                             </tr>
-                                            <tr class="table-black-2">
+                                            <tr id="tr-color">
                                                 <td class="text-center p-50"><small>Items</small></td>
                                                 <td class="text-center p-50"><small>Date</small></td>
                                                 <td class="text-center p-50"><small>Customer's name</small></td>

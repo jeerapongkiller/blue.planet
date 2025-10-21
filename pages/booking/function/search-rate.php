@@ -67,7 +67,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ca
     <?php if ($dataCustomer == 1) { ?> <!--  Thai -->
         <input type="hidden" id="bpr_thai_id" name="bpr_thai_id" value="" />
         <input type="hidden" id="category_id_thai" name="category_id_thai" value="<?php echo $category_id; ?>" />
-        <input type="hidden" id="pror_id_thai" name="pror_id_thai" value="<?php echo $rate_arr['prodrid']; ?>" />
+        <input type="hidden" id="pror_id_thai" name="pror_id_thai" value="<?php echo !empty($rate_arr['prodrid']) ? $rate_arr['prodrid'] : 0; ?>" />
         <?php if ($book_type == 1) { ?> <!--  Join -->
             <div class="form-group col-md-3 col-12">
                 <table width="100%" id="table-adult-thai">
@@ -87,7 +87,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ca
                         <td width="69%">
                             <div class="form-group">
                                 <label class="form-label" for="rate_adult_thai">Rate Adult (Thai)</label>
-                                <input type="number" id="rate_adult_thai" name="rate_adult_thai" class="form-control numeral-mask" value="<?php echo $rate_arr['rate_adult']; ?>" oninput="check_rate();">
+                                <input type="number" id="rate_adult_thai" name="rate_adult_thai" class="form-control numeral-mask" value="<?php echo !empty($rate_arr['rate_adult']) ? $rate_arr['rate_adult'] : 0; ?>" oninput="check_rate();">
                             </div>
                         </td>
                     </tr>
@@ -111,7 +111,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ca
                         <td width="69%">
                             <div class="form-group">
                                 <label class="form-label" for="rate_child_thai">Rate Children (Thai)</label>
-                                <input type="number" id="rate_child_thai" name="rate_child_thai" class="form-control numeral-mask" value="<?php echo $rate_arr['rate_child']; ?>" oninput="check_rate();">
+                                <input type="number" id="rate_child_thai" name="rate_child_thai" class="form-control numeral-mask" value="<?php echo !empty($rate_arr['rate_child']) ? $rate_arr['rate_child'] : 0; ?>" oninput="check_rate();">
                             </div>
                         </td>
                     </tr>
@@ -135,7 +135,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ca
                         <td width="69%">
                             <div class="form-group">
                                 <label class="form-label" for="rate_infant_thai">Rate Infant (Thai)</label>
-                                <input type="number" id="rate_infant_thai" name="rate_infant_thai" class="form-control numeral-mask" value="<?php echo $rate_arr['rate_infant']; ?>" oninput="check_rate();">
+                                <input type="number" id="rate_infant_thai" name="rate_infant_thai" class="form-control numeral-mask" value="<?php echo !empty($rate_arr['rate_infant']) ? $rate_arr['rate_infant'] : 0; ?>" oninput="check_rate();">
                             </div>
                         </td>
                     </tr>
@@ -177,7 +177,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ca
     <?php } elseif ($dataCustomer == 2) { ?> <!--  foreign -->
         <input type="hidden" id="bpr_foreign_id" name="bpr_foreign_id" value="" />
         <input type="hidden" id="category_id_foreign" name="category_id_foreign" value="<?php echo $category_id; ?>" />
-        <input type="hidden" id="pror_id_foreign" name="pror_id_foreign" value="<?php echo $rate_arr['prodrid']; ?>" />
+        <input type="hidden" id="pror_id_foreign" name="pror_id_foreign" value="<?php echo !empty($rate_arr['prodrid']) ? $rate_arr['prodrid'] : 0; ?>" />
         <?php if ($book_type == 1) { ?> <!--  Join -->
             <div class="form-group col-md-3 col-12">
                 <table width="100%" id="table-adult-foreign">
@@ -197,7 +197,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ca
                         <td width="69%">
                             <div class="form-group">
                                 <label class="form-label" for="rate_adult_foreign">Rate Adult (Foreign)</label>
-                                <input type="number" id="rate_adult_foreign" name="rate_adult_foreign" class="form-control numeral-mask" value="<?php echo $rate_arr['rate_adult']; ?>" oninput="check_rate();">
+                                <input type="number" id="rate_adult_foreign" name="rate_adult_foreign" class="form-control numeral-mask" value="<?php echo !empty($rate_arr['rate_adult']) ? $rate_arr['rate_adult'] : 0; ?>" oninput="check_rate();">
                             </div>
                         </td>
                     </tr>
@@ -221,7 +221,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ca
                         <td width="69%">
                             <div class="form-group">
                                 <label class="form-label" for="rate_child_foreign">Rate Children (Foreign)</label>
-                                <input type="number" id="rate_child_foreign" name="rate_child_foreign" class="form-control numeral-mask" value="<?php echo $rate_arr['rate_child']; ?>" oninput="check_rate();">
+                                <input type="number" id="rate_child_foreign" name="rate_child_foreign" class="form-control numeral-mask" value="<?php echo !empty($rate_arr['rate_child']) ? $rate_arr['rate_child'] : 0; ?>" oninput="check_rate();">
                             </div>
                         </td>
                     </tr>
@@ -245,7 +245,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ca
                         <td width="69%">
                             <div class="form-group">
                                 <label class="form-label" for="rate_infant_foreign">Rate Infant (Foreign)</label>
-                                <input type="number" id="rate_infant_foreign" name="rate_infant_foreign" class="form-control numeral-mask" value="<?php echo $rate_arr['rate_infant']; ?>" oninput="check_rate();">
+                                <input type="number" id="rate_infant_foreign" name="rate_infant_foreign" class="form-control numeral-mask" value="<?php echo !empty($rate_arr['rate_infant']) ? $rate_arr['rate_infant'] : 0; ?>" oninput="check_rate();">
                             </div>
                         </td>
                     </tr>

@@ -267,6 +267,7 @@
             search_start_date('today', '<?php echo $today; ?>');
             search_start_date('tomorrow', '<?php echo $tomorrow; ?>');
             search_start_date('custom', '<?php echo $get_date; ?>');
+            startTime();
         });
 
         function search_start_date(type, date) {
@@ -304,6 +305,24 @@
                     link.href = dataUrl;
                     link.click();
                 });
+        }
+
+        function startTime() {
+            const today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('span-time').innerHTML = h + ":" + m + ":" + s;
+            setTimeout(startTime, 1000);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i
+            }; // add zero in front of numbers < 10
+            return i;
         }
     </script>
     <!-- END: Page JS-->

@@ -47,7 +47,7 @@
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <!-- END: Custom CSS-->
 
-    <style>
+    <!-- <style>
         .table-black {
             color: #FFFFFF;
             background-color: #003285;
@@ -57,7 +57,7 @@
             color: #FFFFFF;
             background-color: #0060ff;
         }
-    </style>
+    </style> -->
 </head>
 <!-- END: Head-->
 
@@ -435,6 +435,8 @@
                 document.getElementById('agent_tax_text').innerHTML = document.getElementById('agent_value').dataset.license;
                 document.getElementById('agent_tel_text').innerHTML = document.getElementById('agent_value').dataset.telephone;
                 document.getElementById('agent_address_text').innerHTML = document.getElementById('agent_value').dataset.address;
+                // document.getElementById('tr-color').style.backgroundColor = '#' + document.getElementById('agent_value').dataset.color;
+                // document.getElementById('tr-darken').style.backgroundColor = '#' + document.getElementById('agent_value').dataset.darken;
 
                 document.getElementById('rec_full_text').innerHTML = document.getElementById('agent_value').dataset.rec_full;
                 document.getElementById('inv_full_text').innerHTML = res_invoice[rec_id].inv_full;
@@ -453,6 +455,8 @@
                     var rowspan = 0;
                     text_rates = '';
                     var id = res.id[index];
+                    document.getElementById('tr-color').style.backgroundColor = '#' + res[id].color;
+                    document.getElementById('tr-darken').style.backgroundColor = '#' + res[id].darken;
                     discount = res[id].discount !== '-' ? Number(discount + res[id].discount) : Number(discount);
                     cot = res[id].cot !== '-' ? Number(cot + res[id].cot) : Number(cot);
 

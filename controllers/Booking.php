@@ -499,6 +499,25 @@ class Booking extends DB
         return $data;
     }
 
+    public function showlog(int $booking_id)
+    {
+        $query = "SELECT log_booking.*,
+            users.firstname as firstname, users.lastname as lastname
+            FROM log_booking 
+            LEFT JOIN users
+                ON log_booking.user_id = users.id
+            WHERE log_booking.id > 0
+            AND log_booking.booking_id = $booking_id
+        ";
+        $query .= " ORDER BY log_booking.id ASC";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $result = $statement->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $data;
+    }
+
     public function showbranch()
     {
         $query = "SELECT id, name
@@ -2362,6 +2381,41 @@ class Booking extends DB
         return $this->response;
     }
 
+    public function insert_log(string $name, string $detail, int $booking_id, int $type_id, string $created_at)
+    {
+        $bind_types = "";
+        $params = array();
+
+        $query = "INSERT INTO `log_booking`(`name`, `detail`, `booking_id`, `user_id`, `type_id`, `created_at`)
+        VALUES (?, ?, ?, ?, ?, ?)";
+
+        $bind_types .= "s";
+        array_push($params, $name);
+
+        $bind_types .= "s";
+        array_push($params, $detail);
+
+        $bind_types .= "i";
+        array_push($params, $booking_id);
+
+        $bind_types .= "i";
+        array_push($params, $_SESSION["supplier"]["id"]);
+
+        $bind_types .= "i";
+        array_push($params, $type_id);
+
+        $bind_types .= "s";
+        array_push($params, $created_at);
+
+        $statement = $this->connection->prepare($query);
+        !empty($bind_types) ? $statement->bind_param($bind_types, ...$params) : '';
+
+        if ($statement->execute()) {
+            $this->response = $this->connection->insert_id;
+        }
+
+        return $this->response;
+    }
 
     public function delete_booking_extra(int $booking_extra_id)
     {

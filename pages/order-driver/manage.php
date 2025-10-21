@@ -13,9 +13,10 @@ $search_return = !empty($_GET['search_return']) ? $_GET['search_return'] : 1;
 $search_status = $_GET['search_status'] != "" ? $_GET['search_status'] : 'all';
 $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';
 $search_product = $_GET['search_product'] != "" ? $_GET['search_product'] : 'all';
+$search_island = $_GET['search_island'] != "" ? $_GET['search_island'] : 'all';
 $search_voucher_no = $_GET['voucher_no'] != "" ? $_GET['voucher_no'] : '';
 $refcode = $_GET['refcode'] != "" ? $_GET['refcode'] : '';
-$name = $_GET['name'] != "" ? $_GET['name'] : '';
+// $name = $_GET['name'] != "" ? $_GET['name'] : '';
 # --- show list boats booking --- #
 $first_booking = array();
 $first_prod = array();
@@ -28,7 +29,7 @@ $first_manage = [];
 $first_bo = [];
 $first_trans = [];
 $frist_bomange = array();
-$bookings = $manageObj->showlisttransfers('all', $search_return, $get_date, $search_car, $search_driver, 'all', $search_status, $search_agent, $search_product, $search_voucher_no, $refcode, $name);
+$bookings = $manageObj->showlisttransfers('all', $search_return, $get_date, $search_car, $search_driver, 'all', $search_status, $search_agent, $search_island, $search_product, $search_voucher_no, $refcode);
 # --- Check products --- #
 if (!empty($bookings)) {
     foreach ($bookings as $booking) {
@@ -68,6 +69,7 @@ if (!empty($bookings)) {
             $agent_name[$booking['id']] = !empty($booking['comp_name']) ? $booking['comp_name'] : '';
             $language[$booking['id']] = !empty(!empty($booking['lang_name'])) ? $booking['lang_name'] : '';
             $boat_name[$booking['id']] = !empty($booking['boat_name']) ? $booking['boat_name'] : $booking['outside_boat'];
+            $bomange_id[$booking['product_id']][] = !empty($booking['bomange_id']) ? $booking['bomange_id'] : 0;
             # --- array programe --- #
             $prod_adult[$booking['product_id']][] = !empty($booking['bpr_adult']) && $booking['mange_id'] == 0 ? $booking['bpr_adult'] : 0;
             $prod_child[$booking['product_id']][] = !empty($booking['bpr_child']) && $booking['mange_id'] == 0 ? $booking['bpr_child'] : 0;
@@ -99,6 +101,7 @@ if (!empty($bookings)) {
             $outside[$booking['id']][2] = !empty($booking['outside_dropoff']) ? $booking['outside_dropoff'] : '';
             $zone_name[$booking['id']][1] = !empty($booking['zonep_name']) ? $booking['zonep_name'] : '';
             $zone_name[$booking['id']][2] = !empty($booking['zoned_name']) ? $booking['zoned_name'] : '';
+            $bt_note[$booking['id']][1] = !empty($booking['bt_note']) ? $booking['bt_note'] : '';
 
             if (($booking['pickup_id'] != $booking['dropoff_id']) || ($booking['outside'] != $booking['outside_dropoff'])) {
                 $check_dropoff[$booking['product_id']][] = !empty($booking['id']) ? $booking['id'] : 0;
@@ -121,7 +124,7 @@ if (!empty($bookings)) {
         if ($booking['mange_id'] > 0 && (in_array($booking['bomange_id'], $frist_bomange) == false)) {
             $frist_bomange[] = $booking['bomange_id'];
             $reteun = $booking['mange_pickup'] > 0 ? 1 : 2;
-            $bomange_id[$booking['mange_id']][] = !empty($booking['bomange_id']) ? $booking['bomange_id'] : 0;
+            // $bomange_id[$booking['mange_id']][] = !empty($booking['bomange_id']) ? $booking['bomange_id'] : 0;
             $bomange_bo[$booking['mange_id']][] = !empty($booking['id']) ? $booking['id'] : 0;
             $check_book[$reteun][] = !empty($booking['id']) ? $booking['id'] : 0;
             $check_bt[$reteun][] = !empty($booking['bt_id']) ? $booking['bt_id'] : 0;
@@ -130,14 +133,13 @@ if (!empty($bookings)) {
     }
 }
 # --- get data --- #
-$manages = $manageObj->show_manage_transfer($get_date, $search_return);
+$manages = $manageObj->show_manage_transfer($get_date, $search_island);
 foreach ($manages as $manage) {
     if (in_array($manage['id'], $first_manage) == false) {
         $first_manage[] = $manage['id'];
         $mange['id'][] = !empty($manage['id']) ? $manage['id'] : 0;
         $mange['seat'][] = !empty($manage['seat']) ? $manage['seat'] : 0;
         $mange['pickup'][] = !empty($manage['pickup']) ? $manage['pickup'] : 0;
-        // $mange['dropoff'][] = !empty($manage['dropoff']) ? $manage['dropoff'] : 0;
         $mange['car'][] = !empty($manage['car_id']) ? $manage['car_name'] : '';
         $mange['driver'][] = !empty($manage['driver_name']) ? $manage['driver_name'] : $manage['outside_driver'];
         $mange['license'][] = !empty($manage['license']) ? $manage['license'] : '';
@@ -146,6 +148,10 @@ foreach ($manages as $manage) {
         $mange['driver_name'][] = !empty($manage['driver_name']) ? $manage['driver_name'] : $manage['outside_driver'];
         $mange['guide_id'][] = !empty($manage['guide_id']) ? $manage['guide_id'] : 0;
         $mange['guide_name'][] = !empty($manage['guide_id']) ? $manage['guide_name'] : '';
+        $mange['island_id'][] = !empty($manage['island_id']) ? $manage['island_id'] : 0;
+        $mange['island_name'][] = !empty($manage['island_id']) ? $manage['island_name'] : '';
+        // $mange['color'][] = !empty($manage['color']) ? $manage['color'] : '';
+        $mange['darken'][] = !empty($manage['darken']) ? $manage['darken'] : '';
         $mange['car_id'][] = !empty($manage['car_id']) ? $manage['car_id'] : 0;
         $mange['car_name'][] = !empty($manage['car_id']) ? $manage['car_name'] : $manage['outside_car'];
         $mange['outside_car'][] = !empty($manage['outside_car']) ? $manage['outside_car'] : '';
@@ -222,7 +228,7 @@ foreach ($manages as $manage) {
                     <form id="booking-search-form" name="booking-search-form" method="get" enctype="multipart/form-data">
                         <input type="hidden" name="pages" value="<?php echo $_GET['pages']; ?>">
                         <div class="d-flex align-items-center mx-50 row pt-0 pb-0">
-                            <div class="col-md-2 col-12">
+                            <div class="col-md-3 col-12">
                                 <div class="form-group">
                                     <label for="search_status">Status</label>
                                     <select class="form-control select2" id="search_status" name="search_status">
@@ -264,6 +270,23 @@ foreach ($manages as $manage) {
                                         ?>
                                             <option value="<?php echo $product['id']; ?>" <?php echo $selected; ?>><?php echo $product['name']; ?></option>
                                         <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <div class="form-group">
+                                    <label for="search_island">Island</label>
+                                    <select class="form-control select2" id="search_island" name="search_island">
+                                        <option value="all">All</option>
+                                        <?php
+                                        $islands = $manageObj->showisland();
+                                        foreach ($islands as $island) {
+                                            $selected = $search_island == $island['id'] ? 'selected' : '';
+                                        ?>
+                                            <option value="<?php echo $island['id']; ?>" <?php echo $selected; ?>><?php echo $island['name']; ?></option>
+                                        <?php
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -319,12 +342,13 @@ foreach ($manages as $manage) {
                                     <input type="text" class="form-control" id="voucher_no" name="voucher_no" value="<?php echo $search_voucher_no; ?>" />
                                 </div>
                             </div>
-                            <div class="col-md-2 col-12">
+                            <!-- <div class="col-md-2 col-12">
                                 <div class="form-group">
                                     <label class="form-label" for="name">Customer Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="<?php echo $name; ?>" />
+                                    <input type="text" class="form-control" id="name" name="name" value="<?php // echo $name; 
+                                                                                                            ?>" />
                                 </div>
-                            </div>
+                            </div> -->
                             <input type="hidden" id="pickup_retrun" name="search_retrun" value="1">
                             <div class="col-md-4 col-12 mb-1">
                                 <button type="submit" class="btn btn-primary">Search</button>
@@ -357,17 +381,18 @@ foreach ($manages as $manage) {
                                                 <div class="col-4 text-left text-bold h4"></div>
                                                 <div class="col-4 text-center text-bold h4"><?php echo $head_name; ?></div>
                                                 <div class="col-4 text-right mb-50">
-                                                    <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-info waves-effect btn-page-block-spinner" data-toggle="modal" data-target="#modal-booking" onclick="search_booking('not', '<?php echo $get_date; ?>', <?php echo $return; ?>, <?php echo $mange['id'][$i]; ?>, '<?php echo $head_name; ?>', <?php echo $mange['seat'][$i]; ?>);">เพิ่ม Booking</button> <!--- <i data-feather='plus-circle'></i> --->
+                                                    <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-info waves-effect btn-page-block-spinner" data-toggle="modal" data-target="#modal-booking" onclick="search_booking('not', '<?php echo $get_date; ?>', <?php echo $return; ?>, <?php echo $mange['id'][$i]; ?>, '<?php echo $head_name; ?>', <?php echo $mange['island_id'][$i]; ?>);">เพิ่ม Booking</button> <!--- <i data-feather='plus-circle'></i> --->
                                                     <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-warning waves-effect btn-page-block-spinner" data-toggle="modal" data-target="#modal-transfers" onclick="modal_transfer('<?php echo date('j F Y', strtotime($get_date)); ?>', <?php echo $mange['id'][$i]; ?>, <?php echo $i; ?>, 1)">แก้ใขรถ</button> <!--- <i data-feather='plus-edit'></i> --->
                                                     <input type="hidden" id="arr_mange<?php echo $mange['id'][$i]; ?>" value='<?php echo json_encode($mange, JSON_HEX_APOS, JSON_UNESCAPED_UNICODE); ?>'>
                                                 </div>
                                             </div>
                                             <table class="table table-bordered table-striped">
-                                                <thead class="bg-light">
+                                                <thead bgcolor="<?php echo !empty($mange['darken'][$i]) ? '#' . $mange['darken'][$i] : '#003285'; ?>" style="color: #fff;" >
                                                     <tr>
-                                                        <th colspan="3">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
-                                                        <th colspan="7">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
-                                                        <th colspan="4">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
+                                                        <th colspan="3">Island : <?php echo $mange['island_name'][$i]; ?></th>
+                                                        <th colspan="2">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
+                                                        <th colspan="4">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
+                                                        <th colspan="6">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
                                                     </tr>
                                                     <tr>
                                                         <th>เรือ</th>
@@ -442,7 +467,7 @@ foreach ($manages as $manage) {
                                                                     <td class="text-center"><?php echo $bt_child[$id][$mange_retrun]; ?></td>
                                                                     <td class="text-center"><?php echo $bt_infant[$id][$mange_retrun]; ?></td>
                                                                     <td class="text-center"><?php echo $bt_foc[$id][$mange_retrun]; ?></td>
-                                                                    <td><b class="text-info"><?php echo $note[$id]; ?></b></td>
+                                                                    <td class="wrapword"><b class="text-info"><?php echo $bt_note[$id][1]; ?></b></td>
                                                                 </tr>
                                                             </a>
                                                         <?php } ?>
@@ -480,7 +505,8 @@ foreach ($manages as $manage) {
                             <?php if (!empty($programe_id)) {
                                 $retrun = 1;
                                 for ($a = 0; $a < count($programe_id); $a++) {
-                                    if (!empty($bo_id[$programe_id[$a]])) {
+                                    $check_programe = !empty($bomange_id[$programe_id[$a]]) ? in_array(0, $bomange_id[$programe_id[$a]]) : 1;
+                                    if (!empty($bo_id[$programe_id[$a]]) && $check_programe > 0) {
                             ?>
                                         <div class="card-body pt-0 p-50 ">
                                             <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75">
@@ -558,7 +584,7 @@ foreach ($manages as $manage) {
                                                                 <td class="text-center"><?php echo $bt_child[$id][$retrun]; ?></td>
                                                                 <td class="text-center"><?php echo $bt_infant[$id][$retrun]; ?></td>
                                                                 <td class="text-center"><?php echo $bt_foc[$id][$retrun]; ?></td>
-                                                                <td><?php echo $note[$id]; ?></td>
+                                                                <td class="wrapword"><?php echo $bt_note[$id][1]; ?></td>
                                                             </tr>
                                                     <?php }
                                                     } ?>
@@ -603,6 +629,23 @@ foreach ($manages as $manage) {
                                     <input type="hidden" id="manage_id" name="manage_id" value="">
                                     <input type="hidden" id="retrun" name="retrun" value="">
                                     <div class="row">
+                                        <div class="col-md-3 col-12">
+                                            <div class="form-group">
+                                                <label for="island_id">Island</label>
+                                                <select class="form-control select2" id="island_id" name="island_id">
+                                                    <!-- <option value="all">All</option> -->
+                                                    <option value="0">กรุญาเลือก island ...</option>
+                                                    <?php
+                                                    $islands = $manageObj->showisland();
+                                                    foreach ($islands as $island) {
+                                                    ?>
+                                                        <option value="<?php echo $island['id']; ?>"><?php echo $island['name']; ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-md-3 col-12" hidden>
                                             <div class="form-group" id="frm-car">
                                                 <label for="car">ชื่อรถ</label>

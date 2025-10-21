@@ -481,10 +481,7 @@
                     }
                 }
             }
-            document.getElementById('booking-true').innerHTML = sum_true;
-            document.getElementById('booking-false').innerHTML = sum_false;
             document.getElementById('toc-true').innerHTML = sum_toc_true;
-            document.getElementById('toc-false').innerHTML = sum_toc_false;
             document.getElementById('adult-sum').innerHTML = adult_sum;
             document.getElementById('child-sum').innerHTML = child_sum;
             document.getElementById('infant-sum').innerHTML = infant_sum;
@@ -493,17 +490,18 @@
 
         function search_booking(type, travel_date, manage_id) {
             // get data
-            var formData = new FormData();
-            formData.append('action', 'search');
-            formData.append('travel_date', String(travel_date));
-            formData.append('manage_id', manage_id);
-            formData.append('type', type);
+            // var formData = new FormData();
+            // formData.append('action', 'search');
+            // formData.append('travel_date', String(travel_date));
+            // formData.append('manage_id', manage_id);
+            // formData.append('type', type);
+            var serializedData = $('#booking-search-form').serialize();
             $.ajax({
                 url: "pages/order-boat/function/search-manage-booking.php",
                 type: "POST",
-                processData: false,
-                contentType: false,
-                data: formData,
+                // processData: false,
+                // contentType: false,
+                data: serializedData + "&action=search&manage_id=" + manage_id + "&type=" + type,
                 success: function(response) {
                     $('#div-manage-boooking').html(response);
                     sum_checkbox();
@@ -594,6 +592,7 @@
                 var infant = 0;
                 var foc = 0;
                 if (count > 0) {
+                    no = 1;
                     for (let index = 0; index < count; index++) {
                         adult = res.age[index] == 1 ? Number(adult + 1) : Number(adult);
                         child = res.age[index] == 2 ? Number(child + 1) : Number(child);
@@ -601,15 +600,17 @@
                         foc = res.age[index] == 4 ? Number(foc + 1) : Number(foc);
 
                         text_table += '<tr>';
-                        text_table += '<td class="text-center">' + res.age_name[index] + '</td>';
+                        text_table += '<td class="text-center">' + no++ + '</td>';
                         text_table += '<td>' + res.name[index] + '</td>';
-                        text_table += '<td class="text-center">' + res.voucher_no[index] + '</td>';
+                        text_table += '<td>' + res.voucher_no[index] + '</td>';
+                        text_table += '<td></td>';
+                        text_table += '<td class="text-center">' + res.passport[index] + '</td>';
                         text_table += '<td class="text-center">' + res.nation[index] + '</td>';
                         text_table += '<td class="text-center">' + res.birth[index] + '</td>';
                         text_table += '</tr>';
                     }
                     text_table += '<tr>';
-                    text_table += '<td class="text-center" colspan="5">TOTAL ' + Number(adult + child + infant + foc) + ' PAX | A ' + Number(adult) + ' | C ' + Number(child) + ' | INF ' + Number(infant) + ' | FOC ' + Number(foc) + '</td>';
+                    text_table += '<td class="text-center" colspan="7">TOTAL ' + Number(adult + child + infant + foc) + ' PAX | A ' + Number(adult) + ' | C ' + Number(child) + ' | INF ' + Number(infant) + ' | FOC ' + Number(foc) + '</td>';
                     text_table += '</tr>';
                 }
                 document.getElementById('table-tbody-customers').innerHTML = text_table;
@@ -714,7 +715,8 @@
                         if (countprod) {
                             for (let index = 0; index < countprod; index++) {
                                 selected = (boat_id !== undefined && res.id[index] == boat_id) ? 'selected' : '';
-                                $('#boats').append("<option value=\"" + res.id[index] + "\" data-name=\"" + res.name[index] + " (" + res.refcode[index] + ")\" " + selected + ">" + res.name[index] + " (" + res.refcode[index] + ")</option>");
+                                $('#boats').append("<option value=\"" + res.id[index] + "\" data-name=\"" + res.name[index] + " (" + res.refcode[index] + ")\" " + selected + ">" + res.name[index] + "</option>");
+                                // " (" + res.refcode[index] + ")
                             }
                         }
                         if (boat_id !== undefined && boat_id == 'outside') {

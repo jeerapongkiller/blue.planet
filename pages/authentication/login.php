@@ -16,7 +16,7 @@ require_once 'controllers/Auth.php';
     <title>Supplier Login - Blue Planet</title>
     <link rel="apple-touch-icon" href="app-assets/images/ico/favicon.png">
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.png">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
@@ -103,9 +103,37 @@ require_once 'controllers/Auth.php';
         $auth = new Auth();
         $response = $auth->check_login($username_signin, $password_signin);
 
+        // if ($response != false && $response > 0) {
+        //     $redirect_page = ($_SESSION["supplier"]["department_id"] == 5) ? 'order-job/list' : 'booking/list';
+        //     header('location:./?pages=' . $redirect_page);
+        // }
         if ($response != false && $response > 0) {
-            $redirect_page = ($_SESSION["supplier"]["department_id"] == 5) ? 'order-job/list' : 'booking/list';
-            header('location:./?pages=' . $redirect_page);
+            $permission_pages = [
+                1 => 'booking/list',
+                3 => 'manage-transfer/list',
+                4 => 'order-booking/list',
+                5 => 'invoice/list',
+                6 => 'report/list',
+                7 => 'tour/list',
+                8 => 'agent/list',
+                9 => 'car/list',
+                10 => 'user/list',
+            ];
+
+            $redirect_page = '';
+
+            foreach ($permission_pages as $perm_id => $page) {
+                if (in_array($perm_id, $_SESSION["supplier"]["permission"])) {
+                    $redirect_page = "?pages=$page";
+                    break;
+                }
+            }
+
+            if ($_SESSION["supplier"]["id"] == 1) {
+                $redirect_page = '?pages=booking/list';
+            }
+
+            header("Location: ./$redirect_page");
         } else {
             echo '
                 <script type="text/javascript">

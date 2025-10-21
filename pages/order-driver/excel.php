@@ -79,6 +79,7 @@ if (!empty($bookings)) {
             $outside[$booking['id']][2] = !empty($booking['outside_dropoff']) ? $booking['outside_dropoff'] : '';
             $zone_name[$booking['id']][1] = !empty($booking['zonep_name']) ? $booking['zonep_name'] : '';
             $zone_name[$booking['id']][2] = !empty($booking['zoned_name']) ? $booking['zoned_name'] : '';
+            $bt_note[$booking['id']][1] = !empty($booking['bt_note']) ? $booking['bt_note'] : '';
 
             $check_mange[$booking['product_id']][1][] = !empty($booking['mange_id']) ? $booking['mange_id'] : 0;
 
@@ -167,7 +168,7 @@ if (!empty($mange_id)) {
                         $bt_child[$id][$mange_retrun],
                         $bt_infant[$id][$mange_retrun],
                         $bt_foc[$id][$mange_retrun],
-                        $note[$id],
+                        $bt_note[$id][1],
                     ];
                 }
             }

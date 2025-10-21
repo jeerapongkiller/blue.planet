@@ -47,7 +47,7 @@
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <!-- END: Custom CSS-->
 
-    <style>
+    <!-- <style>
         .table-black {
             color: #FFFFFF;
             background-color: #003285;
@@ -57,7 +57,7 @@
             color: #FFFFFF;
             background-color: #0060ff;
         }
-    </style>
+    </style> -->
 </head>
 <!-- END: Head-->
 
@@ -406,6 +406,9 @@
                 document.getElementById('agent_tax_text').innerHTML = document.getElementById('agent_value').dataset.license;
                 document.getElementById('agent_tel_text').innerHTML = document.getElementById('agent_value').dataset.telephone;
                 document.getElementById('agent_address_text').innerHTML = document.getElementById('agent_value').dataset.address;
+                document.getElementById('tr-color').style.backgroundColor = '#' + document.getElementById('agent_value').dataset.color;
+                document.getElementById('tr-darken').style.backgroundColor = '#' + document.getElementById('agent_value').dataset.darken;
+
                 var res = $.parseJSON(array_booking);
                 var res_rates = array_rates !== '' ? $.parseJSON(array_rates) : undefined;
                 var res_extar = array_extar !== '' ? $.parseJSON(array_extar) : undefined;
@@ -446,7 +449,8 @@
 
                                 amount = res_rates[id].total[y] !== '-' ? Number(amount + res_rates[id].total[y]) : Number(amount);
                             } else if (y > 0) {
-                                var customer = res_rates[id].customer[y] == 1 ? ' (Thai)' : ' (Foreign)';
+                                // var customer = res_rates[id].customer[y] == 1 ? ' (Thai)' : ' (Foreign)';
+                                var customer = ' (' + res_rates[id].category_name[y] + ') ';
                                 text_html += '<tr>' +
                                     '<td class="text-center">' + Number(no++) + '</td>' +
                                     '<td> ' + res[id].product_name + customer + ' </td>' +

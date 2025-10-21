@@ -7,7 +7,7 @@ $times = date("H:i:s");
 
 if (isset($_GET['action']) && $_GET['action'] == "print" && isset($_GET['type'])) {
     $search_status = !empty($_GET["search_status"]) ? $_GET["search_status"] : 'all';
-    $search_travel = !empty($_GET["search_travel"]) ? $_GET["search_travel"] : '0000-00-00';
+    $search_travel = !empty($_GET["search_travel"]) ? $_GET["search_travel"] : $today;
     $date_form = substr($search_travel, 0, 10) != '' ? substr($search_travel, 0, 10) : '0000-00-00';
     $date_to = substr($search_travel, 14, 10) != '' ? substr($search_travel, 14, 10) : $date_form;
     $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';
@@ -356,7 +356,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && isset($_GET['type'])
                         foreach ($ortran_id as $x => $val) {  ?>
                             <tr>
                                 <td>
-                                    <div class="font-weight-bolder text-primary"><?php echo !empty($car_name[$ortran_id[$x]]) ? !empty($driver_name[$ortran_id[$x]]) ? $car_name[$ortran_id[$x]] . ' / ' . $driver_name[$ortran_id[$x]] : $car_name[$ortran_id[$x]] : ''; ?></div>
+                                    <div class="font-weight-bolder text-primary"><?php echo $driver_name[$ortran_id[$x]]; ?></div>
                                 </td>
                                 <td><?php echo (!empty($ortran_travel[$ortran_id[$x]])) ? date('j F Y', strtotime($ortran_travel[$ortran_id[$x]])) : ''; ?></td>
                                 <td class="text-center p-25 m-25"><?php echo !empty($bot_id[$val]) ? count($bot_id[$val]) : 0; ?></td>

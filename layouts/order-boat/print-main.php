@@ -23,13 +23,19 @@
     <link rel="stylesheet" type="text/css" href="app-assets/css/themes/semi-dark-layout.css">
 
     <style type="text/css" media="print">
-        @page {
+        <?php if (isset($_GET['action']) && $_GET['action'] == "customer") { ?>@page {
+            size: A4;
+            margin: 0;
+            padding: 0;
+        }
+
+        <?php } else { ?>@page {
             size: A4 landscape;
             margin: 0;
             padding: 0;
         }
 
-        @media print {
+        <?php } ?>@media print {
             .pagebreak {
                 page-break-after: always;
             }
@@ -46,7 +52,7 @@
         }
 
         .tableprint th {
-            background-color: #333;
+            /* background-color: #333; */
             color: #FFF;
         }
 
@@ -75,7 +81,27 @@
     <!-- BEGIN Vendor JS-->
 
     <script>
+        function startTime() {
+            const today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('span-time').innerHTML = h + ":" + m + ":" + s;
+            setTimeout(startTime, 1000);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i
+            }; // add zero in front of numbers < 10
+            return i;
+        }
+
         $(window).on('load', function() {
+            startTime();
+
             document.title = document.getElementById('name_img').value;
             window.print(document.getElementById('div-boat-job-image'));
         });

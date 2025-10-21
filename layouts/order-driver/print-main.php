@@ -70,7 +70,7 @@
         }
 
         .tableprint th {
-            background-color: #333;
+            /* background-color: #333; */
             color: #FFF;
         }
 
@@ -99,7 +99,27 @@
     <!-- BEGIN Vendor JS-->
 
     <script>
+        function startTime() {
+            const today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('span-time').innerHTML = h + ":" + m + ":" + s;
+            setTimeout(startTime, 1000);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i
+            }; // add zero in front of numbers < 10
+            return i;
+        }
+
         $(window).on('load', function() {
+            startTime();
+
             document.title = document.getElementById('name_img').value;
             window.print(document.getElementById('div-driver-job-image'));
         });

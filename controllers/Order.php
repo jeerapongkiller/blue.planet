@@ -36,6 +36,7 @@ class Order extends DB
         $query = "SELECT *
             FROM drivers
             WHERE is_approved = 1
+            ORDER BY name ASC
         ";
         $statement = $this->connection->prepare($query);
         $statement->execute();
@@ -142,6 +143,25 @@ class Order extends DB
         $statement->execute();
         $result = $statement->get_result();
         $data = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $data;
+    }
+
+    public function get_value(string $select, string $from, string $WHERE)
+    {
+        $query = "SELECT $select
+            FROM $from 
+            WHERE $WHERE
+        ";
+        
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $result = $statement->get_result();
+        if ($result->num_rows > 0) {
+            $data = $result->fetch_assoc();
+        } else {
+            $data = false;
+        }
 
         return $data;
     }
@@ -383,9 +403,24 @@ class Order extends DB
     {
         $query = "SELECT *
             FROM products 
-            WHERE is_deleted = 0
+            WHERE is_approved = 1
         ";
         $query .= " ORDER BY id ASC";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $result = $statement->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $data;
+    }
+
+    public function showisland()
+    {
+        $query = "SELECT id, name, is_approved
+            FROM island 
+            WHERE is_approved = 1
+        ";
+        $query .= " ORDER BY name ASC";
         $statement = $this->connection->prepare($query);
         $statement->execute();
         $result = $statement->get_result();
@@ -415,7 +450,7 @@ class Order extends DB
 
     // Management Transfer
     // --------------------------------------------------------------------
-    public function showlisttransfers($type, int $return, string $travel_date, $car, $driver, $programe, $status, $agent, $product, $voucher_no, $refcode, $name)
+    public function showlisttransfers($type, int $return, string $travel_date, $car, $driver, $programe, $status, $agent, $island, $product, $voucher_no, $refcode)
     {
         $bind_types = "";
         $params = array();
@@ -511,10 +546,11 @@ class Order extends DB
 
         $query .= (!empty($status) && $status != 'all') ? " AND BSTA.id = " . $status : "";
         $query .= (!empty($agent) && $agent != 'all') ? " AND COMP.id = " . $agent : "";
+        $query .= (!empty($island) && $island != 'all') ? " AND PROD.island_id = " . $island : "";
         $query .= (!empty($product) && $product != 'all') ? " AND PROD.id = " . $product : "";
         $query .= (!empty($voucher_no)) ? " AND BO.voucher_no_agent LIKE '%" . $voucher_no . "%' " : "";
         $query .= (!empty($refcode)) ? " AND BONO.bo_full LIKE '%" . $refcode . "%' " : "";
-        $query .= (!empty($name)) ? " AND CUS.name LIKE '%" . $name . "%' " : "";
+        // $query .= (!empty($name)) ? " AND CUS.name LIKE '%" . $name . "%' " : "";
 
         if (!empty($type) && $type == 'manage') {
 
@@ -579,7 +615,7 @@ class Order extends DB
                 $bind_types .= "i";
                 array_push($params, $programe);
             }
-            $query .= " ORDER BY PROD.id DESC, BOMANGE.arrange ASC, CATE.id ASC, CUS.id ASC ";
+            $query .= " ORDER BY BOMANGE.arrange ASC, PROD.id DESC, CATE.id ASC, CUS.id ASC ";
         }
 
 
@@ -592,12 +628,13 @@ class Order extends DB
         return $data;
     }
 
-    public function show_manage_transfer(string $travel_date)
+    public function show_manage_transfer(string $travel_date, $island)
     {
         $query = "SELECT manage.*,
                 BOMAN.arrange as arrange, BOMAN.booking_transfer_id as boman_bt,
                 CAR.id as car_id, CAR.name as car_name, CAR.car_registration as registration,
-                DRIVER.id as driver_id, DRIVER.name as driver_name
+                DRIVER.id as driver_id, DRIVER.name as driver_name,
+                island.name as island_name, island.color as color, island.color_darken as darken
             FROM order_transfer manage
             LEFT JOIN booking_order_transfer BOMAN
                 ON manage.id = BOMAN.order_id
@@ -605,9 +642,13 @@ class Order extends DB
                 ON manage.car_id = CAR.id
             LEFT JOIN drivers DRIVER
                 ON manage.driver_id = DRIVER.id
+            LEFT JOIN island
+                ON manage.island_id = island.id
             WHERE manage.id > 0
             AND manage.travel_date = ?
         ";
+
+        $query .= (!empty($island) && $island != 'all') ? " AND manage.island_id = " . $island : "";
 
         $query .= " ORDER BY manage.pickup DESC,
                     CASE
@@ -654,13 +695,13 @@ class Order extends DB
         return $data;
     }
 
-    public function insert_manage_transfer(string $outside_driver, int $car, int $seat, int $driver, string $license, string $telephone, string $date_travel, string $note, int $pickup, int $dropoff)
+    public function insert_manage_transfer(string $outside_driver, int $island_id, int $car, int $seat, int $driver, string $license, string $telephone, string $date_travel, string $note, int $pickup, int $dropoff)
     {
         $bind_types = "";
         $params = array();
 
-        $query = "INSERT INTO `order_transfer`(`outside_driver`, `license`, `telephone`, `travel_date`, `note`, `pickup`, `dropoff`, `seat`, `driver_id`, `car_id`, `created_at`)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+        $query = "INSERT INTO `order_transfer`(`outside_driver`, `license`, `telephone`, `travel_date`, `note`, `pickup`, `dropoff`, `seat`, `island_id`, `driver_id`, `car_id`, `created_at`)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
 
         $bind_types .= "s";
         array_push($params, $outside_driver);
@@ -687,6 +728,9 @@ class Order extends DB
         array_push($params, $seat);
 
         $bind_types .= "i";
+        array_push($params, $island_id);
+
+        $bind_types .= "i";
         array_push($params, $driver);
 
         $bind_types .= "i";
@@ -702,12 +746,16 @@ class Order extends DB
         return $this->response;
     }
 
-    public function update_manage_transfer(string $outside_driver, int $car, int $seat, int $driver, string $license, string $telephone, string $note, int $id)
+    public function update_manage_transfer(string $outside_driver, int $island_id, int $car, int $seat, int $driver, string $license, string $telephone, string $note, int $id)
     {
         $bind_types = "";
         $params = array();
 
         $query = "UPDATE order_transfer SET";
+
+        $query .= " island_id = ? ,";
+        $bind_types .= "i";
+        array_push($params, $island_id);
 
         $query .= " car_id = ? ,";
         $bind_types .= "i";
@@ -879,7 +927,7 @@ class Order extends DB
 
     // Management Boat
     // --------------------------------------------------------------------
-    public function showlistboats($type, int $id, string $travel_date, $boat, $guide, $status, $agent, $product, $voucher_no, $refcode, $name, $hotel)
+    public function showlistboats($type, int $id, string $travel_date, $boat, $guide, $status, $agent, $island, $product, $voucher_no, $refcode, $hotel)
     {
         $bind_types = "";
         $params = array();
@@ -898,6 +946,7 @@ class Order extends DB
                     BPR.id as bpr_id, BPR.adult as bpr_adult, BPR.child as bpr_child, BPR.infant as bpr_infant, BPR.foc as bpr_foc,
                     BPR.rate_adult as rate_adult, BPR.rate_child as rate_child, BPR.rate_infant as rate_infant, BPR.rate_total as rate_private,   
                     PROD.id as product_id, PROD.name as product_name,
+                    island.id as island_id, island.name as island_name, island.color as island_color, island.color_darken as island_darken,
                     CATE.id as category_id, CATE.name as category_name, CATE.transfer as category_transfer, 
                     BT.id as bt_id, BT.adult as bt_adult, BT.child as bt_child, BT.infant as bt_infant, BT.foc as bt_foc, BT.start_pickup as start_pickup, BT.end_pickup as end_pickup,
                     BT.pickup_type, pickup_type, BT.room_no as room_no, BT.note as bt_note, BT.hotel_pickup as outside, BT.hotel_dropoff as outside_dropoff,
@@ -946,6 +995,8 @@ class Order extends DB
                     ON BP.id = BPR.booking_products_id
                 LEFT JOIN products PROD
                     ON BP.product_id = PROD.id
+                LEFT JOIN island
+                    ON PROD.island_id = island.id
                 LEFT JOIN product_periods PROP
                     ON BPR.category_id = PROP.product_category_id
                     AND PROP.period_from <= BP.travel_date
@@ -1006,10 +1057,11 @@ class Order extends DB
 
         $query .= (!empty($status) && $status != 'all') ? " AND BSTA.id = " . $status : "";
         $query .= (!empty($agent) && $agent != 'all') ? " AND COMP.id = " . $agent : "";
+        $query .= (!empty($island) && $island != 'all') ? " AND PROD.island_id = " . $island : "";
         $query .= (!empty($product) && $product != 'all') ? " AND PROD.id = " . $product : "";
         $query .= (!empty($voucher_no) && $product != 'all') ? " AND BO.voucher_no_agent LIKE '%" . $voucher_no . "%' " : "";
         $query .= (!empty($refcode)) ? " AND BONO.bo_full LIKE '%" . $refcode . "%' " : "";
-        $query .= (!empty($name)) ? " AND CUS.name LIKE '%" . $name . "%' " : "";
+        // $query .= (!empty($name)) ? " AND CUS.name LIKE '%" . $name . "%' " : "";
         $query .= (!empty($hotel)) ? " AND BT.hotel_pickup LIKE '%" . $hotel . "%' " : "";
 
         if (!empty($type) && ($type == 'list' || $type == 'job' || $type == 'guide')) {
@@ -1082,7 +1134,8 @@ class Order extends DB
                 array_push($params, $id);
             }
 
-            $query .= " ORDER BY CUS.id ASC";
+            // $query .= " ORDER BY CUS.id ASC";
+            $query .= " ORDER BY BT.pickup_type DESC, BORDB.arrange ASC, CATE.name DESC, CUS.id ASC";
         }
 
         $statement = $this->connection->prepare($query);

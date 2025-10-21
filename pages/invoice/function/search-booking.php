@@ -9,11 +9,13 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
     // get value from ajax
     $agent_id = $_POST['agent_id'] != "" ? $_POST['agent_id'] : 0;
     $travel_date = $_POST['travel_date'] != "" ? $_POST['travel_date'] : '0000-00-00';
+    $search_product = !empty($_POST['search_product']) ? $_POST['search_product'] : 'all';
+    $search_island = !empty($_POST['search_island']) ? $_POST['search_island'] : 'all';
 
     $first_booking = array();
     $first_extar = array();
     $first_bpr = array();
-    $bookings = $invObj->showlist('bookings', $travel_date, $agent_id, 0);
+    $bookings = $invObj->showlist('bookings', $travel_date, $search_island, $search_product, $agent_id, 0);
     if (!empty($bookings)) {
         foreach ($bookings as $booking) {
             # --- get value booking --- #
@@ -27,12 +29,10 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
                 $agent_license[] = !empty($booking['tat_license']) ? $booking['tat_license'] : '';
                 $agent_telephone[] = !empty($booking['comp_telephone']) ? $booking['comp_telephone'] : '';
                 $agent_address[] = !empty($booking['comp_address']) ? $booking['comp_address'] : '';
-                // $adult[] = !empty($booking['bpr_adult']) ? $booking['bpr_adult'] : 0;
-                // $child[] = !empty($booking['bpr_child']) ? $booking['bpr_child'] : 0;
-                // $infant[] = !empty($booking['bpr_infant']) ? $booking['bpr_infant'] : 0;
-                // $foc[] = !empty($booking['bpr_foc']) ? $booking['bpr_foc'] : 0;
-                // $rate_adult[] = !empty($booking['rate_adult']) ? $booking['rate_adult'] : 0;
-                // $rate_child[] = !empty($booking['rate_child']) ? $booking['rate_child'] : 0;
+                $color[] = !empty($booking['island_color']) ? $booking['island_color'] : '';
+                $darken[] = !empty($booking['island_darken']) ? $booking['island_darken'] : '';
+                // $color[] = '00D100';
+                // $darken[] = '008000';
                 $cot[] = !empty($booking['total_paid']) ? $booking['total_paid'] : 0;
                 $start_pickup[] = !empty($booking['start_pickup']) ? date('H:i', strtotime($booking['start_pickup'])) : '00:00:00';
                 $end_pickup[] = !empty($booking['end_pickup']) ? date('H:i', strtotime($booking['end_pickup'])) : '00:00:00';
@@ -57,14 +57,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
                 $arr_bo[$booking['id']]['cus_name'] = !empty($booking['cus_name']) ? $booking['cus_name'] : '';
                 $arr_bo[$booking['id']]['product_name'] = !empty($booking['product_name']) ? $booking['product_name'] : '';
                 $arr_bo[$booking['id']]['voucher_no'] = !empty($booking['voucher_no']) ? $booking['voucher_no'] : $booking['book_full'];
-                // $arr_bo[$booking['id']]['adult'] = !empty($booking['bpr_adult']) ? $booking['bpr_adult'] : '-';
-                // $arr_bo[$booking['id']]['child'] = !empty($booking['bpr_child']) ? $booking['bpr_child'] : '-';
-                // $arr_bo[$booking['id']]['rate_adult'] = !empty($booking['rate_adult']) && $booking['bpr_adult'] > 0 ? $booking['rate_adult'] : '-';
-                // $arr_bo[$booking['id']]['rate_child'] = !empty($booking['rate_child']) && $booking['bpr_child'] > 0 ? $booking['rate_child'] : '-';
-                // $arr_bo[$booking['id']]['foc'] = !empty($booking['bpr_foc']) ? $booking['bpr_foc'] : '-';
                 $arr_bo[$booking['id']]['discount'] = !empty($booking['discount']) ? $booking['discount'] : '-';
                 $arr_bo[$booking['id']]['cot'] = !empty($booking['total_paid']) ? $booking['total_paid'] : '-';
-                // $arr_bo[$booking['id']]['total'] = $booking['bp_private_type'] == 1 ? ($booking['bpr_adult'] * $booking['rate_adult']) + ($booking['bpr_child'] * $booking['rate_child']) : $booking['rate_total'];
             }
             # --- get value rates --- #
             if ((in_array($booking['bpr_id'], $first_bpr) == false) && !empty($booking['bpr_id'])) {
@@ -87,7 +81,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
                 $arr_rates[$booking['id']]['foc'][] = !empty($booking['bpr_foc']) ? $booking['bpr_foc'] : 0;
                 $arr_rates[$booking['id']]['rate_adult'][] = !empty($booking['rate_adult']) && $booking['bpr_adult'] > 0 ? $booking['rate_adult'] : '-';
                 $arr_rates[$booking['id']]['rate_child'][] = !empty($booking['rate_child']) && $booking['bpr_child'] > 0 ? $booking['rate_child'] : '-';
-                $arr_rates[$booking['id']]['total'][] = ($booking['bp_private_type'] == 1) ? ($booking['booksta_id'] != 2 && $booking['booksta_id'] != 4) ? ($booking['bpr_adult'] * $booking['rate_adult']) + ($booking['bpr_child'] * $booking['rate_child']) : $booking['rate_total'] : $booking['rate_total'];
+                $arr_rates[$booking['id']]['total'][] = ($booking['booktye_id'] > 0) ? ($booking['booktye_id'] == 1) ? ($booking['bpr_adult'] * $booking['rate_adult']) + ($booking['bpr_child'] * $booking['rate_child']) : $booking['rate_private'] : $booking['rate_total'];
             }
             # --- get value booking --- #
             if (in_array($booking['bec_id'], $first_extar) == false && !empty($booking['bec_id'])) {
@@ -191,11 +185,12 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
                         if (!empty($arr_rates[$id]['total'])) { 
                             $total = !empty($cot[$i]) ? array_sum($arr_rates[$id]['total']) - $cot[$i] : array_sum($arr_rates[$id]['total']); // booking
                             $total = !empty($arr_extar[$id]['total']) ? $total + array_sum($arr_extar[$id]['total']) : $total; // extar charge
-                        } ?>
+                        }
+                         ?>
                         <tr>
                             <td>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input dt-checkboxes checkbox-bookings" type="checkbox" id="checkbox<?php echo $bo_id[$i]; ?>" name="bo_id[]" value="<?php echo $bo_id[$i]; ?>">
+                                    <input class="custom-control-input dt-checkboxes checkbox-bookings" type="checkbox" id="checkbox<?php echo $bo_id[$i]; ?>" name="bo_id[]" value="<?php echo $bo_id[$i]; ?>" data-color="<?php echo $color[$i]; ?>" data-darken="<?php echo $darken[$i]; ?>">
                                     <label class="custom-control-label" for="checkbox<?php echo $bo_id[$i]; ?>"></label>
                                 </div>
                             </td>

@@ -63,7 +63,7 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
     $first_booking = array();
     $first_extar = array();
     $first_bpr = array();
-    $invoices = $invObj->showlist('invoices', '0000-00-00', 'all', $get_cover);
+    $invoices = $invObj->showlist('invoices', '0000-00-00', 'all', 'all', 'all', $get_cover);
     if (!empty($invoices)) {
         foreach ($invoices as $invoice) {
             # --- get value booking --- #
@@ -116,6 +116,10 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                 $discount[] = !empty($invoice['discount']) ? $invoice['discount'] : 0;
                 $created_at[] = !empty($invoice['created_at']) ? $invoice['created_at'] : '0000-00-00';
                 $booker_name[] = !empty($invoice['booker_fname']) ? $invoice['booker_fname'] . ' ' . $invoice['booker_lname'] : '';
+                $color[] = !empty($invoice['island_color']) ? $invoice['island_color'] : '';
+                $darken[] = !empty($invoice['island_darken']) ? $invoice['island_darken'] : '';
+                // $color[] = '00D100';
+                // $darken[] = '008000';
                 // $total[] = $invoice['bp_private_type'] == 1 ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'];
 
                 $arr_bo['id'][] = !empty($invoice['id']) ? $invoice['id'] : 0;
@@ -133,7 +137,7 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                 $arr_bo[$invoice['id']]['foc'] = !empty($invoice['bpr_foc']) ? $invoice['bpr_foc'] : '-';
                 $arr_bo[$invoice['id']]['discount'] = !empty($invoice['discount']) ? $invoice['discount'] : '-';
                 $arr_bo[$invoice['id']]['cot'] = !empty($invoice['total_paid']) ? $invoice['total_paid'] : '-';
-                $arr_bo[$invoice['id']]['total'] = $invoice['bp_private_type'] == 1 ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'];
+                $arr_bo[$invoice['id']]['total'] = $invoice['booktye_id'] == 1 ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_private'];
             }
             # --- get value rates --- #
             if ((in_array($invoice['bpr_id'], $first_bpr) == false) && !empty($invoice['bpr_id'])) {
@@ -149,7 +153,7 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                 $rate_adult[$invoice['id']][] = !empty($invoice['rate_adult']) && $invoice['bpr_adult'] > 0 ? $invoice['rate_adult'] : '-';
                 $rate_child[$invoice['id']][] = !empty($invoice['rate_child']) && $invoice['bpr_child'] > 0 ? $invoice['rate_child'] : '-';
                 $rate_infant[$invoice['id']][] = !empty($invoice['rate_infant']) && $invoice['bpr_infant'] > 0 ? $invoice['rate_infant'] : '-';
-                $total[$invoice['id']][] = $invoice['bp_private_type'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_total'];
+                $total[$invoice['id']][] = $invoice['booktye_id'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_private'];
 
                 $arr_rates[$invoice['id']]['id'][] = !empty($invoice['bpr_id']) ? $invoice['bpr_id'] : 0;
                 $arr_rates[$invoice['id']]['category_name'][] = !empty($invoice['category_name']) ? $invoice['category_name'] : 0;
@@ -160,7 +164,7 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                 $arr_rates[$invoice['id']]['foc'][] = !empty($invoice['bpr_foc']) ? $invoice['bpr_foc'] : 0;
                 $arr_rates[$invoice['id']]['rate_adult'][] = !empty($invoice['rate_adult']) && $invoice['bpr_adult'] > 0 ? $invoice['rate_adult'] : '-';
                 $arr_rates[$invoice['id']]['rate_child'][] = !empty($invoice['rate_child']) && $invoice['bpr_child'] > 0 ? $invoice['rate_child'] : '-';
-                $arr_rates[$invoice['id']]['total'][] = $invoice['bp_private_type'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_total'];
+                $arr_rates[$invoice['id']]['total'][] = $invoice['booktye_id'] == 1 ? ($invoice['booksta_id'] != 2 && $invoice['booksta_id'] != 4) ? ($invoice['bpr_adult'] * $invoice['rate_adult']) + ($invoice['bpr_child'] * $invoice['rate_child']) : $invoice['rate_total'] : $invoice['rate_private'];
             }
             # --- get value booking --- #
             if (in_array($invoice['bec_id'], $first_extar) == false && !empty($invoice['bec_id'])) {
@@ -193,6 +197,8 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
         data-vat="<?php echo $vat[0]; ?>"
         data-withholding="<?php echo $withholding[0]; ?>"
         data-bank_account="<?php echo $banacc_id[0]; ?>"
+        data-darken="<?php echo $darken[0]; ?>"
+        data-color="<?php echo $color[0]; ?>"
         data-note="<?php echo $inv_note[0]; ?>">
     <textarea id="array_booking" hidden><?php echo !empty($arr_bo) ? json_encode($arr_bo, true) : ''; ?></textarea>
     <textarea id="array_rates" hidden><?php echo !empty($arr_rates) ? json_encode($arr_rates, true) : ''; ?></textarea>
@@ -205,22 +211,26 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
 
         .invoice-padding .table-black td {
             color: #FFFFFF;
-            background-color: #003285;
+            background-color: <?php echo '#' . $darken[0]; ?>;
             padding: 0.7rem;
         }
 
         .invoice-padding .table-black-2 td {
             color: #FFFFFF;
-            background-color: #0060ff;
+            background-color: <?php echo '#' . $color[0]; ?>;
             padding: 0.5rem;
         }
 
         .invoice-padding .table-content td {
             border: 1px solid #333;
-            font-size: 14px;
+            font-size: 18px;
             color: #000;
             /* padding: 0.72rem 2rem */
             padding: 0.2rem 1rem
+        }
+
+        .text-24 {
+            font-size: 24px !important;
         }
     </style>
     <div class="card-body invoice-padding pb-0" id="invoice-preview-vertical">
@@ -235,7 +245,7 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                 </span>
                 <table width="100%" class="mt-50" hidden>
                     <tr class="table-content">
-                        <th rowspan="2" class="text-center" bgcolor="#003285" style="color: #fff; border-radius: 15px 0px 0px 0px;">
+                        <th rowspan="2" class="text-center" bgcolor="<?php echo '#' . $darken[0]; ?>" style="color: #fff; border-radius: 15px 0px 0px 0px;">
                             ใบแจ้งหนี้ / INVOICE
                         </th>
                         <td class="text-center">
@@ -363,7 +373,7 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                                     <td class="text-center" rowspan="<?php echo $rowspan; ?>"><?php echo $cot[$i] != '-' ? number_format($cot[$i]) : $cot[$i]; ?></td>
                                 </tr>
                             <?php } elseif ($r > 0) {
-                                $customer = $category_cus[$bo_id[$i]][$r] == 1 ? ' (Thai)' : ' (Foreign)'; ?>
+                                $customer = ' (' . $category_name[$bo_id[$i]][$r] . ')'; ?>
                                 <tr class="table-content">
                                     <td class="text-center"><?php echo $no++; ?></td>
                                     <td><?php echo $product_name[$i] . $customer; ?></td>
@@ -413,10 +423,10 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                 ?>
 
                 <tr class="table-content">
-                    <td class="text-center" colspan="9"><em><b><?php echo bahtText($amount) ?></b></em></td>
-                    <td class="text-center" colspan="3">
-                        <dl class="row" style="margin-bottom: 0;">
-                            <dt class="col-sm-8 text-right">
+                    <td class="text-center" colspan="6"><em><b><?php echo bahtText($amount) ?></b></em></td>
+                    <td class="text-center" colspan="6">
+                        <dl class="row text-right" style="margin-bottom: 0;">
+                            <dt class="col-sm-8">
                                 <b>ยอดรวม : </b>
                                 <p style="font-size: 10px; margin-bottom: 2px;">(Total)</p>
                             </dt>
@@ -431,19 +441,20 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                 ?>
 
                 <tr class="table-content">
-                    <td colspan="9" rowspan="5">
+                    <td colspan="6" rowspan="5">
                         <b>หมายเหตุและเงื่อนใข (Terms & Conditions)</b><br>
-                        <p>
-                            <?php echo !empty($account_name[0]) ? '</br><b>ชื่อบัญชี</b> ' . $account_name[0] . '</br><b>เลขที่บัญชี</b> ' . $account_no[0] . '</br><b>ธนาคาร</b> ' . $bank_name[0] : ''; ?>
+                        <p class="text-24">
+                            <?php // echo !empty($account_name[0]) ? '</br><b>ชื่อบัญชี</b> ' . $account_name[0] . '</br><b>เลขที่บัญชี</b> ' . $account_no[0] . '</br><b>ธนาคาร</b> ' . $bank_name[0] : '';
+                            echo !empty($account_name[0]) ? '</br><b>ชื่อบัญชี</b> ' . $account_name[0] . ' <b>เลขที่บัญชี</b> ' . $account_no[0] . ' <b> ' . $bank_name[0] . '</b>' : '' ?>
                         </p>
                         <p>
                             <?php echo $inv_note[0]; ?>
                         </p>
                     </td>
                     <?php if (!empty($discount)) { ?>
-                        <td class="table-content text-center" colspan="3">
-                            <dl class="row" style="margin-bottom: 0;">
-                                <dt class="col-sm-8 text-right">
+                        <td class="table-content text-center" colspan="6">
+                            <dl class="row text-right" style="margin-bottom: 0;">
+                                <dt class="col-sm-8">
                                     <b> ส่วนลด : </b>
                                     <p style="font-size: 10px; margin-bottom: 2px;">(Discount)</p>
                                 </dt>
@@ -455,9 +466,9 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
 
                 <?php if (!empty($cot)) { ?>
                     <tr class="table-content">
-                        <td class="text-center" colspan="3">
-                            <dl class="row" style="margin-bottom: 0;">
-                                <dt class="col-sm-8 text-right">
+                        <td class="text-center" colspan="6">
+                            <dl class="row text-right" style="margin-bottom: 0;">
+                                <dt class="col-sm-8">
                                     <b>Cash on tour :</b>
                                 </dt>
                                 <dd class="col-sm-4 mt-50 text-nowrap">฿ <?php echo number_format(array_sum($cot)); ?></dd>
@@ -468,9 +479,9 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
 
                 <?php if ($vat[0] > 0) { ?>
                     <tr class="table-content">
-                        <td class="text-center" colspan="3">
-                            <dl class="row" style="margin-bottom: 0;">
-                                <dt class="col-sm-8 text-right">
+                        <td class="text-center" colspan="6">
+                            <dl class="row text-right" style="margin-bottom: 0;">
+                                <dt class="col-sm-8">
                                     <b> <?php echo $vat[0] != '-' ? $vat[0] == 1 ? 'รวมภาษี 7%' : 'แยกภาษี 7%' : '-' ?> : </b>
                                     <p style="font-size: 10px; margin-bottom: 2px;">(Tax)</p>
                                 </dt>
@@ -482,9 +493,9 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
 
                 <?php if ($withholding[0] > 0) { ?>
                     <tr class="table-content">
-                        <td class="text-center" colspan="3">
-                            <dl class="row" style="margin-bottom: 0;">
-                                <dt class="col-sm-8 text-right">
+                        <td class="text-center" colspan="6">
+                            <dl class="row text-right" style="margin-bottom: 0;">
+                                <dt class="col-sm-8">
                                     <b> หัก ณ ที่จ่าย (<?php echo $withholding[0]; ?>%) : </b>
                                     <p style="font-size: 10px; margin-bottom: 2px;">(Withholding Tax)</p>
                                 </dt>
@@ -496,9 +507,9 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
 
                 <tr class="table-content">
                     <!-- <td colspan="9"></td> -->
-                    <td class="text-center" bgcolor="#003285" style="color: #fff;" colspan="3">
-                        <dl class="row" style="margin-bottom: 0;">
-                            <dt class="col-sm-8 text-right">
+                    <td class="text-center" bgcolor="<?php echo '#' . $darken[0]; ?>" style="color: #fff;" colspan="6">
+                        <dl class="row text-right" style="margin-bottom: 0;">
+                            <dt class="col-sm-8">
                                 <b>ยอดชำระ : </b>
                                 <p style="font-size: 10px; margin-bottom: 2px;">(Payment Amount)</p>
                             </dt>

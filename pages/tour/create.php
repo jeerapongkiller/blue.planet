@@ -66,10 +66,23 @@ $prodObj = new Product();
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-md-3">
-                                            <div class="form-group">
-                                                <label for="Park">อุทยาน (Park)</label>
-                                                <select class="form-control select2" id="park" name="park">
-                                                <option value="">Please Select Park...</option>
+                                            <label for="island_id">เกาะ (Island)</label>
+                                            <select class="form-control select2" id="island_id" name="island_id">
+                                                <option value="0">Please Select Island...</option>
+                                                <?php
+                                                $islands = $prodObj->showisland();
+                                                foreach ($islands as $island) {
+                                                ?>
+                                                    <option value="<?php echo $island['id']; ?>"><?php echo $island['name']; ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="Park">อุทยาน (Park)</label>
+                                            <select class="form-control select2" id="park" name="park">
+                                                <option value="0">Please Select Park...</option>
                                                 <?php
                                                 $parks = $prodObj->showpark();
                                                 foreach ($parks as $park) {
@@ -79,7 +92,6 @@ $prodObj = new Product();
                                                 }
                                                 ?>
                                             </select>
-                                            </div>
                                         </div>
                                     </div>
                                     <hr>

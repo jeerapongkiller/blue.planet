@@ -13,7 +13,7 @@ $objPHPExcel->setActiveSheetIndex(0);
 if (isset($_GET['action']) && $_GET['action'] == "print" && isset($_GET['type'])) {
     # --- get value --- #
     $search_status = !empty($_GET["search_status"]) ? $_GET["search_status"] : 'all';
-    $search_travel = !empty($_GET["search_travel"]) ? $_GET["search_travel"] : '0000-00-00';
+    $search_travel = !empty($_GET["search_travel"]) ? $_GET["search_travel"] : $today;
     $date_form = substr($search_travel, 0, 10) != '' ? substr($search_travel, 0, 10) : '0000-00-00';
     $date_to = substr($search_travel, 14, 10) != '' ? substr($search_travel, 14, 10) : $date_form;
     $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';

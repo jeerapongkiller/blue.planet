@@ -14,8 +14,9 @@ if (isset($_POST['action']) && $_POST['action'] == "create") {
     $note = $_POST['note'] != "" ? $_POST['note'] : '';
     $pax = $_POST['pax'] != "" ? $_POST['pax'] : 0;
     $park_id = $_POST['park'] != "" ? $_POST['park'] : 0;
+    $island_id = $_POST['island_id'] != "" ? $_POST['island_id'] : 0;
 
-    $response = $prodObj->insert_data($is_approved, $refcode, $name, $note, $pax, $park_id);
+    $response = $prodObj->insert_data($is_approved, $refcode, $name, $note, $pax, $island_id, $park_id);
 
     echo $response != FALSE && $response > 0 ? $response : FALSE;
 } else {

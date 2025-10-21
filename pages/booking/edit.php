@@ -66,6 +66,15 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                     </span>
                                 </button>
                             </div>
+                            <div class="step" data-target="#history-vertical">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-box">3</span>
+                                    <span class="bs-stepper-label">
+                                        <span class="bs-stepper-title">History</span>
+                                        <span class="bs-stepper-subtitle">Please fill out</span>
+                                    </span>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="bs-stepper-content">
@@ -289,7 +298,7 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                 <div class="form-group col-md-2" id="div-total">
                                                     <label for="rate_total">Total Price</label>
                                                     <p id="text-total-price"></p>
-                                                    <input type="text" class="form-control numeral-mask" id="rate_total" name="rate_total" value="0" hidden/>
+                                                    <input type="text" class="form-control numeral-mask" id="rate_total" name="rate_total" value="0" hidden />
                                                 </div>
                                             </div>
                                         </div>
@@ -1179,6 +1188,57 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                         <button type="submit" class="btn btn-primary btn-page-block-spinner" name="submit" value="Submit">Submit</button>
                                     </div>
                                 </form>
+                            </div>
+                            <div id="history-vertical" class="content">
+                                <div class="row">
+                                    <div class="col-12 border-bottom pb-1">
+                                        <h3>ประวัติการใช้งาน Booking #<?php echo $book_full; ?></h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="card-body">
+                                            <ul class="timeline">
+                                                <?php $logs = $bookObj->showlog($_GET['id']);
+                                                if (!empty($logs)) {
+                                                    foreach ($logs as $log) {
+                                                        switch ($log['type_id']) {
+                                                            case 1:
+                                                                $color = 'success';
+                                                                break;
+                                                            case 2:
+                                                                $color = 'info';
+                                                                break;
+                                                            case 3:
+                                                                $color = 'danger';
+                                                                break;
+                                                            case 4:
+                                                                $color = 'warning';
+                                                                break;
+                                                            default:
+                                                                $color = 'primary';
+                                                                break;
+                                                        }
+                                                ?>
+                                                        <li class="timeline-item">
+                                                            <span class="timeline-point timeline-point-<?php echo $color; ?> timeline-point-indicator"></span>
+                                                            <div class="timeline-event">
+                                                                <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0">
+                                                                    <span>
+                                                                        <h6><?php echo $log['name']; ?></h6>
+                                                                        <p class="mb-0">
+                                                                            <?php echo !empty($log['detail']) ? $log['detail'] . '<br>' : ''; ?>
+                                                                            <?php echo $log['firstname'] . ' ' . $log['lastname']; ?>
+                                                                        </p>
+                                                                    </span>
+                                                                    <span class="timeline-event-time"><?php echo $log['created_at']; ?></span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                <?php }
+                                                } ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!------------------------------------------------------------------>
                             <!-- End Form Modal -->

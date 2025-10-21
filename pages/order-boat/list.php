@@ -8,23 +8,21 @@ $tomorrow = date("Y-m-d", strtotime(" +1 day"));
 // $tomorrow = '2025-01-17';
 $get_date = !empty($_GET['date_travel_booking']) ? $_GET['date_travel_booking'] : $today; // $tomorrow->format("Y-m-d")
 $search_boat = !empty($_GET['search_boat']) ? $_GET['search_boat'] : 'all';
-// $search_guide = !empty($_GET['search_guide']) ? $_GET['search_guide'] : 'all';
 $search_status = $_GET['search_status'] != "" ? $_GET['search_status'] : 'all';
 $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';
 $search_product = $_GET['search_product'] != "" ? $_GET['search_product'] : 'all';
+$search_island = $_GET['search_island'] != "" ? $_GET['search_island'] : 'all';
 $search_voucher_no = $_GET['voucher_no'] != "" ? $_GET['voucher_no'] : '';
 $refcode = $_GET['refcode'] != "" ? $_GET['refcode'] : '';
-$name = $_GET['name'] != "" ? $_GET['name'] : '';
 
 $href = "&date_travel=" . $get_date;
 $href .= "&search_boat=" . $search_boat;
-// $href .= "&search_guide=" . $search_guide;
 $href .= "&search_status=" . $search_status;
 $href .= "&search_agent=" . $search_agent;
+$href .= "&search_island=" . $search_island;
 $href .= "&search_product=" . $search_product;
 $href .= "&search_voucher_no=" . $search_voucher_no;
 $href .= "&refcode=" . $refcode;
-$href .= "&name=" . $name;
 # --- show list boats booking --- #
 $first_booking = array();
 $first_prod = array();
@@ -35,7 +33,7 @@ $first_bomanage = array();
 $first_bpr = array();
 $first_bo = [];
 $first_trans = [];
-$bookings = $manageObj->showlistboats('list', 0, $get_date, $search_boat, $search_guide, $search_status, $search_agent, $search_product, $search_voucher_no, $refcode, $name, '');
+$bookings = $manageObj->showlistboats('list', 0, $get_date, $search_boat, $search_guide, $search_status, $search_agent, $search_island, $search_product, $search_voucher_no, $refcode, '');
 # --- Check products --- #
 if (!empty($bookings)) {
     foreach ($bookings as $booking) {
@@ -78,6 +76,7 @@ if (!empty($bookings)) {
             $boat_name[$booking['id']] = !empty($booking['boat_name']) ? $booking['boat_name'] : '';
             $color_id[$booking['id']] = !empty($booking['color_id']) ? $booking['color_id'] : '';
             $language[$booking['id']] = !empty(!empty($booking['lang_name'])) ? $booking['lang_name'] : '';
+            $darken[$booking['id']] = !empty($booking['island_darken']) ? $booking['island_darken'] : '';
             # --- array programe --- #
             $check_mange[$booking['product_id']][] = !empty($booking['mange_id']) ? $booking['mange_id'] : 0;
             $prod_adult[$booking['product_id']][] = !empty($booking['bpr_adult']) && $booking['mange_id'] == 0 ? $booking['bpr_adult'] : 0;
@@ -227,7 +226,7 @@ if (!empty($programed)) {
 }
 ?>
 
-<div class="app-content content ">
+<div class="app-content content">
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
@@ -284,7 +283,7 @@ if (!empty($programed)) {
                     <form id="booking-search-form" name="booking-search-form" method="get" enctype="multipart/form-data">
                         <input type="hidden" name="pages" value="<?php echo $_GET['pages']; ?>">
                         <div class="d-flex align-items-center mx-50 row pt-0 pb-0">
-                            <div class="col-md-2 col-12">
+                            <div class="col-md-3 col-12">
                                 <div class="form-group">
                                     <label for="search_status">Status</label>
                                     <select class="form-control select2" id="search_status" name="search_status">
@@ -331,6 +330,23 @@ if (!empty($programed)) {
                             </div>
                             <div class="col-md-3 col-12">
                                 <div class="form-group">
+                                    <label for="search_island">Island</label>
+                                    <select class="form-control select2" id="search_island" name="search_island">
+                                        <option value="all">All</option>
+                                        <?php
+                                        $islands = $manageObj->showisland();
+                                        foreach ($islands as $island) {
+                                            $selected = $search_island == $island['id'] ? 'selected' : '';
+                                        ?>
+                                            <option value="<?php echo $island['id']; ?>" <?php echo $selected; ?>><?php echo $island['name']; ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-12">
+                                <div class="form-group">
                                     <label for="search_boat">เรือ</label>
                                     <select class="form-control select2" id="search_boat" name="search_boat">
                                         <option value="all">All</option>
@@ -356,19 +372,19 @@ if (!empty($programed)) {
                                     <input type="text" class="form-control" id="voucher_no" name="voucher_no" value="<?php echo $search_voucher_no; ?>" />
                                 </div>
                             </div>
-                            <div class="col-md-2 col-12">
+                            <!-- <div class="col-md-2 col-12">
                                 <div class="form-group">
                                     <label class="form-label" for="name">Customer Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="<?php echo $name; ?>" />
+                                    <input type="text" class="form-control" id="name" name="name" value="<?php // echo $name; ?>" />
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-2 col-12">
                                 <div class="form-group">
                                     <label class="form-label" for="date_travel_booking">วันที่เที่ยว (Travel Date)</label></br>
                                     <input type="text" class="form-control date-picker" id="date_travel_booking" name="date_travel_booking" value="<?php echo $get_date; ?>" />
                                 </div>
                             </div>
-                            <div class="col-md-2 col-12">
+                            <div class="col-md-2 col-12 pb-1">
                                 <button type="submit" class="btn btn-primary">Search</button>
                             </div>
                         </div>
@@ -394,7 +410,7 @@ if (!empty($programed)) {
                             <div class="text-center card-text">
                                 <h4 class="font-weight-bolder text-black">ใบจัดเรือ</h4>
                                 <div class="badge badge-pill badge-light-danger">
-                                    <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($get_date)); ?></h5>
+                                    <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($get_date)); ?> </br> <span id="span-time"></span></h5>
                                 </div>
                             </div>
                         </div>
@@ -413,7 +429,7 @@ if (!empty($programed)) {
                                 </div>
 
                                 <table class="table table-striped text-uppercase table-vouchure-t2 text-black" style="font-size: 16px;" width="100%">
-                                    <thead class="bg-light">
+                                    <thead <?php echo !empty($darken[$book['id'][$mange['id'][$i]][0]]) ? 'bgcolor="#' . $darken[$book['id'][$mange['id'][$i]][0]] . '" style="color: #FFF"' : 'class="bg-light"'; ?>>
                                         <tr>
                                             <th colspan="5">ไกด์ : <?php echo $mange['guide_name'][$i]; ?></th>
                                             <th colspan="5">เคาน์เตอร์ : <?php echo $mange['counter'][$i]; ?></th>
@@ -462,13 +478,13 @@ if (!empty($programed)) {
                                                         echo (!empty($managet['driver'][$id][1])) ? $managet['driver'][$id][1] : '';  ?>
                                                     </td>
                                                     <td style="padding: 5px;"><?php echo $product_name[$id] . '<br>';
-                                                        if (!empty($category_name[$id])) {
-                                                            echo ' (';
-                                                            for ($c = 0; $c < count($category_name[$id]); $c++) {
-                                                                echo $c > 0 ? ', ' . $category_name[$id][$c] : $category_name[$id][$c];
-                                                            }
-                                                        }
-                                                        echo ')'; ?></td>
+                                                                                if (!empty($category_name[$id])) {
+                                                                                    echo ' (';
+                                                                                    for ($c = 0; $c < count($category_name[$id]); $c++) {
+                                                                                        echo $c > 0 ? ', ' . $category_name[$id][$c] : $category_name[$id][$c];
+                                                                                    }
+                                                                                }
+                                                                                echo ')'; ?></td>
                                                     <td><?php echo $book['comp_name'][$mange['id'][$i]][$a]; ?></td>
                                                     <td class="wrapword"><?php echo !empty($book['telephone'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . ' <br>(' . $book['telephone'][$mange['id'][$i]][$a] . ') ' . $book['nation_name'][$mange['id'][$i]][$a] : $book['cus_name'][$mange['id'][$i]][$a]; ?></td>
                                                     <td><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>

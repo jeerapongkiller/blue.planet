@@ -58,6 +58,21 @@ class Product extends DB
         return $data;
     }
 
+    public function showisland()
+    {
+        $query = "SELECT id, name, is_approved
+            FROM island 
+            WHERE is_approved = 1
+        ";
+        $query .= " ORDER BY name ASC";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $result = $statement->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $data;
+    }
+
     function showzone(int $product_id)
     {
         $query = "SELECT zones.*,
@@ -146,6 +161,20 @@ class Product extends DB
         return $data;
     }
 
+    public function get_value(string $select, string $from, string $id)
+    {
+        $query = "SELECT $select
+            FROM $from 
+            WHERE id = $id 
+        ";
+        $statement = $this->connection->prepare($query);
+        $statement->execute();
+        $result = $statement->get_result();
+        $data = $result->fetch_assoc();
+
+        return $data;
+    }
+
     public function check_period(int $period_id, int $category_id, string $period_from, string $period_to)
     {
         $query = "SELECT * 
@@ -160,13 +189,13 @@ class Product extends DB
         return $result->num_rows;
     }
 
-    public function insert_data(int $is_approved, string $refcode, string $name, string $note, int $pax, int $park_id)
+    public function insert_data(int $is_approved, string $refcode, string $name, string $note, int $pax, int $island_id, int $park_id)
     {
         $bind_types = "";
         $params = array();
 
-        $query = "INSERT INTO products (refcode, name, slug, pax, note, park_id, is_approved, is_deleted, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())";
+        $query = "INSERT INTO products (refcode, name, slug, pax, note, island_id, park_id, is_approved, is_deleted, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, NOW(), NOW())";
 
         $bind_types .= "s";
         array_push($params, $refcode);
@@ -182,6 +211,9 @@ class Product extends DB
 
         $bind_types .= "s";
         array_push($params, $note);
+
+        $bind_types .= "i";
+        array_push($params, $island_id);
 
         $bind_types .= "i";
         array_push($params, $park_id);
@@ -199,7 +231,7 @@ class Product extends DB
         return $this->response;
     }
 
-    public function update_data(int $is_approved, string $name, string $note, int $pax, int $park_id, int $id)
+    public function update_data(int $is_approved, string $name, string $note, int $pax, int $island_id, int $park_id, int $id)
     {
         $bind_types = "";
         $params = array();
@@ -217,6 +249,10 @@ class Product extends DB
         $query .= " note = ?,";
         $bind_types .= "s";
         array_push($params, $note);
+
+        $query .= " island_id = ?,";
+        $bind_types .= "i";
+        array_push($params, $island_id);
 
         $query .= " park_id = ?,";
         $bind_types .= "i";

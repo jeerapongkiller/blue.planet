@@ -14,6 +14,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
     $search_status = $_GET['search_status'] != "" ? $_GET['search_status'] : 'all';
     $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';
     $search_product = $_GET['search_product'] != "" ? $_GET['search_product'] : 'all';
+    $search_island = $_GET['search_island'] != "" ? $_GET['search_island'] : 'all';
     $search_voucher_no = $_GET['voucher_no'] != "" ? $_GET['voucher_no'] : '';
     $refcode = $_GET['refcode'] != "" ? $_GET['refcode'] : '';
     $name = $_GET['name'] != "" ? $_GET['name'] : '';
@@ -34,7 +35,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
     $first_bo = [];
     $first_trans = [];
     $frist_bomange = [];
-    $bookings = $manageObj->showlisttransfers('all', 1, $date_travel, $search_car, $search_driver, 'all', $search_status, $search_agent, $search_product, $search_voucher_no, $refcode, $name);
+    $bookings = $manageObj->showlisttransfers('all', 1, $date_travel, $search_car, $search_driver, 'all', $search_status, $search_agent, $search_island, $search_product, $search_voucher_no, $refcode);
     # --- Check products --- #
     if (!empty($bookings)) {
         foreach ($bookings as $booking) {
@@ -135,6 +136,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                 $outside[$booking['id']][2] = !empty($booking['outside_dropoff']) ? $booking['outside_dropoff'] : '';
                 $zone_name[$booking['id']][1] = !empty($booking['zonep_name']) ? $booking['zonep_name'] : '';
                 $zone_name[$booking['id']][2] = !empty($booking['zoned_name']) ? $booking['zoned_name'] : '';
+                $bt_note[$booking['id']][1] = !empty($booking['bt_note']) ? $booking['bt_note'] : '';
 
                 $check_mange[$booking['product_id']][1][] = !empty($booking['mange_id']) ? $booking['mange_id'] : 0;
 
@@ -168,7 +170,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
         }
     }
 
-    $manages = $manageObj->show_manage_transfer($date_travel, 1);
+    $manages = $manageObj->show_manage_transfer($date_travel, $search_island);
     foreach ($manages as $manage) {
         if (in_array($manage['id'], $first_manage) == false) {
             $first_manage[] = $manage['id'];
@@ -184,6 +186,9 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
             $mange['driver_name'][] = !empty($manage['driver_name']) ? $manage['driver_name'] : $manage['outside_driver'];
             $mange['guide_id'][] = !empty($manage['guide_id']) ? $manage['guide_id'] : 0;
             $mange['guide_name'][] = !empty($manage['guide_id']) ? $manage['guide_name'] : '';
+            $mange['island_id'][] = !empty($manage['island_id']) ? $manage['island_id'] : 0;
+            $mange['island_name'][] = !empty($manage['island_id']) ? $manage['island_name'] : '';
+            $mange['darken'][] = !empty($manage['darken']) ? $manage['darken'] : '';
             $mange['car_id'][] = !empty($manage['car_id']) ? $manage['car_id'] : 0;
             $mange['car_name'][] = !empty($manage['car_id']) ? $manage['car_name'] : $manage['outside_car'];
             $mange['outside_car'][] = !empty($manage['outside_car']) ? $manage['outside_car'] : '';
@@ -200,6 +205,8 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                 $return = $search_retrun == 2 ? $mange['dropoff'][$i] == 1 ? true : false : $return;
                 $text_retrun = $mange['pickup'][$i] == $search_retrun ? 'Pickup' : 'Dropoff';
                 $mange_retrun = 1;
+                $head_name = !empty($mange['car'][$i]) ? $mange['car'][$i] : '';
+                $head_name = !empty($mange['driver_name'][$i]) ? $mange['driver_name'][$i] : $head_name;
                 if ($bomange_bo[$mange['id'][$i]] && $return == true) {
         ?>
 
@@ -214,29 +221,47 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                                 <span class="col-6 brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>
                                                 <span class="col-6 text-right" style="color: #000;">
                                                     บริษัท บลู แพลนเน็ต ฮอลิเดย์ จํากัด </br>
-                                                    124/343 หมู่ที่ 5 ตำบลรัษฎา อําเภอเมือง จังหวัดภูเก็ต 83000
+                                                    124/343 หมู่ที่ 5 ตำบลรัษฎา อําเภอเมือง จังหวัดภูเก็ต 83000 </br>
+                                                    <span id="span-time"></span>
                                                 </span>
                                             </div>
-                                            <div class="text-center card-text">
+                                            <!-- <div class="text-center card-text">
                                                 <h4 class="font-weight-bolder">ใบจัดรถ (Pickup)</h4>
                                                 <div class="badge badge-pill badge-light-danger">
                                                     <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($date_travel)); ?></h5>
                                                 </div>
+                                            </div> -->
+                                            <div class="d-flex justify-content-between align-items-center header-actions mx-1 row pt-1">
+                                                <div class="col-4 text-left text-center text-black" style="font-size: 80px;">
+                                                    <?php echo $head_name; ?>
+                                                </div>
+                                                <div class="col-4 text-center">
+                                                    <h4 class="font-weight-bolder text-black">ใบจัดรถ (Pickup)</h4>
+                                                    <div class="badge badge-pill badge-light-danger">
+                                                        <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($date_travel)); ?></h5>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 text-right mb-50"></div>
                                             </div>
                                         </div>
 
-                                        <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75 pt-1">
+                                        <!-- <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75 pt-1">
                                             <div class="col-4 text-left text-bold h4"></div>
-                                            <div class="col-4 text-center text-bold h1"><?php echo !empty($mange['car'][$i]) ? !empty($mange['registration'][$i]) ? $mange['car'][$i] . ' (' . $mange['registration'][$i] . ')' : $mange['car'][$i] : ''; ?></div>
+                                            <div class="col-4 text-center text-bold text-black" style="font-size: 36px;"><?php echo $head_name; ?></div>
                                             <div class="col-4 text-right mb-50"></div>
-                                        </div>
+                                        </div> -->
 
                                     </th>
                                 </tr>
+                            </thead>
+                            <thead bgcolor="<?php echo !empty($mange['darken'][$i]) ? '#' . $mange['darken'][$i] : '#003285'; ?>">
                                 <tr>
-                                    <th colspan="5" style="border-bottom: 1px solid #fff;">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
-                                    <th colspan="4" style="border-bottom: 1px solid #fff;">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
-                                    <th colspan="6" style="border-bottom: 1px solid #fff;">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
+                                    <th colspan="6" style="border-bottom: 1px solid #fff; font-size: 36px;">Island : <?php echo $mange['island_name'][$i]; ?></th>
+                                    <th colspan="9" style="border-bottom: 1px solid #fff; font-size: 36px;">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="6" style="border-bottom: 1px solid #fff; font-size: 36px;">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
+                                    <th colspan="9" style="border-bottom: 1px solid #fff; font-size: 36px;">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
                                 </tr>
                                 <tr>
                                     <th>เรือ</th>
@@ -309,7 +334,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                             <td class="text-center bg-info bg-lighten-3"><?php echo $bt_child[$id][$mange_retrun]; ?></td>
                                             <td class="text-center bg-warning bg-lighten-3"><?php echo $bt_infant[$id][$mange_retrun]; ?></td>
                                             <td class="text-center bg-info bg-lighten-3"><?php echo $bt_foc[$id][$mange_retrun]; ?></td>
-                                            <td><?php echo $note[$id]; ?></td>
+                                            <td class="wrapword"><?php echo $bt_note[$id][1]; ?></td>
                                         </tr>
                                     <?php } ?>
                                     <tr>
@@ -426,7 +451,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                                         <td class="text-center"><?php echo $bt_child[$id][$retrun]; ?></td>
                                         <td class="text-center"><?php echo $bt_infant[$id][$retrun]; ?></td>
                                         <td class="text-center"><?php echo $bt_foc[$id][$retrun]; ?></td>
-                                        <td><?php echo $note[$id]; ?></td>
+                                        <td class="wrapword"><?php echo $bt_note[$id][1]; ?></td>
                                     </tr>
                             <?php }
                             } ?>

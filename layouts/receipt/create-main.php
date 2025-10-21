@@ -282,11 +282,13 @@
             });
         }
 
-        function modal_detail(agent_id, agent_name, travel_date) {
+        function modal_detail(agent_id, agent_name, travel_date, search_product, search_island) {
             var formData = new FormData();
             formData.append('action', 'search');
             formData.append('agent_id', agent_id);
             formData.append('travel_date', travel_date);
+            formData.append('search_product', search_product);
+            formData.append('search_island', search_island);
             $.ajax({
                 url: "pages/receipt/function/search-invoice.php",
                 type: "POST",
@@ -336,6 +338,8 @@
                         var rowspan = 0;
                         text_rates = '';
                         var id = res[cover_id].id[index];
+                        document.getElementById('tr-color').style.backgroundColor = '#' + res[id].color;
+                        document.getElementById('tr-darken').style.backgroundColor = '#' + res[id].darken;
                         discount = res[id].discount !== '-' ? Number(discount + res[id].discount) : Number(discount);
                         cot = res[id].cot !== '-' ? Number(cot + res[id].cot) : Number(cot);
 
@@ -364,7 +368,8 @@
 
                                     amount = res_rates[id].total[y] !== '-' ? Number(amount + res_rates[id].total[y]) : Number(amount);
                                 } else if (y > 0) {
-                                    var customer = res_rates[id].customer[y] == 1 ? ' (Thai)' : ' (Foreign)';
+                                    // var customer = res_rates[id].customer[y] == 1 ? ' (Thai)' : ' (Foreign)';
+                                    var customer = ' (' + res_rates[id].category_name[y] + ') ';
                                     text_html += '<tr>' +
                                         '<td class="text-center">' + Number(no++) + '</td>' +
                                         '<td> ' + res[id].product_name + customer + ' </td>' +

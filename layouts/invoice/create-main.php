@@ -45,17 +45,17 @@
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <!-- END: Custom CSS-->
 
-    <style>
+    <!-- <style>
         .table-black {
             color: #FFFFFF;
-            background-color: #003285;
+            background-color: #77006dff;
         }
 
         .table-black-2 {
             color: #FFFFFF;
-            background-color: #0060ff;
+            background-color: #c03eb5ff;
         }
-    </style>
+    </style> -->
 </head>
 <!-- END: Head-->
 
@@ -295,11 +295,13 @@
             });
         }
 
-        function modal_detail(agent_id, agent_name, travel_date) {
+        function modal_detail(agent_id, agent_name, travel_date, search_product, search_island) {
             var formData = new FormData();
             formData.append('action', 'search');
             formData.append('agent_id', agent_id);
             formData.append('travel_date', travel_date);
+            formData.append('search_product', search_product);
+            formData.append('search_island', search_island);
             $.ajax({
                 url: "pages/invoice/function/search-booking.php",
                 type: "POST",
@@ -357,6 +359,10 @@
                 var no = 1;
                 for (let index = 0; index < checked.length; index++) {
                     if (checked[index].checked == true) {
+                        var color = checked[0].dataset.color;
+                        var darken = checked[0].dataset.darken;
+                        document.getElementById('tr-color').style.backgroundColor = '#' + color;
+                        document.getElementById('tr-darken').style.backgroundColor = '#' + darken;
                         var rowspan = 0;
                         text_rates = '';
                         var id = checked[index].value;
@@ -386,7 +392,8 @@
 
                                     amount = res_rates[id].total[y] !== '-' ? Number(amount + res_rates[id].total[y]) : Number(amount);
                                 } else if (y > 0) {
-                                    var customer = res_rates[id].customer[y] == 1 ? ' (Thai)' : ' (Foreign)';
+                                    // var customer = res_rates[id].customer[y] == 1 ? ' (Thai)' : ' (Foreign)';
+                                    var customer = ' (' + res_rates[id].category_name[y] + ') ';
                                     text_html += '<tr>' +
                                         '<td class="text-center">' + Number(no++) + '</td>' +
                                         '<td> ' + res[id].product_name + customer + ' </td>' +

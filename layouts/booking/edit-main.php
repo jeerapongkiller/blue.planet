@@ -554,40 +554,48 @@
                             success: function(response) {
                                 // $('#div-show').html(response);
                                 if (response != false && response > 0) {
-                                    if ($('#bp_action').val() == 'create') {
-                                        // sendline();
-                                        Swal.fire({
-                                            title: "The information has been updated.",
-                                            icon: "success",
-                                        }).then(function(isConfirm) {
-                                            if (isConfirm) {
-                                                // location.reload(); // refresh page
-                                                window.location.href = window.location + "&action=details";
-                                                // window.location.href = './?pages=booking/list';
-                                            }
-                                        })
-                                    } else if ($('#search_travel').val() !== '' && $('#search_agent').val() !== '') {
-                                        Swal.fire({
-                                            title: "The information has been updated.",
-                                            icon: "success",
-                                        }).then(function(isConfirm) {
-                                            if (isConfirm) {
-                                                location.href = "./?pages=invoice/create&search_travel=" + $('#search_travel').val() + "&search_agent=" + $('#search_agent').val();
-                                                // window.location.href = window.location + "&action=details";
-                                            }
-                                        })
-                                    } else {
-                                        Swal.fire({
-                                            title: "The information has been updated.",
-                                            icon: "success",
-                                        }).then(function(isConfirm) {
-                                            if (isConfirm) {
-                                                // location.reload(); // refresh page
-                                                window.location.href = window.location + "&action=details";
-                                                // window.location.href = './?pages=booking/list';
-                                            }
-                                        });
-                                    }
+                                    Swal.fire({
+                                        title: "The information has been updated.",
+                                        icon: "success",
+                                    }).then(function(isConfirm) {
+                                        if (isConfirm) {
+                                            location.reload(); // refresh page
+                                        }
+                                    })
+                                    // if ($('#bp_action').val() == 'create') {
+                                    //     // sendline();
+                                    //     Swal.fire({
+                                    //         title: "The information has been updated.",
+                                    //         icon: "success",
+                                    //     }).then(function(isConfirm) {
+                                    //         if (isConfirm) {
+                                    //             // location.reload(); // refresh page
+                                    //             window.location.href = window.location + "&action=details";
+                                    //             // window.location.href = './?pages=booking/list';
+                                    //         }
+                                    //     })
+                                    // } else if ($('#search_travel').val() !== '' && $('#search_agent').val() !== '') {
+                                    //     Swal.fire({
+                                    //         title: "The information has been updated.",
+                                    //         icon: "success",
+                                    //     }).then(function(isConfirm) {
+                                    //         if (isConfirm) {
+                                    //             location.href = "./?pages=invoice/create&search_travel=" + $('#search_travel').val() + "&search_agent=" + $('#search_agent').val();
+                                    //             // window.location.href = window.location + "&action=details";
+                                    //         }
+                                    //     })
+                                    // } else {
+                                    //     Swal.fire({
+                                    //         title: "The information has been updated.",
+                                    //         icon: "success",
+                                    //     }).then(function(isConfirm) {
+                                    //         if (isConfirm) {
+                                    //             // location.reload(); // refresh page
+                                    //             window.location.href = window.location + "&action=details";
+                                    //             // window.location.href = './?pages=booking/list';
+                                    //         }
+                                    //     });
+                                    // }
                                 } else {
                                     Swal.fire({
                                         title: "Please try again.",

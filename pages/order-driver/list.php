@@ -13,6 +13,7 @@ $search_return = !empty($_GET['search_return']) ? $_GET['search_return'] : 1;
 $search_status = $_GET['search_status'] != "" ? $_GET['search_status'] : 'all';
 $search_agent = $_GET['search_agent'] != "" ? $_GET['search_agent'] : 'all';
 $search_product = $_GET['search_product'] != "" ? $_GET['search_product'] : 'all';
+$search_island = $_GET['search_island'] != "" ? $_GET['search_island'] : 'all';
 $search_voucher_no = $_GET['voucher_no'] != "" ? $_GET['voucher_no'] : '';
 $refcode = $_GET['refcode'] != "" ? $_GET['refcode'] : '';
 $name = $_GET['name'] != "" ? $_GET['name'] : '';
@@ -22,6 +23,7 @@ $href .= "&search_car=" . $search_car;
 $href .= "&search_driver=" . $search_driver;
 $href .= "&search_status=" . $search_status;
 $href .= "&search_agent=" . $search_agent;
+$href .= "&search_island=" . $search_island;
 $href .= "&search_product=" . $search_product;
 $href .= "&search_voucher_no=" . $search_voucher_no;
 $href .= "&refcode=" . $refcode;
@@ -39,7 +41,7 @@ $first_manage = [];
 $first_bo = [];
 $first_trans = [];
 $frist_bomange = array();
-$bookings = $manageObj->showlisttransfers('all', $search_return, $get_date, $search_car, $search_driver, $search_product, $search_status, $search_agent, $search_product, $search_voucher_no, $refcode, $name);
+$bookings = $manageObj->showlisttransfers('all', $search_return, $get_date, $search_car, $search_driver, $search_product, $search_status, $search_agent, $search_island, $search_product, $search_voucher_no, $refcode);
 # --- Check products --- #
 if (!empty($bookings)) {
     foreach ($bookings as $booking) {
@@ -113,6 +115,7 @@ if (!empty($bookings)) {
             $outside[$booking['id']][2] = !empty($booking['outside_dropoff']) ? $booking['outside_dropoff'] : '';
             $zone_name[$booking['id']][1] = !empty($booking['zonep_name']) ? $booking['zonep_name'] : '';
             $zone_name[$booking['id']][2] = !empty($booking['zoned_name']) ? $booking['zoned_name'] : '';
+            $bt_note[$booking['id']][1] = !empty($booking['bt_note']) ? $booking['bt_note'] : '';
 
             if (($booking['pickup_id'] != $booking['dropoff_id']) || ($booking['outside'] != $booking['outside_dropoff'])) {
                 $check_dropoff[$booking['product_id']][] = !empty($booking['id']) ? $booking['id'] : 0;
@@ -144,7 +147,7 @@ if (!empty($bookings)) {
     }
 }
 # --- get data --- #
-$manages = $manageObj->show_manage_transfer($get_date, $search_return);
+$manages = $manageObj->show_manage_transfer($get_date, $search_island);
 foreach ($manages as $manage) {
     if (in_array($manage['id'], $first_manage) == false) {
         $first_manage[] = $manage['id'];
@@ -161,6 +164,9 @@ foreach ($manages as $manage) {
         $mange['driver_name'][] = !empty($manage['driver_name']) ? $manage['driver_name'] : $manage['outside_driver'];
         $mange['guide_id'][] = !empty($manage['guide_id']) ? $manage['guide_id'] : 0;
         $mange['guide_name'][] = !empty($manage['guide_id']) ? $manage['guide_name'] : '';
+        $mange['island_id'][] = !empty($manage['island_id']) ? $manage['island_id'] : 0;
+        $mange['island_name'][] = !empty($manage['island_id']) ? $manage['island_name'] : '';
+        $mange['darken'][] = !empty($manage['darken']) ? $manage['darken'] : '';
         $mange['car_id'][] = !empty($manage['car_id']) ? $manage['car_id'] : 0;
         $mange['car_name'][] = !empty($manage['car_id']) ? $manage['car_name'] : $manage['outside_car'];
         $mange['outside_car'][] = !empty($manage['outside_car']) ? $manage['outside_car'] : '';
@@ -261,7 +267,7 @@ foreach ($manages as $manage) {
                                     <input type="hidden" name="pages" value="<?php echo $_GET['pages']; ?>">
                                     <input type="hidden" id="step" name="step" value="1">
                                     <div class="d-flex align-items-center mx-50 row pt-0 pb-0">
-                                        <div class="col-md-2 col-12">
+                                        <div class="col-md-3 col-12">
                                             <div class="form-group">
                                                 <label for="search_status">Status</label>
                                                 <select class="form-control select2" id="search_status" name="search_status">
@@ -303,6 +309,23 @@ foreach ($manages as $manage) {
                                                     ?>
                                                         <option value="<?php echo $product['id']; ?>" <?php echo $selected; ?>><?php echo $product['name']; ?></option>
                                                     <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-12">
+                                            <div class="form-group">
+                                                <label for="search_island">Island</label>
+                                                <select class="form-control select2" id="search_island" name="search_island">
+                                                    <option value="all">All</option>
+                                                    <?php
+                                                    $islands = $manageObj->showisland();
+                                                    foreach ($islands as $island) {
+                                                        $selected = $search_island == $island['id'] ? 'selected' : '';
+                                                    ?>
+                                                        <option value="<?php echo $island['id']; ?>" <?php echo $selected; ?>><?php echo $island['name']; ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -359,12 +382,6 @@ foreach ($manages as $manage) {
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-12">
-                                            <div class="form-group">
-                                                <label class="form-label" for="name">Customer Name</label>
-                                                <input type="text" class="form-control" id="name" name="name" value="<?php echo $name; ?>" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 col-12">
                                             <button type="submit" class="btn btn-primary">Search</button>
                                         </div>
                                     </div>
@@ -389,7 +406,7 @@ foreach ($manages as $manage) {
                                     <div class="text-center card-text">
                                         <h4 class="font-weight-bolder text-black">ใบจัดรถ (Pick up)</h4>
                                         <div class="badge badge-pill badge-light-danger">
-                                            <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($get_date)); ?></h5>
+                                            <h5 class="m-0 pl-1 pr-1 text-danger"><?php echo date('j F Y', strtotime($get_date)); ?></br> <span id="span-time"></span></h5>
                                         </div>
                                     </div>
                                 </div>
@@ -403,20 +420,23 @@ foreach ($manages as $manage) {
                                             $return = $mange['pickup'][$i] == 1 ? 1 : 2;
                                             $text_retrun = $mange['pickup'][$i] == 1 ? 'Pickup' : 'Dropoff';
                                             $mange_retrun = 1;
+                                            $head_name = !empty($mange['car'][$i]) ? $mange['car'][$i] : '';
+                                            $head_name = !empty($mange['driver_name'][$i]) ? $mange['driver_name'][$i] : $head_name;
                                             if ($bomange_bo[$mange['id'][$i]]) {
                                 ?>
                                                 <div class="d-flex justify-content-between align-items-center header-actions mx-1 row mt-75 text-black">
                                                     <div class="col-4 text-left text-bold h4"></div>
-                                                    <div class="col-4 text-center text-bold h2"><?php echo !empty($mange['car'][$i]) ? !empty($mange['registration'][$i]) ? $mange['car'][$i] . ' (' . $mange['registration'][$i] . ')' : $mange['car'][$i] : ''; ?></div>
+                                                    <div class="col-4 text-center text-bold h4 text-black"><?php echo $head_name; ?></div>
                                                     <div class="col-4 text-right mb-50"></div>
                                                 </div>
 
                                                 <table class="table table-striped text-uppercase table-vouchure-t2 text-black" style="font-size: 16px;">
-                                                    <thead class="bg-light">
+                                                    <thead bgcolor="<?php echo !empty($mange['darken'][$i]) ? '#' . $mange['darken'][$i] : '#003285'; ?>" style="color: #fff;">
                                                         <tr>
-                                                            <th colspan="5">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
-                                                            <th colspan="5">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
-                                                            <th colspan="5">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
+                                                            <th colspan="3">Island : <?php echo $mange['island_name'][$i]; ?></th>
+                                                            <th colspan="2">คนขับ : <?php echo $mange['driver_name'][$i]; ?></th>
+                                                            <th colspan="4">ป้ายทะเบียน : <?php echo $mange['license'][$i]; ?></th>
+                                                            <th colspan="6">โทรศัพท์ : <?php echo $mange['telephone'][$i]; ?></th>
                                                         </tr>
                                                         <tr>
                                                             <th>เรือ</th>
@@ -489,7 +509,7 @@ foreach ($manages as $manage) {
                                                                     <td class="text-center"><?php echo $bt_child[$id][$mange_retrun]; ?></td>
                                                                     <td class="text-center"><?php echo $bt_infant[$id][$mange_retrun]; ?></td>
                                                                     <td class="text-center"><?php echo $bt_foc[$id][$mange_retrun]; ?></td>
-                                                                    <td class="wrapword"><?php echo $note[$id]; ?></td>
+                                                                    <td class="wrapword"><?php echo $bt_note[$id][1]; ?></td>
                                                                 </tr>
                                                             <?php } ?>
                                                             <tr>
@@ -653,7 +673,7 @@ foreach ($manages as $manage) {
                                                                 <td class="text-center"><?php echo $bt_child[$id][$retrun]; ?></td>
                                                                 <td class="text-center"><?php echo $bt_infant[$id][$retrun]; ?></td>
                                                                 <td class="text-center"><?php echo $bt_foc[$id][$retrun]; ?></td>
-                                                                <td class="wrapword"><?php echo $note[$id]; ?></td>
+                                                                <td class="wrapword"><?php echo $bt_note[$id][1]; ?></td>
                                                             </tr>
                                                     <?php }
                                                     } ?>

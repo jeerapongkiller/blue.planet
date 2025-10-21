@@ -4,8 +4,9 @@ include_once('../../../controllers/Booking.php');
 
 $bookObj = new Booking();
 $response = FALSE;
+$today = date("Y-m-d H:i:s");
 
-if (isset($_POST['action']) && $_POST['action'] == "create") {
+if (isset($_POST['action']) && $_POST['action'] == "create" && !empty($_POST['category_id'])) {
     # --- setting system --- #
     $open_rates = !empty('open_rates') ? $_POST['open_rates'] : 0;
     # --- get value booking form --- #
@@ -32,20 +33,8 @@ if (isset($_POST['action']) && $_POST['action'] == "create") {
     // # --- get value booking product form --- #
     $travel_date = !empty($_POST['travel_date']) ? $_POST['travel_date'] : '0000-00-00';
     $product_id = !empty($_POST['product_id']) ? $_POST['product_id'] : 0;
-    // $category_id = !empty($_POST['category_id']) ? $_POST['category_id'] : 0;
-    // $adult = !empty($_POST['adult']) ? $_POST['adult'] : 0;
-    // $child = !empty($_POST['child']) ? $_POST['child'] : 0;
-    // $infant = !empty($_POST['infant']) ? $_POST['infant'] : 0;
-    // $foc = !empty($_POST['foc']) ? $_POST['foc'] : 0;
     $bp_note = !empty($_POST['bp_note']) ? $_POST['bp_note'] : '';
     $language_id = !empty($_POST['language_id']) ? $_POST['language_id'] : 0;
-    // # --- get value booking product rate form --- #
-    // $pror_id = !empty($_POST['pror_id']) ? $_POST['pror_id'] : 0;
-    // $rate_adult = !empty($_POST['rate_adult']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_adult']) : 0;
-    // $rate_child = !empty($_POST['rate_child']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_child']) : 0;
-    // $rate_infant = !empty($_POST['rate_infant']) && $book_type == 1 ? preg_replace('(,)', '', $_POST['rate_infant']) : 0;
-    // $rate_private = !empty($_POST['rate_total']) && $book_type == 2 ? preg_replace('(,)', '', $_POST['rate_total']) : 0;
-    // $rate_total = !empty($_POST['rate_total']) ? preg_replace('(,)', '', $_POST['rate_total']) : 0;
     # --- get value booking product rate form (thai) --- #
     $customer_thai = !empty($_POST['customer_thai']) ? $_POST['customer_thai'] : 0;
     $category_id_thai = !empty($_POST['category_id_thai']) ? $_POST['category_id_thai'] : 0;
@@ -96,10 +85,6 @@ if (isset($_POST['action']) && $_POST['action'] == "create") {
     # --- get value Transfer from --- #
     $pickup_type = !empty($_POST['pickup_type']) ? $_POST['pickup_type'] : 0;
     $transfer_type = !empty($_POST['transfer_type']) ? $_POST['transfer_type'] : 0;
-    // $tran_adult = !empty($_POST['tran_adult_pax']) ? $_POST['tran_adult_pax'] : 0;
-    // $tran_child = !empty($_POST['tran_child_pax']) ? $_POST['tran_child_pax'] : 0;
-    // $tran_infant = !empty($_POST['tran_infant_pax']) ? $_POST['tran_infant_pax'] : 0;
-    // $tran_foc = !empty($_POST['tran_foc_pax']) ? $_POST['tran_foc_pax'] : 0;
     $start_pickup = !empty($_POST['start_pickup']) ? $_POST['start_pickup'] : '00:00:00';
     $end_pickup = !empty($_POST['end_pickup']) ? $_POST['end_pickup'] : '00:00:00';
     $hotel_pickup = !empty($_POST['hotel_pickup']) ? $_POST['hotel_pickup'] : 0;
@@ -139,11 +124,15 @@ if (isset($_POST['action']) && $_POST['action'] == "create") {
         if ($agent == 'outside' && !empty($_POST['agent_outside'])) {
             $agent_out_id = $bookObj->insert_agent($_POST['agent_outside']);
         }
+
         $bo_id = $bookObj->insert_data($book_status, $book_type, $book_date, $book_time, ($agent == 'outside' && !empty($_POST['agent_outside'])) ? $agent_out_id : $agent, $voucher_no, $sender); // insert bookings
+        
         $response = ($bo_id != FALSE && $bo_id > 0) ? $bookObj->insert_booking_no($bo_id, $bo_date, $bo_year, $bo_year_th, $bo_month, $bo_no, $bo_full) : FALSE; // insert bookings no
+        
+        $response = ($bo_id != FALSE && $bo_id > 0) ? $bookObj->insert_log('สร้าง Booking', 'หมายเลข booking no. ' . $bo_full, $bo_id, 1, $today) : FALSE; // insert log booking
+
         $bp_id = ($response != FALSE && $response > 0) ? $bookObj->insert_booking_product($travel_date, $bp_note, $book_type, $language_id, 1, $bo_id, $product_id) : FALSE; // insert booking products
 
-        // $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult, $child, $infant, $foc, $rate_adult, $rate_child, $rate_infant, $rate_private, $rate_total, $category_id, $bp_id, $pror_id) : false; // insert booking products rate
         if ($customer_thai == 1) {
             $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult_thai, $child_thai, $infant_thai, $foc_thai, $rate_adult_thai, $rate_child_thai, $rate_infant_thai, $private_rates_thai, $rate_total_thai, $category_id_thai, $bp_id, $pror_id_thai) : $response; // insert booking products rate
         }
@@ -153,9 +142,9 @@ if (isset($_POST['action']) && $_POST['action'] == "create") {
         }
 
         $bt_id = ($response > 0 && $response != false) ? $bookObj->insert_booking_transfer($tran_adult, $tran_child, $tran_infant, $tran_foc, $start_pickup, $end_pickup, $hotel_outside, (!empty($dropoff_outside)) ? $dropoff_outside : $hotel_outside, $room_no, '', $zone_pickup, ($zone_dropoff > 0) ? $zone_dropoff : $zone_pickup, ($hotel_pickup != 'outside') ? $hotel_pickup : 0, ($hotel_dropoff != 'outside') ? $hotel_dropoff : 0, 1, $include, $bp_id, 0) : false; // insert booking transfer
+        
         $response = ($bt_id > 0 && $bt_id != false) ? $bookObj->insert_transfer_rate(0, 0, 0, 0, $bt_id, 0) : false; // insert booking transfer rate (join)
 
-        // $response = ($response > 0 && $response != false) && (!empty($cus_name)) ? $bookObj->insert_customer($cus_name, '0000-00-00', '', !empty($_POST['telephone']) ? $_POST['telephone'] : '', $address = '', 1, 0, $email = '', 1, $bo_id, 0) : $response;
         if (!empty($_POST['customers']['cus_age'])) {
             for ($i = 0; $i < count($_POST['customers']['cus_age']); $i++) {
                 $response = ($response > 0 && $response != false) && (!empty($_POST['customers']['cus_name'][$i])) ? $bookObj->insert_customer($_POST['customers']['cus_name'][$i], $_POST['customers']['cus_birth_date'][$i], $_POST['customers']['id_card'][$i], $i == 0 ? $_POST['telephone'] : '', $address = '', !empty($_POST['customers']['cus_age'][$i]) ? $_POST['customers']['cus_age'][$i] : 0, 0, $email = '', $i == 0 ? 1 : 0, $bo_id, !empty($_POST['customers']['cus_nationality_id'][$i]) ? $_POST['customers']['cus_nationality_id'][$i] : 0) : $response;

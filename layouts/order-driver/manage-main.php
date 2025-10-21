@@ -400,10 +400,7 @@
                     }
                 }
             }
-            document.getElementById('booking-true').innerHTML = sum_true;
-            document.getElementById('booking-false').innerHTML = sum_false;
             document.getElementById('toc-true').innerHTML = sum_toc_true;
-            document.getElementById('toc-false').innerHTML = sum_toc_false;
             document.getElementById('adult-sum').innerHTML = adult_sum;
             document.getElementById('child-sum').innerHTML = child_sum;
             document.getElementById('infant-sum').innerHTML = infant_sum;
@@ -419,6 +416,7 @@
                 $("#driver").val(res.driver_id[i]).trigger("change");
 
                 document.getElementById('manage_id').value = res.id[i];
+                document.getElementById('island_id').value = res.island_id[i];
                 document.getElementById('car').value = res.car_id[i];
                 document.getElementById('driver').value = res.driver_id[i];
                 document.getElementById('seat').value = res.seat[i];
@@ -427,10 +425,12 @@
                 document.getElementById('note').value = res.note[i];
                 document.getElementById('outside_driver').value = res.driver_id[i] == 0 ? res.driver_name[i] : '';
 
+                $("#island_id").val(res.island_id[i]).trigger("change");
                 $("#car").val(res.car_id[i]).trigger("change");
                 $("#seat").val(res.seat[i]).trigger("change");
                 document.getElementById('delete_manage').disabled = false;
             } else {
+                $("#island_id").val(0).trigger("change");
                 $("#driver").val(0).trigger("change");
                 $("#car").val(0).trigger("change");
                 $("#seat").val(0).trigger("change");
@@ -480,22 +480,22 @@
             }
         }
 
-        function search_booking(type, travel_date, retrun, manage_id, car, seat) {
+        function search_booking(type, travel_date, retrun, manage_id, car, island_id) {
             // get data
-            var formData = new FormData();
-            formData.append('action', 'search');
-            formData.append('travel_date', String(travel_date));
-            formData.append('return', retrun);
-            formData.append('manage_id', manage_id);
-            formData.append('car', car);
-            formData.append('seat', seat);
-            formData.append('type', type);
+            // var formData = new FormData();
+            // formData.append('action', 'search');
+            // formData.append('travel_date', String(travel_date));
+            // formData.append('return', retrun);
+            // formData.append('manage_id', manage_id);
+            // formData.append('car', car);
+            // formData.append('type', type);
+            var serializedData = $('#booking-search-form').serialize();
             $.ajax({
                 url: "pages/order-driver/function/search-manage-booking.php",
                 type: "POST",
-                processData: false,
-                contentType: false,
-                data: formData,
+                // processData: false,
+                // contentType: false,
+                data: serializedData + "&action=search&return=" + retrun + "&car=" + car + "&manage_id=" + manage_id + "&island_id=" + island_id + "&type=" + type,
                 success: function(response) {
                     $('#div-manage-boooking').html(response);
                     sum_checkbox();
@@ -552,7 +552,6 @@
                     }
                 }
             }
-
             if (manage_id > 0) {
                 var formData = new FormData();
                 formData.append('action', 'create');

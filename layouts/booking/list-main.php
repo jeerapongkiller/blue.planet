@@ -410,6 +410,9 @@
                         },
                         'category_id[]': {
                             required: true
+                        },
+                        'agent': {
+                            required: true
                         }
                     },
                     messages: {
@@ -552,119 +555,6 @@
                 }
             });
         }
-
-        // function search_program() {
-        //     var open_rates = document.getElementById('open-rates').value;
-        //     var book_type = document.getElementById('book_type1').checked == true ? 1 : 2;
-        //     document.getElementById('div-adult').hidden = (book_type == 1 && open_rates == 1) ? true : false;
-        //     document.getElementById('table-adult').hidden = (book_type == 1 && open_rates == 1) ? false : true;
-        //     document.getElementById('div-child').hidden = (book_type == 1 && open_rates == 1) ? true : false;
-        //     document.getElementById('table-child').hidden = (book_type == 1 && open_rates == 1) ? false : true;
-        //     document.getElementById('div-infant').hidden = (book_type == 1 && open_rates == 1) ? true : false;
-        //     document.getElementById('table-infant').hidden = (book_type == 1 && open_rates == 1) ? false : true;
-        //     if (open_rates == 1) {
-        //         document.getElementById('rate_total').readOnly = (book_type == 1) ? true : false;
-        //     } else {
-        //         document.getElementById('div-total').hidden = true;
-        //     }
-
-
-        //     var agent = document.getElementById('agent').value;
-        //     var product_id = document.getElementById('product_id').value;
-
-        //     document.getElementById('frm-agent').hidden = agent !== 'outside' ? false : true;
-        //     document.getElementById('frm-agent-outside').hidden = agent !== 'outside' ? true : false;
-
-        //     var formData = new FormData();
-        //     formData.append('action', 'search');
-        //     formData.append('prod_id', product_id);
-        //     $.ajax({
-        //         url: "pages/booking/function/search-category.php",
-        //         type: "POST",
-        //         processData: false,
-        //         contentType: false,
-        //         data: formData,
-        //         success: function(response) {
-        //             if (response != '' && response != false) {
-        //                 $('#category_id').find('option').remove();
-        //                 var res = $.parseJSON(response);
-        //                 var countcate = Object.keys(res.id).length;
-        //                 if (countcate) {
-        //                     for (let index = 0; index < countcate; index++) {
-        //                         $('#category_id').append("<option value=\"" + res.id[index] + "\">" + res.name[index] + "</option>");
-        //                     }
-        //                 } else {
-        //                     $('#category_id').append("<option value=\"0\"></option>");
-        //                 }
-
-        //                 check_category();
-        //             }
-        //         }
-        //     });
-        // }
-
-        // function check_category() {
-        //     var open_rates = document.getElementById('open-rates').value;
-        //     var book_type = document.getElementsByName('booking_type')[0].checked == true ? 1 : 2;
-        //     var agent = document.getElementById('agent').value;
-        //     var product_id = document.getElementById('product_id').value;
-        //     var category_id = document.getElementById('category_id').value;
-        //     var travel_date = document.getElementById('travel_date').value;
-        //     var formData = new FormData();
-        //     formData.append('action', 'search');
-        //     formData.append('agent_id', agent);
-        //     formData.append('product_id', product_id);
-        //     formData.append('category_id', category_id);
-        //     formData.append('travel_date', travel_date);
-        //     $.ajax({
-        //         url: "pages/booking/function/search-rate.php",
-        //         type: "POST",
-        //         processData: false,
-        //         contentType: false,
-        //         data: formData,
-        //         success: function(response) {
-        //             if (response != '' && response != false && open_rates == 1) {
-        //                 var res = $.parseJSON(response);
-        //                 if (book_type == 1) {
-        //                     document.getElementById('pror_id').value = res.prodrid;
-        //                     document.getElementById('rate_adult').value = res.rate_adult;
-        //                     document.getElementById('rate_child').value = res.rate_child;
-        //                     document.getElementById('rate_infant').value = res.rate_infant;
-        //                 } else if (book_type == 2) {
-        //                     document.getElementById('rate_total').value = res.rate_private;
-        //                 }
-        //                 document.getElementById('div-transfer').hidden = (res.transfer == 0) ? true : false;
-        //                 document.getElementById('start_pickup').value = (res.transfer == 0) ? '08:15' : '';
-        //                 document.getElementById('end_pickup').value = (res.transfer == 0) ? '08:15' : '';
-        //                 document.getElementById('include').value = (res.transfer === 1) ? '1' : '2';
-
-        //                 check_rate();
-        //             }
-        //         }
-        //     });
-        // }
-
-        // function check_rate() {
-        //     var total_product = 0;
-        //     var book_type = document.getElementById('book_type1').checked == true ? 1 : 2;
-        //     var rate_total = document.getElementById('rate_total');
-        //     var adult = book_type == 2 ? document.getElementById('adult') : document.getElementById('cover-adult');
-        //     var child = book_type == 2 ? document.getElementById('child') : document.getElementById('cover-child');
-        //     var infant = book_type == 2 ? document.getElementById('infant') : document.getElementById('cover-infant');
-        //     if (book_type == 1) {
-        //         var rate_adult = document.getElementById('rate_adult').value.replace(/,/g, '');
-        //         var rate_child = document.getElementById('rate_child').value.replace(/,/g, '');
-        //         var rate_infant = document.getElementById('rate_infant').value.replace(/,/g, '');
-        //     }
-        //     if (book_type == 1) {
-        //         total_product = Number(total_product) + Number(rate_adult) * Number(adult.value);
-        //         total_product = Number(total_product) + Number(rate_child) * Number(child.value);
-        //         total_product = Number(total_product) + Number(rate_infant) * Number(infant.value);
-        //     } else {
-        //         total_product = Number(rate_total.value.replace(/,/g, ''));
-        //     }
-        //     rate_total.value = numberWithCommas(total_product);
-        // }
 
         function check_time(params) {
             var hotel = params == 'zone_pickup' ? '#hotel_pickup' : '#hotel_dropoff';
@@ -969,8 +859,8 @@
                 infant = Number(infant) + Number(document.getElementById('infant_thai')?.value || 0);
                 foc = Number(foc) + Number(document.getElementById('foc_thai')?.value || 0);
             }
-             // คำนวณสำหรับ Foreign
-             if (document.getElementById('customer_foreign').value == 1) {
+            // คำนวณสำหรับ Foreign
+            if (document.getElementById('customer_foreign').value == 1) {
                 adult = Number(adult) + Number(document.getElementById('adult_foreign')?.value || 0);
                 child = Number(child) + Number(document.getElementById('child_foreign')?.value || 0);
                 infant = Number(infant) + Number(document.getElementById('infant_foreign')?.value || 0);
@@ -1060,108 +950,6 @@
             check_rate();
         }
 
-        // function rows_customer() {
-        //     check_rate();
-        //     return false; // ปิดการมใช้งาน
-        //     var open_rates = document.getElementById('open-rates').value;
-        //     var book_type = document.getElementById('book_type1').checked == true ? 1 : 2;
-        //     var before_arr = document.getElementById('before_arr_cus').value;
-        //     array = (before_arr !== undefined && before_arr != '' && before_arr != 'undefined') ? $.parseJSON(before_arr) : '';
-        //     var frm = document.getElementById('frm-customer');
-        //     var adult = (book_type == 1 && open_rates == 1) ? document.getElementById('cover-adult') : document.getElementById('adult');
-        //     var child = (book_type == 1 && open_rates == 1) ? document.getElementById('cover-child') : document.getElementById('child');
-        //     var infant = (book_type == 1 && open_rates == 1) ? document.getElementById('cover-infant') : document.getElementById('infant');
-        //     var foc = document.getElementById('foc');
-        //     var sum = Number(adult.value) + Number(child.value) + Number(infant.value) + Number(foc.value);
-
-        //     var text = '';
-        //     var text_age = '';
-        //     var cus_age = 0;
-
-        //     for (let index = 0; index < sum; index++) {
-        //         // console.log(adult.value + ' | ' + child.value + ' | ' + infant.value + ' | ' + foc.value + ' | ' + Number(index + 1));
-        //         if ((Number(adult.value) - Number(index + 1)) >= 0) {
-        //             text_age = 'Adult';
-        //             cus_age = 1;
-        //         } else if (((Number(adult.value) + Number(child.value)) - Number(index + 1)) >= 0) {
-        //             text_age = 'Children';
-        //             cus_age = 2;
-        //         } else if (((Number(adult.value) + Number(child.value) + Number(infant.value)) - Number(index + 1)) >= 0) {
-        //             text_age = 'Infant';
-        //             cus_age = 3;
-        //         } else {
-        //             text_age = 'FOC';
-        //             cus_age = 4;
-        //         }
-
-        //         var cus_id = (array != '' && array['cus_id'][index]) ? array['cus_id'][index] : 0;
-        //         var id_card = (array != '' && array['id_card'][index]) ? array['id_card'][index] : '';
-        //         var cus_name = (array != '' && array['cus_name'][index]) ? array['cus_name'][index] : '';
-        //         var birth_date = (array != '' && array['birth_date'][index]) ? array['birth_date'][index] : '';
-        //         var nation_id = (array != '' && array['nation_id'][index]) ? array['nation_id'][index] : 0;
-
-        //         text += '<div class="col-md-1 col-12">' +
-        //             '<div class="form-group pt-2">' +
-        //             '<strong>' + text_age + '</strong>' +
-        //             '<input type="hidden" name="customers[cus_id][]" value="' + cus_id + '" />' +
-        //             '<input type="hidden" name="customers[cus_age][]" value="' + cus_age + '" />' +
-        //             '</div>' +
-        //             '</div>' +
-        //             '<div class="col-md-2 col-12">' +
-        //             '<div class="form-group">' +
-        //             '<label for="id_card">ID Passport/ ID Card</label>' +
-        //             '<input type="text" class="form-control" name="customers[id_card][]" value="' + id_card + '" />' +
-        //             '</div>' +
-        //             '</div>' +
-        //             '<div class="col-md-4 col-12">' +
-        //             '<div class="form-group">' +
-        //             '<label for="name">Name</label>' +
-        //             '<input type="text" class="form-control" name="customers[cus_name][]" value="' + cus_name + '" />' +
-        //             '</div>' +
-        //             '</div>' +
-        //             '<div class="col-md-2 col-12">' +
-        //             '<div class="form-group">' +
-        //             '<label for="birth_date">Birth Date</label>' +
-        //             '<input type="date" class="form-control birth-date" name="customers[cus_birth_date][]" value="' + birth_date + '" />' +
-        //             '</div>' +
-        //             '</div>' +
-        //             '<div class="col-md-3 col-12">' +
-        //             '<div class="form-group">' +
-        //             '<label for="nationality_id">Nationality</label>' +
-        //             '<select class="form-control select2" id="customers' + index + '" name="customers[cus_nationality_id][]">' +
-        //             '<option value="0">Please Select Nationality...</option>' +
-        //             <?php
-                        //             $nations = $bookObj->shownation();
-                        //             foreach ($nations as $nation) {
-                        //             
-                        ?> '<option value="<?php echo $nation['id']; ?>" ';
-        //         text += (nation_id == <?php echo $nation['id']; ?>) ? 'selected' : '';
-        //         text += "><?php echo $nation['name']; ?></option>" +
-        //         <?php
-                    //             }
-                    //         
-                    ?> '</select>' +
-        //         '</div>' +
-        //         '</div>';
-        //     }
-
-        //     frm.innerHTML = text;
-
-        //     // select2
-        //     $('.select2').each(function() {
-        //         var $this = $(this);
-        //         $this.wrap('<div class="position-relative"></div>');
-        //         $this
-        //             .select2({
-        //                 placeholder: 'Select ...',
-        //                 dropdownParent: $this.parent()
-        //             })
-        //             .change(function() {
-        //                 $(this).valid();
-        //             });
-        //     });
-        // }
-
         // Script Function Extra Charge
         // ------------------------------------------------------------------------------------
         function chang_extra_charge(select) {
@@ -1188,9 +976,23 @@
         }
 
         function check_extar_type(select) {
-            var adult = document.getElementById('cover-adult').value;
-            var child = document.getElementById('cover-child').value;
-            var infant = document.getElementById('cover-infant').value;
+            var adult = Number(0);
+            var child = Number(0);
+            var infant = Number(0);
+
+            // Thai
+            if (document.getElementById('customer_thai').value == 1) {
+                adult = Number(document.getElementById('adult_thai')?.value) + adult || adult;
+                child = Number(document.getElementById('child_thai')?.value) + child || child;
+                infant = Number(document.getElementById('infant_thai')?.value) + infant || infant;
+            }
+
+            // Foreign
+            if (document.getElementById('customer_foreign').value == 1) {
+                adult = Number(document.getElementById('adult_foreign')?.value) + adult || adult;
+                child = Number(document.getElementById('child_foreign')?.value) + child || child;
+                infant = Number(document.getElementById('infant_foreign')?.value) + infant || infant;
+            }
 
             var div_name_perpax = select.name.replace('[extra_type]', '[div_extar_perpax]');
             document.getElementsByName(div_name_perpax)[0].hidden = select.value == 1 ? false : true;

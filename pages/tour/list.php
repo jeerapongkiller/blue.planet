@@ -55,10 +55,10 @@ $products = $prodObj->showlist(1);
                         <table class="product-list-table table table-responsive">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>Status</th>
+                                    <th class="cell-fit">Status</th>
                                     <th>Reference #</th>
                                     <th>Name</th>
-                                    <th class="cell-fit"></th>
+                                    <th>Island</th>
 
                                 </tr>
                             </thead>
@@ -73,7 +73,7 @@ $products = $prodObj->showlist(1);
                                             <td><a href="./?pages=tour/edit&id=<?php echo $product['id']; ?>" style="color:#6E6B7B"><span class="badge badge-pill <?php echo $is_approved_class; ?> text-capitalized"><?php echo $is_approved; ?></span></a></td>
                                             <td><a href="./?pages=tour/edit&id=<?php echo $product['id']; ?>" style="color:#6E6B7B"><?php echo $product['refcode']; ?></a></td>
                                             <td><a href="./?pages=tour/edit&id=<?php echo $product['id']; ?>" style="color:#6E6B7B"><?php echo $product['name']; ?></a></td>
-                                            <td><a href="./?pages=tour/edit&id=<?php echo $product['id']; ?>" style="color:#6E6B7B"></a></td>
+                                            <td><a href="./?pages=tour/edit&id=<?php echo $product['id']; ?>" style="color:#6E6B7B"><?php echo $prodObj->get_value('name', 'island', $product['island_id'])['name']; ?></a></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>

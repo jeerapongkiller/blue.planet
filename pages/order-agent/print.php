@@ -37,6 +37,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['agent_
                 $car_name[] = !empty($booking['car_name']) ? $booking['car_name'] : '';
                 $cus_name[] = !empty($booking['cus_name']) ? $booking['cus_name'] : '';
                 $telephone[] = !empty($booking['telephone']) ? $booking['telephone'] : '';
+                $nation_name[] = !empty($booking['nation_name']) ? $booking['nation_name'] : '';
                 $book_full[] = !empty($booking['book_full']) ? $booking['book_full'] : '';
                 $voucher_no[] = !empty($booking['voucher_no_agent']) ? $booking['voucher_no_agent'] : '';
                 $pickup_type[] = !empty($booking['pickup_type']) ? $booking['pickup_type'] : 0;
@@ -108,6 +109,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['agent_
                     <th class="text-center" width="5%">Time</th>
                     <th width="14%">Programe</th>
                     <th width="15%">Name</th>
+                    <th>สัญชาติ</th>
                     <th class="text-center" width="7%">V/C</th>
                     <th width="20%">Hotel</th>
                     <th width="5%">Room</th>
@@ -139,6 +141,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['agent_
                             <td class="text-center"><?php echo $start_pickup[$i] . ' - ' . $end_pickup[$i]; ?></td>
                             <td><?php echo $product_name[$i]; ?></td>
                             <td><?php echo !empty($telephone[$i]) ? $cus_name[$i] . ' <br>(' . $telephone[$i] . ')' : $cus_name[$i]; ?></td>
+                            <td><?php echo $nation_name[$i]; ?></td>
                             <td><?php echo !empty($voucher_no[$i]) ? $voucher_no[$i] : $book_full[$i]; ?></td>
                             <td style="padding: 5px;">
                                 <?php if ($pickup_type[$i] == 1) {

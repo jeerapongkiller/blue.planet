@@ -41,6 +41,7 @@ class Report extends DB
                     BOT.id as BOT_id, BOT.arrange as arrange,
                     ORTRAN.id as ortran_id, ORTRAN.license as license, ORTRAN.telephone as ortran_telephone, ORTRAN.travel_date as ortran_travel,
                     CAR.id as car_id, CAR.name as car_name,
+                    DRIVER.id as driver_id, DRIVER.name as driver_name,
                     HOTPIK.id as hotel_pickup_id, HOTPIK.name as hotel_pickup_name,
                     HOTDRO.id as hotel_dropoff_id, HOTDRO.name as hotel_dropoff_name,
                     INV.id as inv_id, INV.rec_date as rec_date, INV.withholding as withholding,
@@ -84,6 +85,8 @@ class Report extends DB
                     ON BOT.order_id = ORTRAN.id
                 LEFT JOIN cars CAR 
                     ON ORTRAN.car_id = CAR.id
+                LEFT JOIN drivers DRIVER
+                    ON ORTRAN.driver_id = DRIVER.id
                 LEFT JOIN hotel HOTPIK
                     ON BT.hotel_pickup_id = HOTPIK.id
                 LEFT JOIN hotel HOTDRO
