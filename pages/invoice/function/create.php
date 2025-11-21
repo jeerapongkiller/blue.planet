@@ -20,6 +20,7 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && isset($_POST['bo_
     // get value from ajax
     # --- booking create form --- #
     $bo_id = !empty($_POST['bo_id']) ? json_decode($_POST['bo_id']) : 0;
+    $island = !empty($_POST['island']) ? json_decode($_POST['island']) : 0;
     $is_approved = !empty($_POST['is_approved']) ? $_POST['is_approved'] : 0;
     $inv_date = $_POST['inv_date'] != "" ? $_POST['inv_date'] : '';
     $rec_date = $_POST['rec_date'] != "" ? $_POST['rec_date'] : '';
@@ -34,11 +35,12 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && isset($_POST['bo_
     # --- invoice no full --- #
     $inv['no'] = '';
     $inv['full'] = '';
-    $inv_no = $invObj->checkinvno($today);
+    $inv_no = $invObj->checkinvno($today, $island[0]);
     $no = !empty($inv_no['max_inv_no']) ? $inv_no['max_inv_no'] + 1 : 1;
-    $inv['full'] = 'IN' . date("Ymd") . '-' . setNumberLength($no, 3);
+    $island_no = !empty($island[0]) ? setNumberLength($island[0], 2) : 0;
+    $inv['full'] = 'IN' . date("Ymd") . $island_no . '-' . setNumberLength($no, 3);
     $inv['no'] = $no;
-    $cover_id = (!empty($inv['no']) && !empty($inv['full'])) ? $invObj->insert_cover_inv($today, $inv['no'], $inv['full']) : 0;
+    $cover_id = (!empty($inv['no']) && !empty($inv['full'])) ? $invObj->insert_cover_inv($today, $inv['no'], $inv['full'], $island_no) : 0;
     # --- create invoice --- #
     if (!empty($bo_id)) {
         $no = 1;

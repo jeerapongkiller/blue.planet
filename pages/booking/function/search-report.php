@@ -70,6 +70,10 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ty
                     $foc[] = !empty($booking['bpr_foc']) ? $booking['bpr_foc'] : 0;
                     $total[] = $booking['bpr_adult'] + $booking['bpr_child'] + $booking['bpr_infant'] + $booking['bpr_foc'];
 
+                    if ($booking['pickup_type'] == 2) {
+                        $total['no_transfer'][] = $booking['bpr_adult'] + $booking['bpr_child'] + $booking['bpr_infant'] + $booking['bpr_foc'];
+                    }
+
                     $mange_boat[$booking['mange_id']]['adult'][] = !empty($booking['bpr_adult']) ? $booking['bpr_adult'] : 0;
                     $mange_boat[$booking['mange_id']]['child'][] = !empty($booking['bpr_child']) ? $booking['bpr_child'] : 0;
                     $mange_boat[$booking['mange_id']]['infant'][] = !empty($booking['bpr_infant']) ? $booking['bpr_infant'] : 0;
@@ -211,6 +215,10 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ty
             <div class="col-2 border-top border-right py-50 pb-1">
                 <small class="card-text text-muted mb-0">FOC</small>
                 <h1 class="font-weight-bolder text-primary mb-0"><?php echo !empty($foc) ? array_sum($foc) : 0; ?><small class="text-secondary"> PAX</small></h1>
+            </div>
+            <div class="col-2 border-top border-right py-50 pb-1">
+                <small class="card-text text-muted mb-0">เดินทางมาเอง</small>
+                <h1 class="font-weight-bolder text-primary mb-0"><?php echo !empty($total['no_transfer']) ? array_sum($total['no_transfer']) : 0; ?><small class="text-secondary"> PAX</small></h1>
             </div>
             <?php if (!empty($product_id)) {
                 for ($i = 0; $i < count($product_id); $i++) { ?>

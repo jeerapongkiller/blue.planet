@@ -570,15 +570,16 @@
                     contentType: false,
                     data: formData,
                     success: function(response) {
+                        location.reload();
                         // console.log(response);
-                        if (response != false && response > 0) {
-                            location.reload(); // refresh page
-                        } else {
-                            Swal.fire({
-                                title: "Please try again.",
-                                icon: "error",
-                            });
-                        }
+                        // if (response != false && response > 0) {
+                        //     location.reload(); // refresh page
+                        // } else {
+                        //     Swal.fire({
+                        //         title: "Please try again.",
+                        //         icon: "error",
+                        //     });
+                        // }
                     }
                 });
             } else if (type == 'next' && bt_manage == '') {

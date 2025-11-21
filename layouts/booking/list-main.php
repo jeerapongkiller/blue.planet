@@ -419,6 +419,19 @@
 
                     },
                     submitHandler: function(form) {
+
+                        $.blockUI({
+                            message: '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>',
+                            css: {
+                                backgroundColor: 'transparent',
+                                border: '0'
+                            },
+                            overlayCSS: {
+                                backgroundColor: '#fff',
+                                opacity: 0.8
+                            }
+                        });
+
                         // update ajax request data
                         var formData = new FormData(form);
                         formData.append('action', 'create');
@@ -446,6 +459,9 @@
                                         icon: "error",
                                     });
                                 }
+                            },
+                            complete: function() {
+                                $.unblockUI();
                             }
                         });
                     }

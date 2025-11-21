@@ -542,6 +542,19 @@
                         // }
                     },
                     submitHandler: function(form) {
+
+                        $.blockUI({
+                            message: '<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>',
+                            css: {
+                                backgroundColor: 'transparent',
+                                border: '0'
+                            },
+                            overlayCSS: {
+                                backgroundColor: '#fff',
+                                opacity: 0.8
+                            }
+                        });
+
                         // update ajax request data
                         var formData = new FormData(form);
                         formData.append('action', 'edit');
@@ -562,46 +575,15 @@
                                             location.reload(); // refresh page
                                         }
                                     })
-                                    // if ($('#bp_action').val() == 'create') {
-                                    //     // sendline();
-                                    //     Swal.fire({
-                                    //         title: "The information has been updated.",
-                                    //         icon: "success",
-                                    //     }).then(function(isConfirm) {
-                                    //         if (isConfirm) {
-                                    //             // location.reload(); // refresh page
-                                    //             window.location.href = window.location + "&action=details";
-                                    //             // window.location.href = './?pages=booking/list';
-                                    //         }
-                                    //     })
-                                    // } else if ($('#search_travel').val() !== '' && $('#search_agent').val() !== '') {
-                                    //     Swal.fire({
-                                    //         title: "The information has been updated.",
-                                    //         icon: "success",
-                                    //     }).then(function(isConfirm) {
-                                    //         if (isConfirm) {
-                                    //             location.href = "./?pages=invoice/create&search_travel=" + $('#search_travel').val() + "&search_agent=" + $('#search_agent').val();
-                                    //             // window.location.href = window.location + "&action=details";
-                                    //         }
-                                    //     })
-                                    // } else {
-                                    //     Swal.fire({
-                                    //         title: "The information has been updated.",
-                                    //         icon: "success",
-                                    //     }).then(function(isConfirm) {
-                                    //         if (isConfirm) {
-                                    //             // location.reload(); // refresh page
-                                    //             window.location.href = window.location + "&action=details";
-                                    //             // window.location.href = './?pages=booking/list';
-                                    //         }
-                                    //     });
-                                    // }
                                 } else {
                                     Swal.fire({
                                         title: "Please try again.",
                                         icon: "error",
                                     });
                                 }
+                            },
+                            complete: function() {
+                                $.unblockUI();
                             }
                         });
                     }

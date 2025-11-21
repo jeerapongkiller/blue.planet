@@ -450,18 +450,9 @@ if (!empty($programed)) {
                                                                         }
                                                                     }
                                                                     echo ')'; ?></td>
-                                                                <!-- <td style="padding: 5px;">
-                                                                <?php if ($pickup_type[$id] == 1) {
-                                                                    echo (!empty($hotel_name[$id])) ? '<b>Pickup : </b>' . $hotel_name[$id] . $zone_pickup[$id] . '</br>' : '<b>Pickup : </b>' . $outside[$id] . $zone_pickup[$id] . '</br>';
-                                                                    echo (!empty($dropoff_name[$id])) ? '<b>Dropoff : </b>' . $dropoff_name[$id] . $zone_dropoff[$id] : '<b>Dropoff : </b>' . $outside_dropoff[$id]  . $zone_dropoff[$id];
-                                                                } else {
-                                                                    echo 'เดินทางมาเอง';
-                                                                } ?>
-                                                            </td> -->
-                                                                <!-- <td><?php echo $book['room_no'][$mange['id'][$i]][$a]; ?></td> -->
                                                                 <td><?php echo !empty($book['nation_name'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . $book['nation_name'][$mange['id'][$i]][$a] : $book['cus_name'][$mange['id'][$i]][$a]; ?></td>
                                                                 <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
-                                                                <td class="cell-fit"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
+                                                                <td class="cell-fit"><?php echo ($pickup_type[$id] == 1) ? (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id] : 'เดินทางมาเอง'; ?></td>
                                                                 <td><?php echo (!empty($zone_pickup[$id])) ? $zone_pickup[$id] : ''; ?></td>
                                                                 <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                                                 <td class="text-center"><?php echo array_sum($child[$id]); ?></td>
@@ -570,7 +561,7 @@ if (!empty($programed)) {
                                                                 <td><?php echo !empty($start_pickup[$id]) ? date("H:i", strtotime($start_pickup[$id])) : '00:00'; ?></td>
                                                                 <td><?php echo !empty($cus_name[$id][0]) ? !empty($nation_name[$id][0]) ? $cus_name[$id][0] . ' ' . $nation_name[$id][0] : $cus_name[$id][0] . ' ' . $nation_name[$id][0] : ''; ?></td>
                                                                 <td class="text-nowrap"><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
-                                                                <td class="cell-fit"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
+                                                                <td class="cell-fit"><?php echo ($pickup_type[$id] == 1) ? (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]  : 'เดินทางมาเอง'; ?></td>
                                                                 <td><?php echo (!empty($zone_pickup[$id])) ? $zone_pickup[$id] : ''; ?></td>
                                                                 <td class="text-center"><?php echo !empty($adult[$id]) ? array_sum($adult[$id]) : 0; ?></td>
                                                                 <td class="text-center"><?php echo !empty($child[$id]) ? array_sum($child[$id]) : 0; ?></td>

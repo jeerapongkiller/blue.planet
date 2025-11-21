@@ -246,6 +246,7 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                 $product_name[] = !empty(!empty($booking['product_name'])) ? $booking['product_name'] : '';
                                 $agent_name[] = !empty($booking['comp_name']) ? $booking['comp_name'] : '';
                                 $cus_name[] = !empty($booking['cus_name']) ? $booking['cus_name'] : '';
+                                $pickup_type[] = !empty(!empty($booking['pickup_type'])) ? $booking['pickup_type'] : 0;
                                 $hotel_pickup[] = !empty($booking['hotel_pickup']) ? $booking['hotel_pickup'] : $booking['hotel_pickup_name'];
                                 $pickup_name[] = !empty($booking['pickup_name']) ? $booking['pickup_name'] : '';
                                 $room_no[] = !empty($booking['room_no']) ? $booking['room_no'] : '';
@@ -254,15 +255,8 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                 $status_by_name[] = !empty($booking['status_by']) ? $booking['stabyFname'] . ' ' . $booking['stabyLname'] : '';
                                 $status[] = '<span class="badge badge-pill ' . $booking['booksta_class'] . ' text-capitalized"> ' . $booking['booksta_name'] . ' </span>';
                                 $category_transfer[] = !empty(!empty($booking['category_transfer'])) ? $booking['category_transfer'] : 0;
-                                // $adult[] = !empty($booking['bpr_adult']) ? $booking['bpr_adult'] : 0;
-                                // $child[] = !empty($booking['bpr_child']) ? $booking['bpr_child'] : 0;
-                                // $infant[] = !empty($booking['bpr_infant']) ? $booking['bpr_infant'] : 0;
-                                // $foc[] = !empty($booking['bpr_foc']) ? $booking['bpr_foc'] : 0;
                                 $note[] = !empty($booking['bp_note']) ? $booking['bp_note'] : '';
-                                // $rate_adult[] = !empty($booking['rate_adult']) ? $booking['rate_adult'] : 0;
-                                // $rate_child[] = !empty($booking['rate_child']) ? $booking['rate_child'] : 0;
                                 $created_at[] = !empty(!empty($booking['created_at'])) ? $booking['created_at'] : '0000-00-00';
-                                // $rate_total[] = !empty($booking['rate_total']) ? $booking['rate_total'] : 0;
                                 $transfer_type[] = !empty($booking['transfer_type']) ? $booking['transfer_type'] : 0;
                                 $btr_rate_adult[] = !empty($booking['transfer_type']) && $booking['transfer_type'] == 1 ? $booking['bt_adult'] * $booking['btr_rate_adult'] : 0;
                                 $btr_rate_child[] = !empty($booking['transfer_type']) && $booking['transfer_type'] == 1 ? $booking['bt_child'] * $booking['btr_rate_child'] : 0;
@@ -279,13 +273,6 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                         $count_noshow = $count_noshow + 1;
                                         break;
                                 }
-                                # --- Programe --- #
-                                // $prod_id[] = !empty($booking['product_id']) ? $booking['product_id'] : 0;
-                                // $prod_name[$booking['product_id']] = !empty($booking['product_name']) ? $booking['product_name'] : '';
-                                // $prod_adult[$booking['product_id']][] = !empty($booking['bpr_adult']) ? $booking['bpr_adult'] : 0;
-                                // $prod_child[$booking['product_id']][] = !empty($booking['bpr_child']) ? $booking['bpr_child'] : 0;
-                                // $prod_infant[$booking['product_id']][] = !empty($booking['bpr_infant']) ? $booking['bpr_infant'] : 0;
-                                // $prod_foc[$booking['product_id']][] = !empty($booking['bpr_foc']) ? $booking['bpr_foc'] : 0;
                                 # --- order boat --- #
                                 if (!empty(!empty($booking['mange_id'])) && !empty($booking['mange_id']) > 0) {
                                     # --- Boat --- #
@@ -435,7 +422,7 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                                                 </td>
                                                 <td>
                                                     <a <?php echo $href; ?>>
-                                                        <?php echo !empty($pickup_name[$i]) ? $hotel_pickup[$i] . ' (' . $pickup_name[$i] . ')' : $hotel_pickup[$i]; ?></a>
+                                                        <?php echo ($pickup_type[$i] == 1) ? !empty($pickup_name[$i]) ? $hotel_pickup[$i] . ' (' . $pickup_name[$i] . ')' : $hotel_pickup[$i] : 'เดินทางมาเอง'; ?></a>
                                                     </a>
                                                 </td>
                                                 <td>

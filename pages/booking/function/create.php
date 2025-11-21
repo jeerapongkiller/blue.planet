@@ -126,9 +126,9 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && !empty($_POST['ca
         }
 
         $bo_id = $bookObj->insert_data($book_status, $book_type, $book_date, $book_time, ($agent == 'outside' && !empty($_POST['agent_outside'])) ? $agent_out_id : $agent, $voucher_no, $sender); // insert bookings
-        
+
         $response = ($bo_id != FALSE && $bo_id > 0) ? $bookObj->insert_booking_no($bo_id, $bo_date, $bo_year, $bo_year_th, $bo_month, $bo_no, $bo_full) : FALSE; // insert bookings no
-        
+
         $response = ($bo_id != FALSE && $bo_id > 0) ? $bookObj->insert_log('สร้าง Booking', 'หมายเลข booking no. ' . $bo_full, $bo_id, 1, $today) : FALSE; // insert log booking
 
         $bp_id = ($response != FALSE && $response > 0) ? $bookObj->insert_booking_product($travel_date, $bp_note, $book_type, $language_id, 1, $bo_id, $product_id) : FALSE; // insert booking products
@@ -142,7 +142,7 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && !empty($_POST['ca
         }
 
         $bt_id = ($response > 0 && $response != false) ? $bookObj->insert_booking_transfer($tran_adult, $tran_child, $tran_infant, $tran_foc, $start_pickup, $end_pickup, $hotel_outside, (!empty($dropoff_outside)) ? $dropoff_outside : $hotel_outside, $room_no, '', $zone_pickup, ($zone_dropoff > 0) ? $zone_dropoff : $zone_pickup, ($hotel_pickup != 'outside') ? $hotel_pickup : 0, ($hotel_dropoff != 'outside') ? $hotel_dropoff : 0, 1, $include, $bp_id, 0) : false; // insert booking transfer
-        
+
         $response = ($bt_id > 0 && $bt_id != false) ? $bookObj->insert_transfer_rate(0, 0, 0, 0, $bt_id, 0) : false; // insert booking transfer rate (join)
 
         if (!empty($_POST['customers']['cus_age'])) {

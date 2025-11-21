@@ -44,6 +44,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search") {
                 $product_name[] = !empty(!empty($booking['product_name'])) ? $booking['product_name'] : '';
                 $agent_name[] = !empty($booking['comp_name']) ? $booking['comp_name'] : '';
                 $cus_name[] = !empty($booking['cus_name']) ? $booking['cus_name'] : '';
+                $pickup_type[] = !empty(!empty($booking['pickup_type'])) ? $booking['pickup_type'] : 0;
                 $hotel_pickup[] = !empty($booking['hotel_pickup']) ? $booking['hotel_pickup'] : $booking['hotel_pickup_name'];
                 $pickup_name[] = !empty($booking['pickup_name']) ? $booking['pickup_name'] : '';
                 $room_no[] = !empty($booking['room_no']) ? $booking['room_no'] : '';
@@ -233,7 +234,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search") {
                                 </td>
                                 <td>
                                     <a <?php echo $href; ?>>
-                                        <?php echo !empty($pickup_name[$i]) ? $hotel_pickup[$i] . ' (' . $pickup_name[$i] . ')' : $hotel_pickup[$i]; ?></a>
+                                        <?php echo ($pickup_type[$i] == 1) ? !empty($pickup_name[$i]) ? $hotel_pickup[$i] . ' (' . $pickup_name[$i] . ')' : $hotel_pickup[$i] : 'เดินทางมาเอง'; ?></a>
                                     </a>
                                 </td>
                                 <td>

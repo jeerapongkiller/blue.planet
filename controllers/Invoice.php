@@ -482,13 +482,15 @@ class Invoice extends DB
         return $data;
     }
 
-    public function checkinvno($today)
+    public function checkinvno($today, $island)
     {
         $query = "SELECT *,
             MAX(inv_no) as max_inv_no
             FROM invoice_cover 
             WHERE inv_date = '$today'
+            AND island_id = $island
         ";
+ 
         $statement = $this->connection->prepare($query);
         $statement->execute();
         $result = $statement->get_result();
@@ -567,13 +569,13 @@ class Invoice extends DB
         return $this->response;
     }
 
-    public function insert_cover_inv(string $inv_date, int $inv_no, string $inv_full)
+    public function insert_cover_inv(string $inv_date, int $inv_no, string $inv_full, int $island)
     {
         $bind_types = "";
         $params = array();
 
-        $query = "INSERT INTO invoice_cover (inv_date, inv_no, inv_full, created_at)
-        VALUES (?, ?, ?, NOW())";
+        $query = "INSERT INTO invoice_cover (inv_date, inv_no, inv_full, island_id, created_at)
+        VALUES (?, ?, ?, ?, NOW())";
 
         $bind_types .= "s";
         array_push($params, $inv_date);
@@ -583,6 +585,9 @@ class Invoice extends DB
 
         $bind_types .= "s";
         array_push($params, $inv_full);
+
+        $bind_types .= "i";
+        array_push($params, $island);
 
         $statement = $this->connection->prepare($query);
         !empty($bind_types) ? $statement->bind_param($bind_types, ...$params) : '';

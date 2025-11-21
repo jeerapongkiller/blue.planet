@@ -211,15 +211,18 @@
                     submitHandler: function(form) {
                         // update ajax request data
                         var bo_id = [];
+                        var island = [];
                         let checked = $(".checkbox-bookings");
                         for (let index = 0; index < checked.length; index++) {
                             if (checked[index].checked == true) {
                                 bo_id.push(checked[index].value);
+                                island.push(checked[index].dataset.island);
                             }
                         }
                         var formData = new FormData(form);
                         formData.append('action', 'create');
                         formData.append('bo_id', JSON.stringify(bo_id));
+                        formData.append('island', JSON.stringify(island));
                         $.ajax({
                             url: "pages/invoice/function/create.php",
                             type: "POST",
@@ -227,7 +230,7 @@
                             contentType: false,
                             data: formData,
                             success: function(response) {
-                                // $('#div-show').html(response);
+                                // console.log(response);
                                 if (response != false && response > 0) {
                                     Swal.fire({
                                         title: "The information has been added successfully.",

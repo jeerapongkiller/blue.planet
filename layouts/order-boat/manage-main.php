@@ -654,22 +654,23 @@
                     contentType: false,
                     data: formData,
                     success: function(response) {
+                        location.reload(); // refresh page
                         // console.log(response);
-                        if (response != false && response > 0) {
-                            Swal.fire({
-                                title: "The information has been updated.",
-                                icon: "success",
-                            }).then(function(isConfirm) {
-                                if (isConfirm) {
-                                    location.reload(); // refresh page
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                title: "Please try again.",
-                                icon: "error",
-                            });
-                        }
+                        // if (response != false && response > 0) {
+                        //     Swal.fire({
+                        //         title: "The information has been updated.",
+                        //         icon: "success",
+                        //     }).then(function(isConfirm) {
+                        //         if (isConfirm) {
+                        //             location.reload(); // refresh page
+                        //         }
+                        //     });
+                        // } else {
+                        //     Swal.fire({
+                        //         title: "Please try again.",
+                        //         icon: "error",
+                        //     });
+                        // }
                     }
                 });
             } else if (type == 'next' && booking == '') {

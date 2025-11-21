@@ -48,6 +48,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
                 $zone_dropoff[] = !empty($booking['zoned_name']) ? ' (' . $booking['zoned_name'] . ')' : '';
                 $bp_note[] = !empty($booking['bp_note']) ? $booking['bp_note'] : '';
                 $product_name[] = !empty($booking['product_name']) ? $booking['product_name'] : '';
+                $island_id[] = !empty($booking['island_id']) ? $booking['island_id'] : '';
 
                 $arr_bo[$booking['id']]['id'] = !empty($booking['id']) ? $booking['id'] : 0;
                 $arr_bo[$booking['id']]['status'] = !empty($booking['booksta_id']) ? $booking['booksta_id'] : 0;
@@ -182,15 +183,19 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
                         $total_infant = $total_infant + array_sum($infant[$id]);
                         $total_foc = $total_foc + array_sum($foc[$id]);
                         # -- calculator booking -- #
-                        if (!empty($arr_rates[$id]['total'])) { 
+                        if (!empty($arr_rates[$id]['total'])) {
                             $total = !empty($cot[$i]) ? array_sum($arr_rates[$id]['total']) - $cot[$i] : array_sum($arr_rates[$id]['total']); // booking
                             $total = !empty($arr_extar[$id]['total']) ? $total + array_sum($arr_extar[$id]['total']) : $total; // extar charge
                         }
-                         ?>
+                ?>
                         <tr>
                             <td>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input dt-checkboxes checkbox-bookings" type="checkbox" id="checkbox<?php echo $bo_id[$i]; ?>" name="bo_id[]" value="<?php echo $bo_id[$i]; ?>" data-color="<?php echo $color[$i]; ?>" data-darken="<?php echo $darken[$i]; ?>">
+                                    <input class="custom-control-input dt-checkboxes checkbox-bookings" type="checkbox" id="checkbox<?php echo $bo_id[$i]; ?>" name="bo_id[]"
+                                        value="<?php echo $bo_id[$i]; ?>"
+                                        data-color="<?php echo $color[$i]; ?>"
+                                        data-darken="<?php echo $darken[$i]; ?>"
+                                        data-island="<?php echo $island_id[$i]; ?>">
                                     <label class="custom-control-label" for="checkbox<?php echo $bo_id[$i]; ?>"></label>
                                 </div>
                             </td>

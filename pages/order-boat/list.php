@@ -489,7 +489,7 @@ if (!empty($programed)) {
                                                     <td class="wrapword"><?php echo !empty($book['telephone'][$mange['id'][$i]][$a]) ? $book['cus_name'][$mange['id'][$i]][$a] . ' <br>(' . $book['telephone'][$mange['id'][$i]][$a] . ') ' . $book['nation_name'][$mange['id'][$i]][$a] : $book['cus_name'][$mange['id'][$i]][$a]; ?></td>
                                                     <td><?php echo !empty($language[$id]) ? $language[$id] : ''; ?></td>
                                                     <td><?php echo !empty($book['voucher'][$mange['id'][$i]][$a]) ? $book['voucher'][$mange['id'][$i]][$a] : $book['book_full'][$mange['id'][$i]][$a]; ?></td>
-                                                    <td class="font-weight-bolder text-danger wrapword"><?php echo (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id]; ?></td>
+                                                    <td class="font-weight-bolder text-danger wrapword"><?php echo ($pickup_type[$id] == 1) ? (!empty($hotel_name[$id])) ? $hotel_name[$id] : $outside[$id] : 'เดินทางมาเอง'; ?></td>
                                                     <td class="text-center"><?php echo array_sum($adult[$id]); ?></td>
                                                     <td class="text-center"><?php echo array_sum($child[$id]); ?></td>
                                                     <td class="text-center"><?php echo array_sum($infant[$id]); ?></td>

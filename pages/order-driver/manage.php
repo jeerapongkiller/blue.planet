@@ -70,6 +70,7 @@ if (!empty($bookings)) {
             $language[$booking['id']] = !empty(!empty($booking['lang_name'])) ? $booking['lang_name'] : '';
             $boat_name[$booking['id']] = !empty($booking['boat_name']) ? $booking['boat_name'] : $booking['outside_boat'];
             $bomange_id[$booking['product_id']][] = !empty($booking['bomange_id']) ? $booking['bomange_id'] : 0;
+            $bomange_bo[$booking['id']][] = !empty($booking['bomange_id']) ? $booking['bomange_id'] : 0;
             # --- array programe --- #
             $prod_adult[$booking['product_id']][] = !empty($booking['bpr_adult']) && $booking['mange_id'] == 0 ? $booking['bpr_adult'] : 0;
             $prod_child[$booking['product_id']][] = !empty($booking['bpr_child']) && $booking['mange_id'] == 0 ? $booking['bpr_child'] : 0;
@@ -445,7 +446,7 @@ foreach ($manages as $manage) {
                                                         ?>
                                                             <a href="javascripy:void(0);">
                                                                 <tr class="<?php echo ($a % 2 == 1) ? 'table-active' : 'bg-white'; ?>">
-                                                                    <td class="cell-fit"><?php echo $boat_name[$id]; ?></td>
+                                                                    <td class="cell-fit"><?php echo $boat_name[$id] . ' | ' . $arrange[$id][1]; ?></td>
                                                                     <td><?php echo $start_pickup[$id][$mange_retrun] != '00:00' ? date('H:i', strtotime($start_pickup[$id][$mange_retrun])) . ' - ' . date('H:i', strtotime($end_pickup[$id][$mange_retrun])) : ''; ?></td>
                                                                     <td><?php echo $product_name[$id];
                                                                         if (!empty($category_name[$id])) {

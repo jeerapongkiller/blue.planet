@@ -30,6 +30,7 @@ if (isset($_POST['action']) && $_POST['action'] == "edit" && isset($_POST['bo_id
     $travel_date = !empty($_POST['travel_date']) ? $_POST['travel_date'] : '0000-00-00';
     $before_travel = !empty($_POST['travel']) ? $_POST['travel'] : '0000-00-00';
     $product_id = !empty($_POST['product_id']) ? $_POST['product_id'] : 0;
+    $prod_id = !empty($_POST['prod_id']) ? $_POST['prod_id'] : 0;
     // $category_id = !empty($_POST['category_id']) ? $_POST['category_id'] : 0;
     $adult = !empty($_POST['adult']) ? $_POST['adult'] : 0;
     $child = !empty($_POST['child']) ? $_POST['child'] : 0;
@@ -154,6 +155,7 @@ if (isset($_POST['action']) && $_POST['action'] == "edit" && isset($_POST['bo_id
     } elseif ($customer_thai == 1 && $bpr_thai_id == 0) {
         $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult_thai, $child_thai, $infant_thai, $foc_thai, $rate_adult_thai, $rate_child_thai, $rate_infant_thai, $private_rates_thai, $rate_total_thai, $category_id_thai, $bp_id, $pror_id_thai) : $response; // insert booking products rate
     }
+    
     # --- update booking product rates foreign ---- #
     if ($customer_foreign == 1 && $bpr_foreign_id > 0) {
         $response = ($response > 0 && $response != false) ? $bookObj->update_booking_rate($bpr_foreign_id, $adult_foreign, $child_foreign, $infant_foreign, $foc_foreign, $rate_adult_foreign, $rate_child_foreign, $rate_infant_foreign, $private_rates_foreign, $rate_total_foreign, $pror_id_foreign, $category_id_foreign) : false; // update data booking product rate
@@ -231,7 +233,7 @@ if (isset($_POST['action']) && $_POST['action'] == "edit" && isset($_POST['bo_id
         }
     }
 
-    if ($travel_date != $before_travel) {
+    if (($travel_date != $before_travel) || ($product_id != $prod_id)) {
         $response = $bookObj->delete_booking_manage_transfer($mange_transfer, $bt_id, $mange_transfer_id);
         $response = $bookObj->delete_booking_manage_boat($mange_boat, $bo_id, $mange_boat_id);
     }
