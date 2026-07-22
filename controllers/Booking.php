@@ -16,8 +16,108 @@ class Booking extends DB
         return (floor((time() - $then) / 31556926));
     }
 
+    const SEARCH_LIMIT = 200;
+
     public function showlist(int $id, $search_status, string $payment, string $search_agent, string $search_product, string $search_travel, string $voucher_no, string $refcode, string $name)
     {
+        # --- build filter conditions once, shared by both stages --- #
+        $conditions = [];
+        $params = [];
+        $types = '';
+
+        if (!empty($search_status) && $search_status != 'all') {
+            $conditions[] = "BO.booking_status_id = ?";
+            $params[] = (int) $search_status;
+            $types .= 'i';
+        }
+
+        if (!empty($payment) && $payment != 'all') {
+            $conditions[] = "BOPA.booking_payment_id = ?";
+            $params[] = (int) $payment;
+            $types .= 'i';
+        }
+
+        if (!empty($search_agent) && $search_agent != 'all') {
+            $conditions[] = "BO.company_id = ?";
+            $params[] = (int) $search_agent;
+            $types .= 'i';
+        }
+
+        if (!empty($search_product) && $search_product != 'all') {
+            $conditions[] = "BP.product_id = ?";
+            $params[] = (int) $search_product;
+            $types .= 'i';
+        }
+
+        $has_travel_date = !empty($search_travel) && $search_travel != '0000-00-00';
+
+        if ($has_travel_date) {
+            $conditions[] = "BP.travel_date = ?";
+            $params[] = $search_travel;
+            $types .= 's';
+        }
+
+        if (!empty($voucher_no)) {
+            $conditions[] = "BO.voucher_no_agent LIKE ?";
+            $params[] = '%' . $voucher_no . '%';
+            $types .= 's';
+        }
+
+        if (!empty($refcode)) {
+            $conditions[] = "BONO.bo_full LIKE ?";
+            $params[] = '%' . $refcode . '%';
+            $types .= 's';
+        }
+
+        if (!empty($name)) {
+            $conditions[] = "CUS.name LIKE ?";
+            $params[] = '%' . $name . '%';
+            $types .= 's';
+        }
+
+        $where = !empty($conditions) ? ' AND ' . implode(' AND ', $conditions) : '';
+
+        # --- stage 1: find matching booking ids only, using the minimum joins needed to apply --- #
+        # --- the filters above. Bounded by LIMIT so a search never has to touch every booking, --- #
+        # --- unless a specific Travel Date narrows it already (a day's bookings are naturally --- #
+        # --- bounded, and the daily operational view must never silently drop rows). --- #
+        $idLimit = $has_travel_date ? '' : ' LIMIT ' . (self::SEARCH_LIMIT + 1);
+
+        $idQuery = "SELECT DISTINCT BO.id
+                    FROM bookings BO
+                    LEFT JOIN booking_products BP
+                        ON BO.id = BP.booking_id
+                    LEFT JOIN booking_paid BOPA
+                        ON BO.id = BOPA.booking_id
+                    LEFT JOIN customers CUS
+                        ON BO.id = CUS.booking_id
+                    LEFT JOIN bookings_no BONO
+                        ON BO.id = BONO.booking_id
+                    WHERE BO.id > 0
+                    AND BP.is_deleted = 0
+                    $where
+                    ORDER BY BO.id DESC
+                    $idLimit";
+
+        $idStatement = $this->connection->prepare($idQuery);
+        if (!empty($params)) {
+            $idStatement->bind_param($types, ...$params);
+        }
+        $idStatement->execute();
+        $idRows = $idStatement->get_result()->fetch_all(MYSQLI_ASSOC);
+
+        $capped = !$has_travel_date && count($idRows) > self::SEARCH_LIMIT;
+        $ids = array_column($has_travel_date ? $idRows : array_slice($idRows, 0, self::SEARCH_LIMIT), 'id');
+
+        if (empty($ids)) {
+            return ['data' => [], 'capped' => false];
+        }
+
+        # --- stage 2: fetch full booking detail (all joins) only for the bounded set of ids --- #
+        # --- found above, instead of joining every table across the whole bookings table. --- #
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $idTypes = str_repeat('i', count($ids));
+
         $query = "SELECT BO.*,
                         BONO.bo_full as book_full,
                         BSTA.id as booksta_id, BSTA.name as booksta_name, BSTA.name_class as booksta_class, BSTA.button_class as booksta_button,
@@ -122,47 +222,17 @@ class Booking extends DB
                         ON BO.booker_id = BOOKER.id
                     WHERE BO.id > 0
                     AND BP.is_deleted = 0
+                    AND BO.id IN ($placeholders)
+                    ORDER BY BO.id DESC, BP.travel_date ASC, BOPA.id ASC, CUS.id ASC
         ";
 
-        if (!empty($search_status) && $search_status != 'all') {
-            $query .= " AND BSTA.id = " . $search_status;
-        }
-
-        if (!empty($payment) && $payment != 'all') {
-            $query .= " AND BOPAY.id = " . $payment;
-        }
-
-        if (!empty($search_agent) && $search_agent != 'all') {
-            $query .= " AND BO.company_id = " . $search_agent;
-        }
-
-        if (!empty($search_product) && $search_product != 'all') {
-            $query .= " AND BP.product_id = " . $search_product;
-        }
-
-        if (!empty($search_travel) && $search_travel != '0000-00-00') {
-            $query .= " AND BP.travel_date = '" . $search_travel . "'";
-        }
-
-        if (!empty($voucher_no)) {
-            $query .= " AND BO.voucher_no_agent LIKE '%" . $voucher_no . "%' ";
-        }
-
-        if (!empty($refcode)) {
-            $query .= " AND BONO.bo_full LIKE '%" . $refcode . "%' ";
-        }
-
-        if (!empty($name)) {
-            $query .= " AND CUS.name LIKE '%" . $name . "%' ";
-        }
-
-        $query .= " ORDER BY BO.id DESC, BP.travel_date ASC, BOPA.id ASC, CUS.id ASC";
         $statement = $this->connection->prepare($query);
+        $statement->bind_param($idTypes, ...$ids);
         $statement->execute();
         $result = $statement->get_result();
         $data = $result->fetch_all(MYSQLI_ASSOC);
 
-        return $data;
+        return ['data' => $data, 'capped' => $capped];
     }
 
     public function show_agent()

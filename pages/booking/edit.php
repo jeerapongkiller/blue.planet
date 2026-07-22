@@ -312,7 +312,9 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                         <div class="card-body mt-2">
                                             <div class="itinerary-repeater">
                                                 <div data-repeater-list="itinerary">
-                                                    <?php if ($customers) {
+                                                    <?php
+                                                    $nations = $bookObj->shownation();
+                                                    if ($customers) {
                                                         for ($i = 0; $i < count($customers['cus_id']); $i++) { ?>
                                                             <input type="hidden" name="before_cus_id[]" value="<?php echo $customers['cus_id'][$i]; ?>">
                                                             <div data-repeater-item>
@@ -361,7 +363,6 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                             <select class="form-control" name="cus_nationality_id" data-itinerary-repeater="select2">
                                                                                 <option value="0">Please Select Nationality...</option>
                                                                                 <?php
-                                                                                $nations = $bookObj->shownation();
                                                                                 foreach ($nations as $nation) {
                                                                                     $select_nation = $nation['id'] == $customers['nationality'][$i] ? 'selected' : '';
                                                                                 ?>
@@ -406,7 +407,7 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                             <option value="1">Adult</option>
                                                                             <option value="2">Child</option>
                                                                             <option value="3">Infant</option>
-                                                                            <option value="3">FOC</option>
+                                                                            <option value="4">FOC</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -440,7 +441,6 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                         <select class="form-control" name="cus_nationality_id" data-itinerary-repeater="select2">
                                                                             <option value="0">Please Select Nationality...</option>
                                                                             <?php
-                                                                            $nations = $bookObj->shownation();
                                                                             foreach ($nations as $nation) {
                                                                             ?>
                                                                                 <option value="<?php echo $nation['id']; ?>"><?php echo $nation['name']; ?></option>
@@ -670,7 +670,11 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                         <div class="card-body mt-2">
                                             <div class="payments-repeater">
                                                 <div data-repeater-list="payments">
-                                                    <?php if ($payments) {
+                                                    <?php
+                                                    $book_payments = $bookObj->show_booking_payment();
+                                                    $payments_type = $bookObj->show_payments_type(3);
+                                                    $banks_acc = $bookObj->show_bank_account();
+                                                    if ($payments) {
                                                         for ($i = 0; $i < count($payments['bopa_id']); $i++) { ?>
                                                             <input type="hidden" name="before_bopa_id[]" value="<?php echo $payments['bopa_id'][$i]; ?>">
                                                             <input type="hidden" name="before_photo[]" value="<?php echo $payments['bopa_photo'][$i]; ?>">
@@ -683,7 +687,6 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                             <select class="form-control" name="book_payment" data-payments-repeater="select2">
                                                                                 <option value="">Please Select Payment...</option>
                                                                                 <?php
-                                                                                $book_payments = $bookObj->show_booking_payment();
                                                                                 foreach ($book_payments as $book_payment) {
                                                                                     $select_payment = $book_payment['id'] == $payments['bopay_id'][$i] ? 'selected' : '';
                                                                                 ?>
@@ -711,7 +714,6 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                             <select class="form-control" name="payments_type" data-payments-repeater="select2" onchange="check_payments_type(this);">
                                                                                 <option value="">Please choose payments type ... </option>
                                                                                 <?php
-                                                                                $payments_type = $bookObj->show_payments_type(3);
                                                                                 foreach ($payments_type as $payment_type) {
                                                                                     $select_payment = $payment_type['id'] == $payments['payment_type_id'][$i] ? 'selected' : '';
                                                                                 ?>
@@ -726,7 +728,6 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                             <select class="form-control" name="bank_account" data-payments-repeater="select2">
                                                                                 <option value="">Please choose bank account ... </option>
                                                                                 <?php
-                                                                                $banks_acc = $bookObj->show_bank_account();
                                                                                 foreach ($banks_acc as $bank_acc) {
                                                                                     $select_bank = $bank_acc['id'] == $payments['bank_account_id'][$i] ? 'selected' : '';
                                                                                 ?>
@@ -779,8 +780,7 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                         <select class="form-control" name="book_payment" data-payments-repeater="select2">
                                                                             <option value="">Please Select Payment...</option>
                                                                             <?php
-                                                                            $payments = $bookObj->show_booking_payment();
-                                                                            foreach ($payments as $payment) {
+                                                                            foreach ($book_payments as $payment) {
                                                                             ?>
                                                                                 <option value="<?php echo $payment['id']; ?>"><?php echo $payment['name']; ?></option>
                                                                             <?php } ?>
@@ -806,8 +806,7 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                         <select class="form-control" name="payments_type" data-payments-repeater="select2" onchange="check_payments_type(this);">
                                                                             <option value="">Please choose payments type ... </option>
                                                                             <?php
-                                                                            $payments = $bookObj->show_payments_type(3);
-                                                                            foreach ($payments as $payment) {
+                                                                            foreach ($payments_type as $payment) {
                                                                             ?>
                                                                                 <option value="<?php echo $payment['id']; ?>"><?php echo $payment['name']; ?></option>
                                                                             <?php } ?>
@@ -820,7 +819,6 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                         <select class="form-control" name="bank_account" data-payments-repeater="select2">
                                                                             <option value="">Please choose bank account ... </option>
                                                                             <?php
-                                                                            $banks_acc = $bookObj->show_bank_account();
                                                                             foreach ($banks_acc as $bank_acc) {
                                                                             ?>
                                                                                 <option value="<?php echo $bank_acc['id']; ?>"><?php echo $bank_acc['banName'] . ' ' . $bank_acc['account_no'] . ' (' . $bank_acc['account_name'] . ')'; ?></option>

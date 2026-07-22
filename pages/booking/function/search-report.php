@@ -27,7 +27,8 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ty
     $first_book = array();
     $first_rates = array();
     $first_prod = array();
-    $bookings = $bookObj->showlist($_SESSION["supplier"]["id"], 'all', 'all', 'all', 'all', $travel_date, '', '', '');
+    $bookings_result = $bookObj->showlist($_SESSION["supplier"]["id"], 'all', 'all', 'all', 'all', $travel_date, '', '', '');
+    $bookings = $bookings_result['data'];
     if (!empty($bookings)) {
         foreach ($bookings as $booking) {
             if ($booking['booksta_id'] != 3) {

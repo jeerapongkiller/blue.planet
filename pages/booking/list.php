@@ -229,7 +229,9 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                     $count_confirm = 0;
                     $count_noshow = 0;
                     $count_cancel = 0;
-                    $bookings = $bookObj->showlist($_SESSION["supplier"]["id"], 'all', 'all', 'all', 'all', $today, '', '', '');
+                    $bookings_result = $bookObj->showlist($_SESSION["supplier"]["id"], 'all', 'all', 'all', 'all', $today, '', '', '');
+                    $bookings = $bookings_result['data'];
+                    $bookings_capped = $bookings_result['capped'];
                     # --- Check products --- #
                     if (!empty($bookings)) {
                         foreach ($bookings as $booking) {
@@ -349,6 +351,12 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                         }
                     }
                     ?>
+
+                    <?php if (!empty($bookings_capped)) { ?>
+                        <div class="alert alert-warning" role="alert">
+                            แสดงผลลัพธ์ล่าสุด <?php echo Booking::SEARCH_LIMIT; ?> รายการ เนื่องจากพบข้อมูลตรงเงื่อนไขมากกว่านี้ กรุณาระบุเงื่อนไขค้นหาเพิ่มเติม (เช่น Travel Date, Agent, Programe) เพื่อจำกัดผลลัพธ์ให้แม่นยำขึ้น
+                        </div>
+                    <?php } ?>
 
                     <div class="card">
                         <div class="card-datatable pt-0">
