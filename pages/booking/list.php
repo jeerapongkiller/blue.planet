@@ -505,6 +505,10 @@ $day7 = date("Y-m-d", strtotime(" +6 day"));
                             <form id="booking-create-form" name="booking-create-form" method="post" enctype="multipart/form-data">
                                 <div class="modal-body">
                                     <div id="div-show"></div>
+                                    <?php
+                                    $aiScanMode = 'create';
+                                    include 'pages/booking/inc-ai-scan.php';
+                                    ?>
                                     <input type="hidden" id="bo_id" name="bo_id" value="0" />
                                     <input type="hidden" id="bp_id" name="bp_id" value="0" />
                                     <input type="hidden" id="pror_id" name="pror_id" value="0" />

@@ -9,3 +9,34 @@ NOTE:
 ------
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+
+/* === AI Scan panel (booking New / Edit) === */
+.ai-scan { border-color: #d8d6de; }
+.ai-scan__header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem; background: #f8f8f8; }
+.ai-scan__title svg { width: 16px; height: 16px; }
+.ai-scan__tabs .btn { margin: 2px 0 2px 4px; }
+.ai-scan__tabs .btn.active { color: #fff; background-color: #7367f0; border-color: #7367f0; }
+.ai-scan__tabs .btn.active .badge { color: #fff; }
+.ai-scan__dropzone { position: relative; min-height: 140px; border: 2px dashed #d8d6de; border-radius: 6px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; padding: 0.75rem; transition: border-color 0.15s, background 0.15s; }
+.ai-scan__dropzone:hover, .ai-scan__dropzone:focus, .ai-scan__dropzone--over { border-color: #7367f0; background: rgba(115, 103, 240, 0.05); outline: none; }
+.ai-scan__dropzone--multi { min-height: 100px; }
+.ai-scan__dropzone-hint { color: #6e6b7b; line-height: 1.6; }
+.ai-scan__preview { max-width: 100%; max-height: 260px; border-radius: 4px; }
+.ai-scan__text { font-size: 0.9rem; }
+.ai-scan__thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
+.ai-scan__thumb { position: relative; width: 84px; text-align: center; font-size: 0.75rem; }
+.ai-scan__thumb img { width: 84px; height: 84px; object-fit: cover; border-radius: 4px; border: 1px solid #ebe9f1; }
+.ai-scan__thumb-remove { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; line-height: 18px; padding: 0; border-radius: 50%; font-size: 12px; }
+.ai-scan__review th { white-space: nowrap; width: 1%; }
+.ai-scan__review td, .ai-scan__review th { padding: 0.4rem 0.6rem; vertical-align: middle; }
+.ai-scan__row--warn { background: #fff8e1; }
+.ai-scan__row--off { opacity: 0.55; }
+.ai-scan__warn { color: #ff9f43; font-weight: 600; font-size: 0.8rem; }
+.ai-scan__field--filled { box-shadow: 0 0 0 2px rgba(40, 199, 111, 0.45) !important; transition: box-shadow 0.3s; }
+.ai-scan__field--check { box-shadow: 0 0 0 2px rgba(255, 159, 67, 0.7) !important; }
+
+@media (max-width: 768px) {
+    .ai-scan__tabs { width: 100%; }
+    .ai-scan__tabs .btn { width: 100%; margin: 2px 0; }
+    .ai-scan__review { font-size: 0.85rem; }
+}

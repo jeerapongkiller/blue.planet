@@ -102,6 +102,9 @@
     <script src="app-assets/js/core/app.js"></script>
     <!-- END: Theme JS-->
 
+    <!-- AI scan (voucher / text / passport) -->
+    <script src="assets/js/booking-ai-scan.js?v=3"></script>
+
     <?php
     $columntarget = $_SESSION["supplier"]["role_id"] == 1 || $_SESSION["supplier"]["role_id"] == 2 ? '5, 6' : '5';
     ?>
@@ -445,13 +448,17 @@
                             success: function(response) {
                                 // console.log(response);
                                 if (response != false && response > 0) {
-                                    Swal.fire({
-                                        title: "The information has been added successfully.",
-                                        icon: "success",
-                                    }).then(function(isConfirm) {
-                                        if (isConfirm) {
-                                            window.location.href = './?pages=booking/edit&id=' + response; // refresh page
-                                        }
+                                    // upload scanned voucher / passport photos to Google Drive (never blocks the booking)
+                                    const afterCreate = window.BookingAiScan ? window.BookingAiScan.afterCreate(response) : Promise.resolve();
+                                    afterCreate.catch(function() {}).then(function() {
+                                        Swal.fire({
+                                            title: "The information has been added successfully.",
+                                            icon: "success",
+                                        }).then(function(isConfirm) {
+                                            if (isConfirm) {
+                                                window.location.href = './?pages=booking/edit&id=' + response; // refresh page
+                                            }
+                                        });
                                     });
                                 } else {
                                     Swal.fire({

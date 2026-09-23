@@ -1,0 +1,10 @@
+# Secrets (Gemini API key, Google Drive OAuth) — never commit
+config/secrets.php
+
+# AI scan runtime files (log, Drive folder cache) — keep the .htaccess only
+storage/ai-scan/*
+!storage/ai-scan/.htaccess
+
+# Deploy packages (contain config/secrets.php)
+blueplanet-ai-scan-deploy/
+blueplanet-ai-scan-deploy-*.zip

@@ -94,6 +94,11 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                             <!-- Programs Detail Vertical -->
                             <div id="program-details-vertical" class="content">
                                 <form id="booking-edit-form" name="booking-edit-form" method="post" enctype="multipart/form-data">
+                                    <?php
+                                    $aiScanMode = 'edit';
+                                    $aiScanBookingId = $bo_id;
+                                    include 'pages/booking/inc-ai-scan.php';
+                                    ?>
                                     <!-- Start Form Booking Detail -->
                                     <div class="card shadow-none bg-transparent border-secondary border-lighten-5">
                                         <div class="card-header bg-light-secondary pt-1 pb-50 pl-1">

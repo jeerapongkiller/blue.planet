@@ -106,6 +106,9 @@
     <script src="app-assets/js/core/app.js"></script>
     <!-- END: Theme JS-->
 
+    <!-- AI scan (voucher / text / passport) -->
+    <script src="assets/js/booking-ai-scan.js?v=3"></script>
+
     <!-- BEGIN: Page JS-->
     <script type="text/javascript">
         // Ajax Delete Product
@@ -727,6 +730,7 @@
             document.getElementById('frm-agent-outside').hidden = agent !== 'outside' ? true : false;
             var product_id = document.getElementById('product_id').value;
             var cate_id = document.getElementById('cate_id').value;
+            cate_id = JSON.parse(cate_id);
             var formData = new FormData();
             formData.append('action', 'search');
             formData.append('prod_id', product_id);
@@ -737,14 +741,15 @@
                 contentType: false,
                 data: formData,
                 success: function(response) {
-                    // $('#div-show').html(response);
                     if (response != '' && response != false) {
                         $('#category_id').find('option').remove();
                         var res = $.parseJSON(response);
                         var countcate = Object.keys(res.id).length;
                         if (countcate) {
                             for (let index = 0; index < countcate; index++) {
-                                var check_selected = (cate_id.includes(res.id[index]) == true) ? "selected" : "";
+                                var check_selected = cate_id.map(Number).includes(Number(res.id[index])) ?
+                                    "selected" :
+                                    "";
                                 $('#category_id').append("<option value=\"" + res.id[index] + "\" data-transfer=\"" + res.transfer[index] + "\" data-customer=\"" + res.customer[index] + "\" " + check_selected + ">" + res.name[index] + "</option>");
                             }
                         } else {
