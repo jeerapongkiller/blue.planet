@@ -347,8 +347,8 @@ if (!empty($bookings[0]['bp_id'])) {
                 <div class="row align-items-center">
                     <div class="col-sm-9">
                         <p class="mb-2">
-                            <b>บัญชี :</b> บูรพา จงศิริวัฒนากูล 885-2965-797 ธนาคารไทยพาณิชย์ (SCB)
-                            <!-- TOGETHER TRAVEL CO.,LTD. <br>
+                            <b>บัญชี :</b> BLUE PLANET HOLIDAY 885-301-333-1 SCB BANK
+                            <!-- บูรพา จงศิริวัฒนากูล 885-2965-797 ธนาคารไทยพาณิชย์ (SCB) TOGETHER TRAVEL CO.,LTD. <br>
                             Email: togethertravel56@gmail.com <br>
                             Tel: 0969977779, 0958497779 <br> -->
                             <!-- www.sawanutravel.com <br>

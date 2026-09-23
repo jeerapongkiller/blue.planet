@@ -148,7 +148,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                 $bec_rate_total[$booking['id']][] = $booking['bec_type'] > 0 ? $booking['bec_type'] == 1 ? (($booking['bec_adult'] * $booking['bec_rate_adult']) + ($booking['bec_child'] * $booking['bec_rate_child']) + ($booking['bec_infant'] * $booking['bec_rate_infant'])) : ($booking['bec_privates'] * $booking['bec_rate_private']) : 0;
             }
 
-            if (in_array($booking['bomanage_id'], $first_bomanage) == false) {
+            if (in_array($booking['bomanage_id'], $first_bomanage) == false && $booking['category_transfer'] > 0) {
                 $first_managet[] = $booking['bomanage_id'];
                 $retrun_t = !empty($booking['pickup']) ? 1 : 2;
                 $managet['bomanage_id'][$booking['id']][$retrun_t] = !empty($booking['bomanage_id']) ? $booking['bomanage_id'] : 0;

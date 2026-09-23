@@ -572,7 +572,7 @@ class Order extends DB
             //     array_push($params, $programe);
             // }
             // $query .= " ORDER BY BP.travel_date DESC, PROD.id DESC, zones.id DESC, hotel.id DESC ";
-            $query .= " ORDER BY PROD.id DESC, BOMANGE.arrange ASC, BT.pickup_id ASC, BT.start_pickup ASC, BT.hotel_pickup ASC, CUS.id ASC ";
+            $query .= " ORDER BY BOMANGE.arrange ASC, PROD.id DESC, BT.pickup_id ASC, BT.start_pickup ASC, BT.hotel_pickup ASC, CUS.id ASC ";
         }
 
         if (!empty($type) && $type == 'list') {
@@ -878,6 +878,24 @@ class Order extends DB
             return false; // ไม่ตรง return false
         }
 
+        /* ==========================================
+        * 4. เช็ค booking_transfer_id ซ้ำใน booking_order_transfer
+        * ========================================== */
+        $query = "
+            SELECT id 
+            FROM booking_order_transfer 
+            WHERE booking_transfer_id = ?
+            LIMIT 1
+        ";
+        $statement = $this->connection->prepare($query);
+        $statement->bind_param("i", $booking_transfer_id);
+        $statement->execute();
+        $exists = $statement->get_result()->num_rows;
+
+        if ($exists > 0) {
+            return false; // booking นี้ถูกจัดรถแล้ว
+        }
+
 
         # --- INSERT --- #
         $query = "
@@ -925,27 +943,23 @@ class Order extends DB
             return false; // ไม่ตรง return false
         }
 
-        # --- UPDATE --- #
-        // $query = "
-        //     UPDATE booking_order_transfer
-        //     SET arrange = ?, order_id = ?
-        //     WHERE booking_transfer_id = ? AND order_id = ?
-        // ";
+        /* ==========================================
+        * เช็ค booking_transfer_id ซ้ำ (ยกเว้นแถวตัวเอง)
+        * ========================================== */
+        $query = "
+            SELECT id 
+            FROM booking_order_transfer 
+            WHERE booking_transfer_id = ?
+            AND order_id != ?
+            LIMIT 1
+        ";
+        $statement = $this->connection->prepare($query);
+        $statement->bind_param("ii", $booking_transfer_id, $manage_id);
+        $statement->execute();
 
-        // $stmt = $this->connection->prepare($query);
-        // $stmt->bind_param(
-        //     "iiii",
-        //     $arrange,
-        //     $order_id,
-        //     $booking_transfer_id,
-        //     $manage_id
-        // );
-
-        // if ($stmt->execute()) {
-        //     return true;
-        // }
-
-        // return false;
+        if ($statement->get_result()->num_rows > 0) {
+            return false;
+        }
 
         $bind_types = "";
         $params = array();
@@ -979,89 +993,6 @@ class Order extends DB
 
         return $this->response;
     }
-
-    // public function insert_manage_booking(int $arrange, int $order_id, int $booking_transfer_id)
-    // {
-
-    //     # --- select travel_date from booking_products --- #
-    //     $query = "SELECT booking_products.travel_date, products.island_id 
-    //     FROM booking_transfer 
-    //     LEFT JOIN booking_products ON booking_transfer.booking_products_id = booking_products.id
-    //     LEFT JOIN products ON booking_products.product_id = products.id
-    //     WHERE booking_transfer.id = ?";
-    //     $statement = $this->connection->prepare($query);
-    //     $statement->bind_param("i", $booking_transfer_id);
-    //     $statement->execute();
-    //     $result = $statement->get_result();
-    //     $booking = $result->fetch_assoc();
-
-    //     # --- select travel_date from order_boat --- #
-    //     $query = "SELECT travel_date, island_id FROM order_transfer WHERE id = ?";
-    //     $statement = $this->connection->prepare($query);
-    //     $statement->bind_param("i", $order_id);
-    //     $statement->execute();
-    //     $result = $statement->get_result();
-    //     $car = $result->fetch_assoc();
-
-    //     $bind_types = "";
-    //     $params = array();
-
-    //     $query = "INSERT INTO `booking_order_transfer`(`arrange`, `order_id`, `booking_transfer_id`, `created_at`)
-    //     VALUES (?, ?, ?, NOW())";
-
-    //     $bind_types .= "i";
-    //     array_push($params, $arrange);
-
-    //     $bind_types .= "i";
-    //     array_push($params, $order_id);
-
-    //     $bind_types .= "i";
-    //     array_push($params, $booking_transfer_id);
-
-    //     $statement = $this->connection->prepare($query);
-    //     !empty($bind_types) ? $statement->bind_param($bind_types, ...$params) : '';
-
-    //     if ($statement->execute()) {
-    //         $this->response = $this->connection->insert_id;
-    //     }
-
-    //     return $this->response;
-    // }
-
-    // public function update_manage_booking(int $manage_id, int $arrange, int $order_id, int $id)
-    // {
-    //     $bind_types = "";
-    //     $params = array();
-
-    //     $query = "UPDATE booking_order_transfer SET";
-
-    //     if ($order_id > 0) {
-    //         $query .= " order_id = ?, ";
-    //         $bind_types .= "i";
-    //         array_push($params, $order_id);
-    //     }
-
-    //     $query .= " arrange = ?";
-    //     $bind_types .= "i";
-    //     array_push($params, $arrange);
-
-    //     $query .= " WHERE booking_transfer_id = ?";
-    //     $bind_types .= "i";
-    //     array_push($params, $id);
-
-    //     $query .= " AND order_id = ?";
-    //     $bind_types .= "i";
-    //     array_push($params, $manage_id);
-
-    //     $statement = $this->connection->prepare($query);
-    //     !empty($bind_types) ? $statement->bind_param($bind_types, ...$params) : '';
-
-    //     if ($statement->execute()) {
-    //         $this->response = true;
-    //     }
-
-    //     return $this->response;
-    // }
 
     public function delete_manage_booking(int $bt_id, int $manage_id)
     {
@@ -1473,39 +1404,111 @@ class Order extends DB
         return $this->response;
     }
 
+    // public function insert_booking_manage_boat(int $arrange, int $booking_id, int $manage_id)
+    // {
+    //     # --- select travel_date from booking_products --- #
+    //     $query = "SELECT travel_date FROM booking_products WHERE booking_id = ?";
+    //     $statement = $this->connection->prepare($query);
+    //     $statement->bind_param("i", $booking_id);
+    //     $statement->execute();
+    //     $result = $statement->get_result();
+    //     $booking = $result->fetch_assoc();
+
+    //     # --- select travel_date from order_boat --- #
+    //     $query = "SELECT travel_date FROM order_boat WHERE id = ?";
+    //     $statement = $this->connection->prepare($query);
+    //     $statement->bind_param("i", $manage_id);
+    //     $statement->execute();
+    //     $result = $statement->get_result();
+    //     $boat = $result->fetch_assoc();
+
+    //     # --- ตรวจสอบ travel_date --- #
+    //     $booking_date = $booking['travel_date'] ?? null;
+    //     $boat_date = $boat['travel_date'] ?? null;
+
+    //     // กรณี format มีเวลา ให้ตัดเฉพาะวันที่
+    //     $booking_date = substr($booking_date, 0, 10);
+    //     $boat_date = substr($boat_date, 0, 10);
+
+    //     if ($booking_date !== $boat_date) {
+    //         return false; // วันที่ไม่ตรงกัน ไม่ต้อง insert
+    //     }
+
+    //     # --- insert --- #
+    //     $query = "
+    //         INSERT INTO booking_order_boat (`arrange`, `booking_id`, `manage_id`, `created_at`)
+    //         VALUES (?, ?, ?, NOW())
+    //     ";
+
+    //     $statement = $this->connection->prepare($query);
+    //     $statement->bind_param("iii", $arrange, $booking_id, $manage_id);
+
+    //     if ($statement->execute()) {
+    //         return $this->connection->insert_id;
+    //     }
+
+    //     return false;
+    // }
+
     public function insert_booking_manage_boat(int $arrange, int $booking_id, int $manage_id)
     {
-        # --- select travel_date from booking_products --- #
+        /* ===============================
+        * 1. ดึง travel_date ของ booking
+        * =============================== */
         $query = "SELECT travel_date FROM booking_products WHERE booking_id = ?";
         $statement = $this->connection->prepare($query);
         $statement->bind_param("i", $booking_id);
         $statement->execute();
-        $result = $statement->get_result();
-        $booking = $result->fetch_assoc();
+        $booking = $statement->get_result()->fetch_assoc();
 
-        # --- select travel_date from order_boat --- #
+        /* ===============================
+        *  2. ดึง travel_date ของเรือ
+        * =============================== */
         $query = "SELECT travel_date FROM order_boat WHERE id = ?";
         $statement = $this->connection->prepare($query);
         $statement->bind_param("i", $manage_id);
         $statement->execute();
-        $result = $statement->get_result();
-        $boat = $result->fetch_assoc();
+        $boat = $statement->get_result()->fetch_assoc();
 
-        # --- ตรวจสอบ travel_date --- #
-        $booking_date = $booking['travel_date'] ?? null;
-        $boat_date = $boat['travel_date'] ?? null;
-
-        // กรณี format มีเวลา ให้ตัดเฉพาะวันที่
-        $booking_date = substr($booking_date, 0, 10);
-        $boat_date = substr($boat_date, 0, 10);
-
-        if ($booking_date !== $boat_date) {
-            return false; // วันที่ไม่ตรงกัน ไม่ต้อง insert
+        if (empty($booking) || empty($boat)) {
+            return false;
         }
 
-        # --- insert --- #
+        // ตัดเวลา เหลือเฉพาะวันที่
+        $booking_date = substr($booking['travel_date'], 0, 10);
+        $boat_date    = substr($boat['travel_date'], 0, 10);
+
+        /* ===============================
+        * 3. เช็ค travel_date ต้องตรงกัน
+        * =============================== */
+        if ($booking_date !== $boat_date) {
+            return false;
+        }
+
+        /* ==========================================
+        * 4. เช็ค booking_id ซ้ำใน booking_order_boat
+        * ========================================== */
         $query = "
-            INSERT INTO booking_order_boat (`arrange`, `booking_id`, `manage_id`, `created_at`)
+            SELECT id 
+            FROM booking_order_boat 
+            WHERE booking_id = ?
+            LIMIT 1
+        ";
+        $statement = $this->connection->prepare($query);
+        $statement->bind_param("i", $booking_id);
+        $statement->execute();
+        $exists = $statement->get_result()->num_rows;
+
+        if ($exists > 0) {
+            return false; // booking นี้ถูกจัดเรือแล้ว
+        }
+
+        /* ===============================
+        * 5. insert
+        * =============================== */
+        $query = "
+            INSERT INTO booking_order_boat 
+            (`arrange`, `booking_id`, `manage_id`, `created_at`)
             VALUES (?, ?, ?, NOW())
         ";
 
@@ -1541,6 +1544,24 @@ class Order extends DB
 
         if ($booking_date !== $boat_date) {
             return false; // วันที่ไม่ตรงกัน ไม่อัปเดต
+        }
+
+        /* ==========================================
+        * เช็ค booking_id ซ้ำ (UPDATE – exclude ตัวเอง)
+        * ========================================== */
+        $query = "
+            SELECT id
+            FROM booking_order_boat
+            WHERE booking_id = ?
+            AND manage_id != ?
+            LIMIT 1
+        ";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("ii", $booking_id, $manage_id);
+        $stmt->execute();
+
+        if ($stmt->get_result()->num_rows > 0) {
+            return false; // booking นี้ถูกผูกกับเรือลำอื่นแล้ว
         }
 
         # --- สร้าง query update --- #

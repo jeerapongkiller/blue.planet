@@ -2703,11 +2703,15 @@ class Booking extends DB
         return $this->response;
     }
 
-    public function delete_booking_manage_transfer(int $mange_id, int $bt_id, int $id)
+    public function delete_booking_manage_transfer(int $bt_id)
     {
-        $query = "DELETE FROM booking_order_transfer WHERE order_id = ? AND booking_transfer_id = ? AND id = ?";
+        // Delete by booking_transfer_id (immutable row id) instead of the
+        // front-end-supplied order_id/id — those are stale hidden-field
+        // values captured at page load and can no longer match the current
+        // link after the assignment changed or the travel date moved.
+        $query = "DELETE FROM booking_order_transfer WHERE booking_transfer_id = ?";
         $statement = $this->connection->prepare($query);
-        $statement->bind_param("iii", $mange_id, $bt_id, $id);
+        $statement->bind_param("i", $bt_id);
         $statement->execute();
         if ($statement->execute()) {
             $this->response = true;
@@ -2716,11 +2720,15 @@ class Booking extends DB
         return $this->response;
     }
 
-    public function delete_booking_manage_boat(int $mange_id, int $bo_id, int $id)
+    public function delete_booking_manage_boat(int $bo_id)
     {
-        $query = "DELETE FROM booking_order_boat WHERE manage_id = ? AND booking_id = ? AND id = ?";
+        // Delete by booking_id (immutable row id) instead of the
+        // front-end-supplied manage_id/id — those are stale hidden-field
+        // values captured at page load and can no longer match the current
+        // link after the assignment changed or the travel date moved.
+        $query = "DELETE FROM booking_order_boat WHERE booking_id = ?";
         $statement = $this->connection->prepare($query);
-        $statement->bind_param("iii", $mange_id, $bo_id, $id);
+        $statement->bind_param("i", $bo_id);
         $statement->execute();
         if ($statement->execute()) {
             $this->response = true;

@@ -73,7 +73,7 @@ if (isset($action) && !empty($id)) {
     $first_booking = array();
     $first_bpr = array();
     $first_extar = array();
-    $receipts = $recObj->showlist('receipts', '0000-00-00', 'all','all', 'all', $id);
+    $receipts = $recObj->showlist('receipts', '0000-00-00', 'all', 'all', 'all', $id);
     if (!empty($receipts)) {
         foreach ($receipts as $receipt) {
             # --- get value receipt --- #
@@ -251,6 +251,75 @@ if (isset($action) && !empty($id)) {
 
         .text-24 {
             font-size: 24px !important;
+        }
+
+
+        .receipt-footer {
+            width: 100%;
+            border: 1px solid #333;
+            min-height: 170px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 40px;
+            box-sizing: border-box;
+        }
+
+        /* .signature-box {
+            width: 420px;
+            text-align: center;
+            position: relative;
+        }
+
+        .signature-stamp {
+            height: 70px;
+            display: block;
+            margin: 0 auto -10px auto;
+            opacity: 0.95;
+        }
+
+        .signature-img {
+            height: 70px;
+            display: block;
+            margin: 0 auto;
+        } */
+
+        .signature-box {
+            width: 420px;
+            text-align: center;
+            position: relative;
+            padding-top: 25px;
+        }
+
+        .signature-stamp {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 85px;
+            opacity: 0.35;
+            z-index: 1;
+        }
+
+        .signature-img {
+            position: relative;
+            height: 75px;
+            z-index: 2;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .signature-line {
+            line-height: 1;
+            margin-top: -5px;
+            letter-spacing: 2px;
+        }
+
+        .signature-label,
+        .signature-date {
+            font-size: 16px;
+            line-height: 1.4;
+            color: #000;
         }
     </style>
     <div class="card-body receipt-padding pb-0" id="receipt-preview-vertical">
@@ -591,28 +660,31 @@ if (isset($action) && !empty($id)) {
             </tr>
         </table>
 
-        <table width="100%" class="mt-1">
-            <tr>
-                <table width="100%" height="150px">
-                    <tr class="default-td">
-                        <td align="center" valign="bottom" width="35%">
-                            _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br>
-                            ผู้รับวางบิล / Receiver Signature <br>
-                            วันที่ / Date _ _ _ _ _ _ _ _ _ _ _ _ _ _
-                        </td>
-                        <td align="center" valign="center" width="30%" style="font-weight: bold; font-size: 24px; color: rgba(0, 0, 0, 0.5);">
-                            <span class="brand-logo"><img src="app-assets/images/logo/logo-500.png" height="100"></span>
-                        </td>
-                        <td align="center" valign="bottom" width="35%">
-                            <span class="text-center h3 text-black"></span><br>
-                            _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br>
-                            ผู้มีอำนาจลงนาม / Authorized Signature <br>
-                            วันที่ / Date _ _ _ <?php echo date('j F Y', strtotime($date_rec[0])); ?> _ _ _
-                        </td>
-                    </tr>
-                </table>
-            </tr>
-        </table>
+        <div class="receipt-footer mt-1">
+            <div class="signature-box">
+                <img
+                    src="app-assets/images/logo/blue-logo.png"
+                    class="signature-stamp"
+                    alt="Company Logo">
+
+                <img
+                    src="app-assets/images/logo/signature.png"
+                    class="signature-img"
+                    alt="Authorized Signature">
+
+                <div class="signature-line">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div>
+
+                <div class="signature-label">
+                    ผู้มีอำนาจลงนาม / Authorized Signature
+                </div>
+
+                <div class="signature-date">
+                    วันที่ / Date _ _ _
+                    <?php echo date('j F Y', strtotime($date_rec[0])); ?>
+                    _ _ _
+                </div>
+            </div>
+        </div>
         <br><br>
 
     </div>

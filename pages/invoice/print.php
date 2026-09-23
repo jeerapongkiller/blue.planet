@@ -510,7 +510,7 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                     <td class="text-center" bgcolor="<?php echo '#' . $darken[0]; ?>" style="color: #fff;" colspan="6">
                         <dl class="row text-right" style="margin-bottom: 0;">
                             <dt class="col-sm-8">
-                                <b>ยอดชำระ : </b>
+                                <b>ยอดสุทธิ : </b>
                                 <p style="font-size: 10px; margin-bottom: 2px;">(Payment Amount)</p>
                             </dt>
                             <dd class="col-sm-4 mt-50 text-nowrap"><b>฿ <?php echo number_format($amount, 2); ?></b></dd>
@@ -529,13 +529,12 @@ if (isset($action) && $action == "preview" && !empty($get_cover)) {
                                 วันที่ / Date _ _ _ _ _ _ _ _ _ _ _ _ _ _
                             </td>
                             <td class="table-content" align="center" valign="center" width="30%" style="font-weight: bold; font-size: 24px; color: rgba(0, 0, 0, 0.5);">
-                                <span class="brand-logo"><img src="app-assets/images/logo/logo-500.png" height="100"></span>
+                                ตราประทับบริษัท
                             </td>
                             <td class="table-content" align="center" valign="bottom" width="35%">
-                                <span class="text-center h3 text-black"></span><br>
-                                _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br>
+                                _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br>
                                 ผู้มีอำนาจลงนาม / Authorized Signature <br>
-                                วันที่ / Date _ _ _ <?php echo date('j F Y', strtotime($rec_date[0])); ?> _ _ _
+                                วันที่ / Date _ _ _ _ _ _ _ _ _ _ _ _ _ _
                             </td>
                         </tr>
                     </table>

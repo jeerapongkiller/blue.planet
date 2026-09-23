@@ -446,7 +446,7 @@ foreach ($manages as $manage) {
                                                         ?>
                                                             <a href="javascripy:void(0);">
                                                                 <tr class="<?php echo ($a % 2 == 1) ? 'table-active' : 'bg-white'; ?>">
-                                                                    <td class="cell-fit"><?php echo $boat_name[$id] . ' | ' . $arrange[$id][1]; ?></td>
+                                                                    <td class="cell-fit"><?php echo $boat_name[$id]; ?></td>
                                                                     <td><?php echo $start_pickup[$id][$mange_retrun] != '00:00' ? date('H:i', strtotime($start_pickup[$id][$mange_retrun])) . ' - ' . date('H:i', strtotime($end_pickup[$id][$mange_retrun])) : ''; ?></td>
                                                                     <td><?php echo $product_name[$id];
                                                                         if (!empty($category_name[$id])) {

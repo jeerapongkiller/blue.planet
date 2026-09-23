@@ -163,7 +163,7 @@ if (!empty($bookings)) {
             $customers[$booking['mange_id']]['voucher_no'][] = !empty($booking['voucher_no_agent']) ? $booking['voucher_no_agent'] : '';
         }
 
-        if (in_array($booking['bomanage_id'], $first_bomanage) == false) {
+        if (in_array($booking['bomanage_id'], $first_bomanage) == false && $booking['category_transfer'] > 0) {
             $first_managet[] = $booking['bomanage_id'];
             $retrun_t = !empty($booking['pickup']) ? 1 : 2;
             $managet['bomanage_id'][$booking['id']][$retrun_t] = !empty($booking['bomanage_id']) ? $booking['bomanage_id'] : 0;

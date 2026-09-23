@@ -134,11 +134,11 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && !empty($_POST['ca
         $bp_id = ($response != FALSE && $response > 0) ? $bookObj->insert_booking_product($travel_date, $bp_note, $book_type, $language_id, 1, $bo_id, $product_id) : FALSE; // insert booking products
 
         if ($customer_thai == 1) {
-            $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult_thai, $child_thai, $infant_thai, $foc_thai, $rate_adult_thai, $rate_child_thai, $rate_infant_thai, $private_rates_thai, $rate_total_thai, $category_id_thai, $bp_id, $pror_id_thai) : $response; // insert booking products rate
+            $response = ($bp_id > 0 && $bp_id != FALSE && $category_id_thai > 0) ? $bookObj->insert_booking_rate($adult_thai, $child_thai, $infant_thai, $foc_thai, $rate_adult_thai, $rate_child_thai, $rate_infant_thai, $private_rates_thai, $rate_total_thai, $category_id_thai, $bp_id, $pror_id_thai) : $response; // insert booking products rate
         }
 
         if ($customer_foreign == 1) {
-            $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult_foreign, $child_foreign, $infant_foreign, $foc_foreign, $rate_adult_foreign, $rate_child_foreign, $rate_infant_foreign, $private_rates_foreign, $rate_total_foreign, $category_id_foreign, $bp_id, $pror_id_foreign) : $response; // insert booking products rate
+            $response = ($bp_id > 0 && $bp_id != FALSE && $category_id_foreign > 0) ? $bookObj->insert_booking_rate($adult_foreign, $child_foreign, $infant_foreign, $foc_foreign, $rate_adult_foreign, $rate_child_foreign, $rate_infant_foreign, $private_rates_foreign, $rate_total_foreign, $category_id_foreign, $bp_id, $pror_id_foreign) : $response; // insert booking products rate
         }
 
         $bt_id = ($response > 0 && $response != false) ? $bookObj->insert_booking_transfer($tran_adult, $tran_child, $tran_infant, $tran_foc, $start_pickup, $end_pickup, $hotel_outside, (!empty($dropoff_outside)) ? $dropoff_outside : $hotel_outside, $room_no, '', $zone_pickup, ($zone_dropoff > 0) ? $zone_dropoff : $zone_pickup, ($hotel_pickup != 'outside') ? $hotel_pickup : 0, ($hotel_dropoff != 'outside') ? $hotel_dropoff : 0, 1, $include, $bp_id, 0) : false; // insert booking transfer
@@ -147,7 +147,7 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && !empty($_POST['ca
 
         if (!empty($_POST['customers']['cus_age'])) {
             for ($i = 0; $i < count($_POST['customers']['cus_age']); $i++) {
-                $response = ($response > 0 && $response != false) && (!empty($_POST['customers']['cus_name'][$i])) ? $bookObj->insert_customer($_POST['customers']['cus_name'][$i], $_POST['customers']['cus_birth_date'][$i], $_POST['customers']['id_card'][$i], $i == 0 ? $_POST['telephone'] : '', $address = '', !empty($_POST['customers']['cus_age'][$i]) ? $_POST['customers']['cus_age'][$i] : 0, 0, $email = '', $i == 0 ? 1 : 0, $bo_id, !empty($_POST['customers']['cus_nationality_id'][$i]) ? $_POST['customers']['cus_nationality_id'][$i] : 0) : $response;
+                $response = ($response > 0 && $response != false) && (!empty($_POST['customers']['cus_name'][$i])) ? $bookObj->insert_customer(htmlspecialchars($_POST['customers']['cus_name'][$i]), $_POST['customers']['cus_birth_date'][$i], $_POST['customers']['id_card'][$i], $i == 0 ? $_POST['telephone'] : '', $address = '', !empty($_POST['customers']['cus_age'][$i]) ? $_POST['customers']['cus_age'][$i] : 0, 0, $email = '', $i == 0 ? 1 : 0, $bo_id, !empty($_POST['customers']['cus_nationality_id'][$i]) ? $_POST['customers']['cus_nationality_id'][$i] : 0) : $response;
             }
         }
 
@@ -170,64 +170,65 @@ if (isset($_POST['action']) && $_POST['action'] == "create" && !empty($_POST['ca
                 $response = ($response > 0 && $response != false) && ($extra > 0 || !empty($extra_name)) && ($extra_type > 0) ? $bookObj->insert_booking_extra($bo_id, $extra, $extra_name, $extra_type, $extra_adult, $extra_rate_adult, $extra_child, $extra_rate_child, $extra_infant, $extra_rate_infant, $extra_num_private, $extra_rate_private) : $response;
             }
         }
-    } else {
-        # --- chack insert agent --- #
-        if ($agent == 'outside' && !empty($_POST['agent_outside'])) {
-            $agent_out_id = $bookObj->insert_agent($_POST['agent_outside']);
-        }
+    } 
+    // else {
+    //     # --- chack insert agent --- #
+    //     if ($agent == 'outside' && !empty($_POST['agent_outside'])) {
+    //         $agent_out_id = $bookObj->insert_agent($_POST['agent_outside']);
+    //     }
 
-        $bo_id = $bookObj->insert_data($book_status, $book_type, $book_date, $book_time, $agent, $voucher_no, $sender); // insert bookings
+    //     $bo_id = $bookObj->insert_data($book_status, $book_type, $book_date, $book_time, $agent, $voucher_no, $sender); // insert bookings
 
-        $response = ($bo_id != FALSE && $bo_id > 0) ? $bookObj->insert_booking_no($bo_id, $bo_date, $bo_year, $bo_year_th, $bo_month, $bo_no, $bo_full) : FALSE; // insert bookings no
+    //     $response = ($bo_id != FALSE && $bo_id > 0) ? $bookObj->insert_booking_no($bo_id, $bo_date, $bo_year, $bo_year_th, $bo_month, $bo_no, $bo_full) : FALSE; // insert bookings no
 
-        $bp_id = ($response != FALSE && $response > 0) ? $bookObj->insert_booking_product($travel_date, $bp_note, $book_type, $language_id, 1, $bo_id, $product_id) : FALSE; // insert booking products
+    //     $bp_id = ($response != FALSE && $response > 0) ? $bookObj->insert_booking_product($travel_date, $bp_note, $book_type, $language_id, 1, $bo_id, $product_id) : FALSE; // insert booking products
 
-        $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult, $child, $infant, $foc, $rate_adult, $rate_child, $rate_infant, $rate_total, 0, $category_id, $bp_id, $pror_id) : false; // insert booking products rate
+    //     $response = ($bp_id > 0 && $bp_id != FALSE) ? $bookObj->insert_booking_rate($adult, $child, $infant, $foc, $rate_adult, $rate_child, $rate_infant, $rate_total, 0, $category_id, $bp_id, $pror_id) : false; // insert booking products rate
 
-        $response = ($response > 0 && $response != false) && (!empty($cus_name)) ? $bookObj->insert_customer($cus_name, '0000-00-00', '', !empty($_POST['telephone']) ? $_POST['telephone'] : '', $address = '', 1, 0, $email = '', 1, $bo_id, 0) : $response;
-        // if ($customers != '') {
-        //     for ($i = 0; $i < count($customers); $i++) {
-        //         $head = $i == 0 ? 1 : 0;
-        //         $response = ($response > 0 && $response != false) && !empty($customers[$i]['cus_name']) ? $bookObj->insert_customer($customers[$i]['cus_name'], $customers[$i]['cus_birth_date'], $customers[$i]['id_card'], $customers[$i]['cus_telephone'], $address = '', !empty($customers[$i]['cus_age']) ? $customers[$i]['cus_age'] : 0, !empty($customers[$i]['cus_type']) ? $customers[$i]['cus_type'] : 0, $email = '', $head, $bo_id, !empty($customers[$i]['cus_nationality_id']) ? $customers[$i]['cus_nationality_id'] : 0) : false; // insert customers
-        //     }
-        // }
+    //     $response = ($response > 0 && $response != false) && (!empty($cus_name)) ? $bookObj->insert_customer($cus_name, '0000-00-00', '', !empty($_POST['telephone']) ? $_POST['telephone'] : '', $address = '', 1, 0, $email = '', 1, $bo_id, 0) : $response;
+    //     // if ($customers != '') {
+    //     //     for ($i = 0; $i < count($customers); $i++) {
+    //     //         $head = $i == 0 ? 1 : 0;
+    //     //         $response = ($response > 0 && $response != false) && !empty($customers[$i]['cus_name']) ? $bookObj->insert_customer($customers[$i]['cus_name'], $customers[$i]['cus_birth_date'], $customers[$i]['id_card'], $customers[$i]['cus_telephone'], $address = '', !empty($customers[$i]['cus_age']) ? $customers[$i]['cus_age'] : 0, !empty($customers[$i]['cus_type']) ? $customers[$i]['cus_type'] : 0, $email = '', $head, $bo_id, !empty($customers[$i]['cus_nationality_id']) ? $customers[$i]['cus_nationality_id'] : 0) : false; // insert customers
+    //     //     }
+    //     // }
 
-        # --- check insert hotel outside --- #
-        if (!empty($hotel_pickup_outside)) {
-            $hotel_pickup = $bookObj->insert_hotel($hotel_pickup_outside, $pickup);
-            $hotel_dropoff = ($hotel_pickup != false && $hotel_pickup > 0) ? $hotel_pickup : $hotel_dropoff;
-            $hotel_pickup_outside = ($hotel_pickup != false && $hotel_pickup > 0) ? '' : $hotel_pickup_outside;
-            $hotel_dropoff_outside = ($hotel_pickup != false && $hotel_pickup > 0) ? '' : $hotel_dropoff_outside;
-        }
-        // $bt_id = ($response > 0 && $response != false) ? $bookObj->insert_booking_transfer($tran_adult, $tran_child, $tran_infant, $tran_foc, $start_pickup, $end_pickup, $hotel_pickup_outside, $hotel_dropoff_outside, $room_no, $trans_note, $pickup, $dropoff, $hotel_pickup, $hotel_dropoff, $transfer_type, $pickup_type, $bp_id, $category_id) : false; // insert booking transfer
-        $bt_id = ($response > 0 && $response != false) ? $bookObj->insert_booking_transfer($adult, $child, $infant, $foc, $start_pickup, $end_pickup, $hotel_outside, (!empty($dropoff_outside)) ? $dropoff_outside : $hotel_outside, $room_no, '', $zone_pickup, ($zone_dropoff > 0) ? $zone_dropoff : $zone_pickup, ($hotel_pickup != 'outside') ? $hotel_pickup : 0, ($hotel_dropoff != 'outside') ? $hotel_dropoff : 0, 1, 1, $bp_id, $category_id) : false; // insert booking transfer
+    //     # --- check insert hotel outside --- #
+    //     if (!empty($hotel_pickup_outside)) {
+    //         $hotel_pickup = $bookObj->insert_hotel($hotel_pickup_outside, $pickup);
+    //         $hotel_dropoff = ($hotel_pickup != false && $hotel_pickup > 0) ? $hotel_pickup : $hotel_dropoff;
+    //         $hotel_pickup_outside = ($hotel_pickup != false && $hotel_pickup > 0) ? '' : $hotel_pickup_outside;
+    //         $hotel_dropoff_outside = ($hotel_pickup != false && $hotel_pickup > 0) ? '' : $hotel_dropoff_outside;
+    //     }
+    //     // $bt_id = ($response > 0 && $response != false) ? $bookObj->insert_booking_transfer($tran_adult, $tran_child, $tran_infant, $tran_foc, $start_pickup, $end_pickup, $hotel_pickup_outside, $hotel_dropoff_outside, $room_no, $trans_note, $pickup, $dropoff, $hotel_pickup, $hotel_dropoff, $transfer_type, $pickup_type, $bp_id, $category_id) : false; // insert booking transfer
+    //     $bt_id = ($response > 0 && $response != false) ? $bookObj->insert_booking_transfer($adult, $child, $infant, $foc, $start_pickup, $end_pickup, $hotel_outside, (!empty($dropoff_outside)) ? $dropoff_outside : $hotel_outside, $room_no, '', $zone_pickup, ($zone_dropoff > 0) ? $zone_dropoff : $zone_pickup, ($hotel_pickup != 'outside') ? $hotel_pickup : 0, ($hotel_dropoff != 'outside') ? $hotel_dropoff : 0, 1, 1, $bp_id, $category_id) : false; // insert booking transfer
 
-        if ($transfer_type == 2 && $transfers != '' && !empty($block_transfer)) {
-            for ($i = 0; $i < count($transfers); $i++) {
-                $response = ($bt_id > 0 && $bt_id != false) && !empty($transfers[$i]['cars_category']) ? $bookObj->insert_transfer_rate($tran_rate_adult, $tran_rate_child, $tran_rate_infant, $transfers[$i]['cars_total'], $bt_id, $transfers[$i]['cars_category']) : false; // insert booking transfer rate (private)
-            }
-        } elseif ($transfer_type == 1) {
-            $response = ($bt_id > 0 && $bt_id != false) ? $bookObj->insert_transfer_rate($tran_rate_adult, $tran_rate_child, $tran_rate_infant, $tran_total_price, $bt_id, $cars_category = 0) : false; // insert booking transfer rate (join)
-        }
+    //     if ($transfer_type == 2 && $transfers != '' && !empty($block_transfer)) {
+    //         for ($i = 0; $i < count($transfers); $i++) {
+    //             $response = ($bt_id > 0 && $bt_id != false) && !empty($transfers[$i]['cars_category']) ? $bookObj->insert_transfer_rate($tran_rate_adult, $tran_rate_child, $tran_rate_infant, $transfers[$i]['cars_total'], $bt_id, $transfers[$i]['cars_category']) : false; // insert booking transfer rate (private)
+    //         }
+    //     } elseif ($transfer_type == 1) {
+    //         $response = ($bt_id > 0 && $bt_id != false) ? $bookObj->insert_transfer_rate($tran_rate_adult, $tran_rate_child, $tran_rate_infant, $tran_total_price, $bt_id, $cars_category = 0) : false; // insert booking transfer rate (join)
+    //     }
 
-        if (!empty($extra_charge) && count($extra_charge) > 0 && $bo_id > 0) {
-            for ($i = 0; $i < count($extra_charge); $i++) {
-                $extra = !empty($extra_charge[$i]['extra_charge']) ? $extra_charge[$i]['extra_charge'] : 0;
-                $extra_name = !empty($extra_charge[$i]['extc_name']) ? $extra_charge[$i]['extc_name'] : '';
-                $extra_type = !empty($extra_charge[$i]['extra_type']) ? $extra_charge[$i]['extra_type'] : 0;
-                $extra_adult = !empty($extra_charge[$i]['extra_adult']) ? $extra_charge[$i]['extra_adult'] : 0;
-                $extra_rate_adult = !empty($extra_charge[$i]['extra_rate_adult']) ? preg_replace('(,)', '', $extra_charge[$i]['extra_rate_adult']) : 0;
-                $extra_child = !empty($extra_charge[$i]['extra_child']) ? $extra_charge[$i]['extra_child'] : 0;
-                $extra_rate_child = !empty($extra_charge[$i]['extra_rate_child']) ? preg_replace('(,)', '', $extra_charge[$i]['extra_rate_child']) : 0;
-                $extra_infant = !empty($extra_charge[$i]['extra_infant']) ? $extra_charge[$i]['extra_infant'] : 0;
-                $extra_rate_infant = !empty($extra_charge[$i]['extra_rate_infant']) ? preg_replace('(,)', '', $extra_charge[$i]['extra_rate_infant']) : 0;
-                $extra_num_private = !empty($extra_charge[$i]['extra_num_private']) ? $extra_charge[$i]['extra_num_private'] : 0;
-                $extra_rate_private = !empty($extra_charge[$i]['extra_rate_private']) ? preg_replace('(,)', '', $extra_charge[$i]['extra_rate_private']) : 0;
+    //     if (!empty($extra_charge) && count($extra_charge) > 0 && $bo_id > 0) {
+    //         for ($i = 0; $i < count($extra_charge); $i++) {
+    //             $extra = !empty($extra_charge[$i]['extra_charge']) ? $extra_charge[$i]['extra_charge'] : 0;
+    //             $extra_name = !empty($extra_charge[$i]['extc_name']) ? $extra_charge[$i]['extc_name'] : '';
+    //             $extra_type = !empty($extra_charge[$i]['extra_type']) ? $extra_charge[$i]['extra_type'] : 0;
+    //             $extra_adult = !empty($extra_charge[$i]['extra_adult']) ? $extra_charge[$i]['extra_adult'] : 0;
+    //             $extra_rate_adult = !empty($extra_charge[$i]['extra_rate_adult']) ? preg_replace('(,)', '', $extra_charge[$i]['extra_rate_adult']) : 0;
+    //             $extra_child = !empty($extra_charge[$i]['extra_child']) ? $extra_charge[$i]['extra_child'] : 0;
+    //             $extra_rate_child = !empty($extra_charge[$i]['extra_rate_child']) ? preg_replace('(,)', '', $extra_charge[$i]['extra_rate_child']) : 0;
+    //             $extra_infant = !empty($extra_charge[$i]['extra_infant']) ? $extra_charge[$i]['extra_infant'] : 0;
+    //             $extra_rate_infant = !empty($extra_charge[$i]['extra_rate_infant']) ? preg_replace('(,)', '', $extra_charge[$i]['extra_rate_infant']) : 0;
+    //             $extra_num_private = !empty($extra_charge[$i]['extra_num_private']) ? $extra_charge[$i]['extra_num_private'] : 0;
+    //             $extra_rate_private = !empty($extra_charge[$i]['extra_rate_private']) ? preg_replace('(,)', '', $extra_charge[$i]['extra_rate_private']) : 0;
 
-                $response = ($response > 0 && $response != false) && ($extra > 0 || !empty($extra_name)) && ($extra_type > 0) ? $bookObj->insert_booking_extra($bo_id, $extra, $extra_name, $extra_type, $extra_adult, $extra_rate_adult, $extra_child, $extra_rate_child, $extra_infant, $extra_rate_infant, $extra_num_private, $extra_rate_private) : $response;
-            }
-        }
-    }
+    //             $response = ($response > 0 && $response != false) && ($extra > 0 || !empty($extra_name)) && ($extra_type > 0) ? $bookObj->insert_booking_extra($bo_id, $extra, $extra_name, $extra_type, $extra_adult, $extra_rate_adult, $extra_child, $extra_rate_child, $extra_infant, $extra_rate_infant, $extra_num_private, $extra_rate_private) : $response;
+    //         }
+    //     }
+    // }
 
     echo $response != FALSE && $response > 0 ? $bo_id : FALSE;
 } else {
