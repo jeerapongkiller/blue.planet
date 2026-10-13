@@ -365,15 +365,22 @@ class AiScan extends DB
             "- MONEY: total_price = full tour price. deposit = amount already paid to the agent. cot = CASH ON TOUR still to collect on the tour day " .
             "(labels: COT, Cot, Cash on tour, Cash). If only total and deposit are given, cot = total - deposit. If 'PAID' is stamped and no COT is written, cot = 0. " .
             "Numbers like '3,200' or '3.200' are 3200.\n" .
-            "- voucher_no: the voucher / booking reference (No. 5296, 'Vc A1934', 'SPM-260831-SPMD-1S', 'FY-261004LEO-XT-A'). Keep any letters/prefix.\n" .
+            "- voucher_no: the voucher / booking reference (No. 5296, 'Vc A1934', 'SPM-260831-SPMD-1S', 'FY-261004LEO-XT-A'). Keep any letters/prefix. " .
+            "When a voucher shows both 'Reference ID' and 'DT ID', voucher_no = the DT ID (e.g. 'T1-88396-1539368537923301'), never the Reference ID.\n" .
             "- agent_name: the travel agent that SENT the booking = the company printed in the voucher header/logo (e.g. 'Phuket Attraction', 'Anna & Victor Tour', 'ROTANA PHUKET'), " .
             "or in a chat screenshot the agent/company name typed in a message (e.g. 'Thaidream', 'Futai', 'Fuxing group'). " .
             "NEVER return 'Blue Planet' (that is us, the supplier — e.g. 'Supplier: Blue Planet', 'Catamaran by Blue planet').\n" .
             "- sender_name: staff who issued/sent it ('Issued by', 'Booked by', 'Sender'). Not the guest.\n" .
             "- customer_phone: the GUEST's phone (e.g. on the guest signature line / 'Tel' of the guest / '+91 97467 13103' in chat). NEVER a phone PRINTED on the voucher form " .
-            "(header/footer 'Tel', 'WhatsApp', 'Line ID' of the company) and NEVER a guide's phone — null if no guest phone.\n" .
+            "(header/footer 'Tel', 'WhatsApp', 'Line ID' of the company) and NEVER a guide's phone — null if no guest phone. " .
+            "'CONTACT TO: 7-9333111934 , 9333111934' = country calling code 7 + number: return '+7 9333111934' (always keep the country code, e.g. '+84 955293854', '+359 886173613').\n" .
             "- A tour GUIDE sent by the agent ('ไกด์ ...', 'Guide: ...', often with a phone) is NOT a passenger and NOT the customer phone: put 'Guide: name phone' in remark.\n" .
             "- passengers: one entry per NAMED traveller only (lead guest name counts). Do not repeat names to fill the pax count. nationality = English country name if stated.\n" .
+            "- MEMBER LIST rows like 'Kazantsev/Ilya , 2021-11-27 , Passport: 779862816 ( Valid: to 1900-01-01 ) , Mobile: 9333111934' (one row may wrap over two lines): " .
+            "birth_date = the date RIGHT AFTER that row's name. The 'Valid: to ...' date is the passport expiry — NEVER a birth date; '1900-01-01' is an empty placeholder. " .
+            "Read each row on its own; do not shift values between rows. passenger type comes from the AGE on travel_date (born within 2 years = infant, under 12 = child), " .
+            "NOT from the row order, so the child is whoever has the recent birth date.\n" .
+            "- Pax from 'QTY: Children × 1 , Adult × 4' = 4 adults + 1 child; 'Infant × n' = infants.\n" .
             "- extra_charges: additional paid items that are not the tour fare (extra luggage, private car, park fee...). amount 0 if no price.\n" .
             "- remark: useful operational notes only (meeting point, guide phone, special requests). Ignore printed terms/conditions, refund policy, addresses, social links.\n" .
             "- Use null / 0 / [] when not present. Never invent. If you are guessing a value, add its key to uncertain_fields.\n\n" .
@@ -712,6 +719,41 @@ class AiScan extends DB
         return (float)preg_replace('/[^\d.\-]/', '', str_replace(',', '', (string)$v));
     }
 
+    /**
+     * The AI sometimes marks the wrong traveller as child (by row order instead of age).
+     * When every non-FOC traveller has a birth date and their number equals the voucher pax count,
+     * the youngest ones become the infants, then the children, as counted on the voucher.
+     */
+    private static function typesFromBirthDates(array $passengers, array $paxThai, array $paxForeign)
+    {
+        $infants = $paxThai['infant'] + $paxForeign['infant'];
+        $children = $paxThai['child'] + $paxForeign['child'];
+        $adults = $paxThai['adult'] + $paxForeign['adult'];
+
+        $idx = [];
+        foreach ($passengers as $i => $p) {
+            if ($p['type'] === 'foc') {
+                continue;
+            }
+            if ($p['birth_date'] === '') {
+                return $passengers;
+            }
+            $idx[] = $i;
+        }
+        if (empty($idx) || count($idx) !== $adults + $children + $infants) {
+            return $passengers;
+        }
+
+        // youngest first
+        usort($idx, function ($a, $b) use ($passengers) {
+            return strcmp($passengers[$b]['birth_date'], $passengers[$a]['birth_date']);
+        });
+        foreach ($idx as $rank => $i) {
+            $passengers[$i]['type'] = $rank < $infants ? 'infant' : ($rank < $infants + $children ? 'child' : 'adult');
+        }
+        return $passengers;
+    }
+
     /** Convert the raw AI voucher JSON into form-ready values with ids. */
     public function mapVoucher(array $d)
     {
@@ -741,16 +783,23 @@ class AiScan extends DB
                 }
                 $nat = $this->matchNationality(isset($p['nationality']) ? $p['nationality'] : '');
                 $type = isset($p['type']) && in_array($p['type'], ['adult', 'child', 'infant', 'foc'], true) ? $p['type'] : 'adult';
+                $birth = self::cleanDate(isset($p['birth_date']) ? $p['birth_date'] : '');
+                // "1900-01-01" is the empty passport-expiry placeholder on some vouchers, never a real birth date
+                if ($birth !== '' && (int)substr($birth, 0, 4) <= 1900) {
+                    $birth = '';
+                }
                 $passengers[] = [
                     'name' => trim((string)$p['name']),
                     'type' => $type,
                     'passport_no' => isset($p['passport_no']) ? trim((string)$p['passport_no']) : '',
-                    'birth_date' => self::cleanDate(isset($p['birth_date']) ? $p['birth_date'] : ''),
+                    'birth_date' => $birth,
                     'nationality_id' => $nat['id'],
                     'nationality_name' => $nat['name'] !== '' ? $nat['name'] : (isset($p['nationality']) ? (string)$p['nationality'] : ''),
                 ];
             }
         }
+
+        $passengers = self::typesFromBirthDates($passengers, $paxThai, $paxForeign);
 
         $extras = [];
         if (!empty($d['extra_charges']) && is_array($d['extra_charges'])) {
