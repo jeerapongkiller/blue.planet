@@ -43,7 +43,7 @@
     <!-- END: Page CSS-->
 
     <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . "/../../assets/css/style.css"); ?>">
     <!-- END: Custom CSS-->
 
     <style>
@@ -577,6 +577,19 @@
             }
         }
 
+        function escapeHtml(text) {
+            return String(text).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        // Boat type tag shown in the guest list (key from Order::boatTypeFromProduct)
+        function boatTypeTag(key, label) {
+            if (label === '') {
+                return '';
+            }
+            const modifier = (key === 'catamaran' || key === 'speedboat') ? key : 'other';
+            return '<span class="boat-type-tag boat-type-tag--' + modifier + '">' + escapeHtml(label) + '</span>';
+        }
+
         function modal_customers(manage_id, travel_date, boat_name) {
             // document.getElementById('text-prak').innerHTML = park_name;
             document.getElementById('text-travel-customer').innerHTML = travel_date;
@@ -591,6 +604,10 @@
                 var child = 0;
                 var infant = 0;
                 var foc = 0;
+                // guests per boat type (catamaran / speed boat) for towel check
+                const boatCount = {};
+                const boatTypes = res.boat_type || [];
+                const boatLabels = res.boat_label || [];
                 if (count > 0) {
                     no = 1;
                     for (let index = 0; index < count; index++) {
@@ -599,10 +616,17 @@
                         infant = res.age[index] == 3 ? Number(infant + 1) : Number(infant);
                         foc = res.age[index] == 4 ? Number(foc + 1) : Number(foc);
 
+                        const boatKey = boatTypes[index] || '';
+                        const boatLabel = boatLabels[index] || '';
+                        if (boatLabel !== '') {
+                            boatCount[boatLabel] = (boatCount[boatLabel] || 0) + 1;
+                        }
+
                         text_table += '<tr>';
                         text_table += '<td class="text-center">' + no++ + '</td>';
                         text_table += '<td>' + res.name[index] + '</td>';
                         text_table += '<td>' + res.voucher_no[index] + '</td>';
+                        text_table += '<td class="text-center">' + boatTypeTag(boatKey, boatLabel) + '</td>';
                         text_table += '<td></td>';
                         text_table += '<td class="text-center">' + res.passport[index] + '</td>';
                         text_table += '<td class="text-center">' + res.nation[index] + '</td>';
@@ -610,7 +634,8 @@
                         text_table += '</tr>';
                     }
                     text_table += '<tr>';
-                    text_table += '<td class="text-center" colspan="7">TOTAL ' + Number(adult + child + infant + foc) + ' PAX | A ' + Number(adult) + ' | C ' + Number(child) + ' | INF ' + Number(infant) + ' | FOC ' + Number(foc) + '</td>';
+                    const boatSummary = Object.keys(boatCount).map((label) => ' | ' + escapeHtml(label) + ' ' + boatCount[label]).join('');
+                    text_table += '<td class="text-center" colspan="8">TOTAL ' + Number(adult + child + infant + foc) + ' PAX | A ' + Number(adult) + ' | C ' + Number(child) + ' | INF ' + Number(infant) + ' | FOC ' + Number(foc) + '<b>' + boatSummary + '</b></td>';
                     text_table += '</tr>';
                 }
                 document.getElementById('table-tbody-customers').innerHTML = text_table;

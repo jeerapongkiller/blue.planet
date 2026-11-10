@@ -33,9 +33,9 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
                     $id_card[] = !empty($booking['id_card']) ? $booking['id_card'] : '';
                     $birth_date[] = !empty($booking['birth_date']) && $booking['birth_date'] != '0000-00-00' ? date('j F Y', strtotime($booking['birth_date'])) : '';
                     $nation_name[] = !empty($booking['nation_name']) ? $booking['nation_name'] : '';
-                    $nation_name[] = !empty($booking['nation_name']) ? $booking['nation_name'] : '';
                     $voucher_no_agent[] = !empty($booking['voucher_no_agent']) ? $booking['voucher_no_agent'] : '';
                     $telephone[] = !empty($booking['telephone']) ? $booking['telephone'] : '';
+                    $boat_type[] = Order::boatTypeFromProduct(!empty($booking['product_name']) ? $booking['product_name'] : '');
                 }
             }
         }
@@ -43,8 +43,8 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
 
     $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'รายชื่อส่งอุทยาน' . $product_name);
     $objPHPExcel->getActiveSheet()->SetCellValue('A2', 'วันที่เดินทาง ' . date('j F Y', strtotime($travel_date)) . ' ' . $boat_name);
-    $objPHPExcel->getActiveSheet()->mergeCells('A1:G1');
-    $objPHPExcel->getActiveSheet()->mergeCells('A2:G2');
+    $objPHPExcel->getActiveSheet()->mergeCells('A1:H1');
+    $objPHPExcel->getActiveSheet()->mergeCells('A2:H2');
 
     $columnName = [];
     $total_tourist = 0;
@@ -52,8 +52,9 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
     $total_child = 0;
     $total_infant = 0;
     $total_foc = 0;
+    $boat_count = []; // guests per boat type label
     if (!empty($cus_id)) {
-        $columnName[] = ['ลำดับ', 'ชื่อ-สกุล', 'วัน/เดือน/ปีเกิด', 'เลขพาส', 'สัญชาติ', 'เบอร์โทร', 'ลายเซ็น',];
+        $columnName[] = ['ลำดับ', 'ชื่อ-สกุล', 'เรือ', 'วัน/เดือน/ปีเกิด', 'เลขพาส', 'สัญชาติ', 'เบอร์โทร', 'ลายเซ็น',];
 
         for ($i = 0; $i < count($cus_id); $i++) {
             $total_adult = $cus_age[$i] == 1 ? $total_adult + 1 : $total_adult;
@@ -62,11 +63,27 @@ if (isset($_GET['action']) && $_GET['action'] == "customer" && (!empty($_GET['ma
             $total_foc = $cus_age[$i] == 4 ? $total_foc + 1 : $total_foc;
             $total_tourist = $total_tourist + 1;
 
-            $columnName[] = [$i + 1, $cus_name[$i], $birth_date[$i], $id_card[$i], $nation_name[$i], $telephone[$i], ''];
+            $bt_label = $boat_type[$i]['label'];
+            if ($bt_label !== '') {
+                $boat_count[$bt_label] = ($boat_count[$bt_label] ?? 0) + 1;
+            }
+
+            $columnName[] = [$i + 1, $cus_name[$i], $bt_label, $birth_date[$i], $id_card[$i], $nation_name[$i], $telephone[$i], ''];
         }
+
+        // summary row: pax by age + guests per boat type
+        $summary = 'TOTAL ' . $total_tourist . ' PAX | A ' . $total_adult . ' | C ' . $total_child . ' | INF ' . $total_infant . ' | FOC ' . $total_foc;
+        foreach ($boat_count as $bt_name => $bt_total) {
+            $summary .= ' | ' . $bt_name . ' ' . $bt_total;
+        }
+        $columnName[] = [$summary];
     }
 
     $objPHPExcel->getActiveSheet()->fromArray($columnName, null, 'A4');
+    if (!empty($cus_id)) {
+        $summary_row = 4 + count($columnName) - 1;
+        $objPHPExcel->getActiveSheet()->mergeCells('A' . $summary_row . ':H' . $summary_row);
+    }
 
     // ชื่อไฟล์
     $file_export = "Excel-" . date("dmY-Hs");

@@ -10,6 +10,23 @@ class Order extends DB
         parent::__construct();
     }
 
+    /**
+     * Boat type booked by the guest, derived from the product name
+     * (products have no boat-type field; names contain CATAMARAN / สปีดโบ๊ท, incl. typos).
+     * Returns ['key' => 'catamaran'|'speedboat'|'', 'label' => display text].
+     */
+    public static function boatTypeFromProduct($product_name)
+    {
+        $name = (string)$product_name;
+        if (preg_match('/CATAMA[RL]AN|คาตามาราน/iu', $name)) {
+            return ['key' => 'catamaran', 'label' => 'CATAMARAN'];
+        }
+        if (preg_match('/SPEED\s*BOAT|สปีดโบ[๊้]?[ทดต]/iu', $name)) {
+            return ['key' => 'speedboat', 'label' => 'SPEED BOAT'];
+        }
+        return ['key' => '', 'label' => trim($name)];
+    }
+
     public function show_cars()
     {
         $query = "SELECT *

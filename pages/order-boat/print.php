@@ -557,6 +557,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                     $birth_date[] = !empty($booking['birth_date']) && $booking['birth_date'] != '0000-00-00' ? date('j F Y', strtotime($booking['birth_date'])) : '';
                     $nation_name[] = !empty($booking['nation_name']) ? $booking['nation_name'] : '';
                     $voucher_no_agent[] = !empty($booking['voucher_no_agent']) ? $booking['voucher_no_agent'] : '';
+                    $boat_type[] = Order::boatTypeFromProduct(!empty($booking['product_name']) ? $booking['product_name'] : '');
                 }
             }
         }
@@ -595,6 +596,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                         <th class="text-center font-size-20" width="5%">ลำดับ</th>
                         <th class="text-center font-size-20" width="20%">ชื่อ</th>
                         <th class="text-center font-size-20" width="15%">V/C</th>
+                        <th class="text-center font-size-20" width="10%">เรือ</th>
                         <th class="text-center font-size-20" width="15%">เซ็นชื่อ</th>
                         <th class="text-center font-size-20" width="15%">ID Passport/ ID Card</th>
                         <th class="text-center font-size-20" width="10%">สัญชาติ</th>
@@ -608,6 +610,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                     $total_child = 0;
                     $total_infant = 0;
                     $total_foc = 0;
+                    $boat_count = []; // guests per boat type label
                     $no = 1;
                     if (!empty($cus_id)) {
                         for ($i = 0; $i < count($cus_id); $i++) {
@@ -617,13 +620,23 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                             $total_foc = $cus_age[$i] == 4 ? $total_foc + 1 : $total_foc;
                             $total_tourist = $total_tourist + 1;
                             $class_tr = ($i % 2 == 1) ? 'table-active' : '';
+                            $bt_label = $boat_type[$i]['label'];
+                            $bt_modifier = in_array($boat_type[$i]['key'], ['catamaran', 'speedboat'], true) ? $boat_type[$i]['key'] : 'other';
+                            if ($bt_label !== '') {
+                                $boat_count[$bt_label] = ($boat_count[$bt_label] ?? 0) + 1;
+                            }
                     ?>
                             <tr class="<?php echo $class_tr; ?>">
                                 <td class="text-center font-size-25"><?php echo $no; ?></td>
                                 <td class="font-size-25"><?php echo $cus_name[$i]; ?></td>
                                 <td class="font-size-25"><?php echo $voucher_no_agent[$i]; ?></td>
+                                <td class="text-center font-size-25">
+                                    <?php if ($bt_label !== '') { ?>
+                                        <span class="boat-type-tag boat-type-tag--<?php echo $bt_modifier; ?>"><?php echo htmlspecialchars($bt_label, ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <?php } ?>
+                                </td>
                                 <td class="font-size-25"></td>
-                                <td class="text-center font-size-25"><?php echo $passport[$i]; ?></td>
+                                <td class="text-center font-size-25"><?php echo $id_card[$i]; ?></td>
                                 <td class="text-center font-size-25"><?php echo $nation_name[$i]; ?></td>
                                 <td class="text-center font-size-25"><?php echo $birth_date[$i]; ?></td>
                             </tr>
@@ -640,6 +653,9 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
                         Child : <?php echo $total_child; ?>
                         Infant : <?php echo $total_infant; ?>
                         FOC : <?php echo $total_foc; ?>
+                        <?php foreach ($boat_count as $bt_name => $bt_total) { ?>
+                            | <b><?php echo htmlspecialchars($bt_name, ENT_QUOTES, 'UTF-8'); ?> : <?php echo $bt_total; ?></b>
+                        <?php } ?>
                     </div>
                 </h4>
             </div>
