@@ -881,8 +881,10 @@
         function download_image(type) {
             var img_name = type == 'customers' ? document.getElementById('customer_img').value : document.getElementById('name_img').value;
             var node = type == 'customers' ? document.getElementById('div-park-job-image') : document.getElementById('div-boat-job-image');
+            // JPEG has no alpha: transparent rows (non-striped) would render black, so force a white background
             domtoimage.toJpeg(node, {
-                    quality: 0.95
+                    quality: 0.95,
+                    bgcolor: '#FFFFFF'
                 })
                 .then(function(dataUrl) {
                     var link = document.createElement('a');
