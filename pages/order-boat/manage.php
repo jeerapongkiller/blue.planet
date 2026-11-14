@@ -93,9 +93,6 @@ if (!empty($bookings)) {
                 $customers[$booking['mange_id']]['birth'][] = !empty($booking['birth_date']) && $booking['birth_date'] != '0000-00-00' ? date('j F Y', strtotime($booking['birth_date'])) : '';
                 $customers[$booking['mange_id']]['nation'][] = !empty($booking['nation_name']) ? $booking['nation_name'] : '';
                 $customers[$booking['mange_id']]['voucher_no'][] = !empty($booking['voucher_no_agent']) ? $booking['voucher_no_agent'] : '';
-                $boat_type = Order::boatTypeFromProduct(!empty($booking['product_name']) ? $booking['product_name'] : '');
-                $customers[$booking['mange_id']]['boat_type'][] = $boat_type['key'];
-                $customers[$booking['mange_id']]['boat_label'][] = $boat_type['label'];
             }
         }
 
@@ -789,17 +786,16 @@ if (!empty($programed)) {
                                     <table id="div-park-job-image" class="table table-bordered table-striped table-vouchure-t2" style="table-layout: inherit; width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 22px !important;">
                                         <thead>
                                             <tr bgcolor="#FFCEC7">
-                                                <th colspan="8" class="text-center"><h4 class="m-0 text-black" id="text-travel-customer">Travel date</h4></th>
+                                                <th colspan="7" class="text-center"><h4 class="m-0 text-black" id="text-travel-customer">Travel date</h4></th>
                                             </tr>
                                             <tr bgcolor="#FFCEC7">
-                                                <th colspan="5" class="text-center"><h4 class="m-0 text-black" id="text-boat">เรือ</h4></th>
+                                                <th colspan="4" class="text-center"><h4 class="m-0 text-black" id="text-boat">เรือ</h4></th>
                                                 <th colspan="3" class="text-center"><h4 class="m-0 text-black" id="text-prak">อุทยาน</h4></th>
                                             </tr>
                                             <tr bgcolor="#DE2400" style="color: #FFF;">
                                                 <th class="text-center" width="5%" style="font-size: 18px !important;">ลำดับ</th>
                                                 <th class="text-center" width="20%" style="font-size: 18px !important;">ชื่อ</th>
                                                 <th class="text-center" width="15%" style="font-size: 18px !important;">V/C</th>
-                                                <th class="text-center" width="10%" style="font-size: 18px !important;">เรือ</th>
                                                 <th class="text-center" width="15%" style="font-size: 18px !important;">เซ็นชื่อ</th>
                                                 <th class="text-center" width="15%" style="font-size: 18px !important;">ID Passport/ ID Card</th>
                                                 <th class="text-center" width="10%" style="font-size: 18px !important;">สัญชาติ</th>

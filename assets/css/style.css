@@ -40,10 +40,3 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     .ai-scan__tabs .btn { width: 100%; margin: 2px 0; }
     .ai-scan__review { font-size: 0.85rem; }
 }
-
-/* === Boat type tag (order-boat guest list: modal image / print) === */
-/* Outlined + bold text so it still reads on black & white printouts */
-.boat-type-tag { display: inline-block; padding: 2px 8px; border: 2px solid currentColor; border-radius: 4px; font-weight: 700; font-size: 0.8em; line-height: 1.3; white-space: nowrap; }
-.boat-type-tag--catamaran { color: #0b5ed7; background: #e7f0ff; }
-.boat-type-tag--speedboat { color: #c2410c; background: #fff1e6; }
-.boat-type-tag--other     { color: #444; background: #f3f3f3; white-space: normal; }
