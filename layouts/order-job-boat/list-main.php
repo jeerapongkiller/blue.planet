@@ -98,6 +98,7 @@
     <script src="app-assets/vendors/js/forms/cleave/cleave.min.js"></script>
     <script src="app-assets/vendors/js/forms/cleave/addons/cleave-phone.us.js"></script>
     <script src="app-assets/js/scripts/node_modules/dom-to-image/src/dom-to-image.js"></script>
+    <script src="assets/js/job-sheet-export.js?v=<?php echo filemtime(__DIR__ . "/../../assets/js/job-sheet-export.js"); ?>"></script>
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN Sweetalert2 JS -->
@@ -448,17 +449,8 @@
 
         function download_image() {
             var img_name = document.getElementById('name_img').value;
-            console.log(img_name);
             var node = document.getElementById('order-job-image-table');
-            domtoimage.toJpeg(node, {
-                    quality: 0.95
-                })
-                .then(function(dataUrl) {
-                    var link = document.createElement('a');
-                    link.download = img_name + '.jpg';
-                    link.href = dataUrl;
-                    link.click();
-                });
+            exportNodeAsJpeg(node, img_name);
         }
 
         function numberWithCommas(x) {

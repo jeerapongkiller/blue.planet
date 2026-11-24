@@ -53,7 +53,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search") {
             </div>
         </div>
         <hr class="pb-0 pt-0">
-        <div id="div-driver-job-image" style="background-color: #FFF;">
+        <div class="job-sheet" id="div-driver-job-image" style="background-color: #FFF;">
             <!-- Body starts -->
             <?php
             for ($i = 0; $i < count($mange['id']); $i++) {
