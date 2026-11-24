@@ -58,14 +58,23 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 /* Export mode: added by exportNodeAsJpeg() only while capturing the JPG.
    Fixed A4-friendly width (instead of the user's screen width) so text prints larger,
    with compact cell padding so columns get more room. */
-.job-sheet--export { width: 1050px !important; max-width: none !important; }
+/* Width is set inline by fitNodeToTables() (1050px, or wider if a table needs it) */
+/* Use a system font while exporting: dom-to-image may fail to embed the Vuexy web font and
+   fall back to a wider font, so the table measured on screen would overflow (cut off) in the
+   image. A system font renders the same on screen and in the image. Icons (<i>) keep their font. */
+.job-sheet--export,
+.job-sheet--export *:not(i) { font-family: Tahoma, "Leelawadee UI", Thonburi, Arial, sans-serif; }
+.job-sheet--export .btn { visibility: hidden; } /* e.g. "รายชื่อลูกค้า" button in the header */
+.job-sheet--export .invoice-spacing { font-size: 16px; align-items: center; }
 .job-sheet--export .table th,
 .job-sheet--export .table td,
 .job-sheet--export.table th,
 .job-sheet--export.table td { padding: 6px 5px; line-height: 1.3; }
 /* Larger text for print. max() keeps sheets that already use a bigger font (e.g. 22px) */
 .job-sheet--export td,
-.job-sheet--export.table td { font-size: max(22px, 1em); font-weight: 600; }
+.job-sheet--export.table td { font-size: max(22px, 1em); font-weight: 500; }
+/* Key columns (pickup time / customer / hotel), marked by markKeyColumns() in job-sheet-export.js */
+.job-sheet--export td.job-sheet__cell--key { font-weight: 700; }
 .job-sheet--export .table thead th,
 .job-sheet--export.table thead th { font-size: max(18px, 1em); letter-spacing: 0; }
 .job-sheet--export h4, .job-sheet--export .h4 { font-size: 26px; }
