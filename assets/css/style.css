@@ -55,3 +55,18 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 .job-sheet td { font-weight: 500; }
 /* Wrap long text at word boundaries only — never split names/hotels mid-word */
 .job-sheet td, .job-sheet th { word-break: normal; overflow-wrap: break-word; }
+/* Export mode: added by exportNodeAsJpeg() only while capturing the JPG.
+   Fixed A4-friendly width (instead of the user's screen width) so text prints larger,
+   with compact cell padding so columns get more room. */
+.job-sheet--export { width: 1050px !important; max-width: none !important; }
+.job-sheet--export .table th,
+.job-sheet--export .table td,
+.job-sheet--export.table th,
+.job-sheet--export.table td { padding: 6px 5px; line-height: 1.3; }
+/* Larger text for print. max() keeps sheets that already use a bigger font (e.g. 22px) */
+.job-sheet--export td,
+.job-sheet--export.table td { font-size: max(22px, 1em); font-weight: 600; }
+.job-sheet--export .table thead th,
+.job-sheet--export.table thead th { font-size: max(18px, 1em); letter-spacing: 0; }
+.job-sheet--export h4, .job-sheet--export .h4 { font-size: 26px; }
+.job-sheet--export h5, .job-sheet--export .h5 { font-size: 20px; }

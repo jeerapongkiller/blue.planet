@@ -13,6 +13,14 @@ function exportNodeAsJpeg(node, fileName, scale = 3) {
         return Promise.resolve();
     }
 
+    // Job sheets: lay out at a fixed A4-friendly width while capturing (see .job-sheet--export
+    // in style.css). On a wide monitor the sheet would otherwise be ~1600px+ wide and the
+    // text shrinks to ~5pt when the image is printed on A4. Reading scrollWidth below
+    // forces the re-layout synchronously.
+    const isJobSheet = node.classList.contains('job-sheet');
+    if (isJobSheet) node.classList.add('job-sheet--export');
+    const cleanup = () => { if (isJobSheet) node.classList.remove('job-sheet--export'); };
+
     const width = node.scrollWidth;
     const height = node.scrollHeight;
 
@@ -51,5 +59,6 @@ function exportNodeAsJpeg(node, fileName, scale = 3) {
         })
         .catch(() => {
             if (typeof toastr !== 'undefined') toastr.error('บันทึกรูปไม่สำเร็จ กรุณาลองใหม่');
-        });
+        })
+        .finally(cleanup);
 }
