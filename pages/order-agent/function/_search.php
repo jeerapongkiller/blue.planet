@@ -147,7 +147,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search") {
             </div>
         </div>
         <hr class="pb-0 pt-0">
-        <div class="job-sheet" id="order-agent-image-table" style="background-color: #FFFFFF;">
+        <div id="order-agent-image-table" style="background-color: #FFFFFF;">
             <!-- Header starts -->
             <div class="card-body pb-0">
                 <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0 mb-1">

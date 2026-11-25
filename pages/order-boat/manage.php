@@ -783,7 +783,7 @@ if (!empty($programed)) {
                             </div>
                             <div class="modal-body" style="background-color: #FFF !important;">
                                 <div class="table-responsive">
-                                    <table id="div-park-job-image" class="job-sheet table table-bordered table-striped table-vouchure-t2" style="table-layout: inherit; width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 22px !important;">
+                                    <table id="div-park-job-image" class="table table-bordered table-striped table-vouchure-t2" style="table-layout: inherit; width: 100%; overflow: hidden; text-overflow: ellipsis; font-size: 22px !important;">
                                         <thead>
                                             <tr bgcolor="#FFCEC7">
                                                 <th colspan="7" class="text-center"><h4 class="m-0 text-black" id="text-travel-customer">Travel date</h4></th>

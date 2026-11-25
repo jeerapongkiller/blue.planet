@@ -109,7 +109,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search") {
         </div>
         <hr class="pb-0 pt-0">
         <!-- Body START -->
-        <div class="job-sheet" id="div-driver-job-image" style="background-color: #FFF;">
+        <div id="div-driver-job-image" style="background-color: #FFF;">
             <!-- Body start -->
             <div class="row" id="basic-table">
                 <?php if (!empty($mange['id'])) {

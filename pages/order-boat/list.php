@@ -397,7 +397,7 @@ if (!empty($programed)) {
                         <button type="button" class="btn btn-info waves-effect waves-float waves-light btn-page-block-spinner" onclick="download_image();">Image</button>
                         <a href='./?pages=order-boat/excel<?php echo $href; ?>&action=boat' target="_blank"><button class="btn btn-info waves-effect waves-float waves-light btn-page-block-spinner">Excel</button></a>
                     </div>
-                    <div class="job-sheet" id="div-boat-job-image" style="background-color: #FFF;">
+                    <div id="div-boat-job-image" style="background-color: #FFF;">
                         <!-- Header starts -->
                         <div class="card-body pb-0">
                             <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing text-black">
@@ -543,7 +543,7 @@ if (!empty($programed)) {
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="job-sheet modal-body" id="div-park-job-image" style="background-color: #FFF !important;">
+                            <div class="modal-body" id="div-park-job-image" style="background-color: #FFF !important;">
                                 <div class="table-responsive">
                                     <div class="text-center mb-50">
                                         <div class="badge-light-orange"><b id="text-travel-customer">Travel date</b></div>

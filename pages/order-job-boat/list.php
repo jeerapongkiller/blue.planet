@@ -176,7 +176,7 @@ $get_date = !empty($_GET['date']) ? $_GET['date'] : $today;
                         }
                         ?>
                         <hr class="pb-0 pt-0">
-                        <div class="job-sheet" id="order-job-image-table" style="background-color: #FFF;">
+                        <div id="order-job-image-table" style="background-color: #FFF;">
                             <!-- Header starts -->
                             <div class="card-body pb-0">
                                 <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0 mb-1">

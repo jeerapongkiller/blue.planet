@@ -191,7 +191,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
             }
         }
 ?>
-        <div class="job-sheet" id="div-boat-job-image" style="background-color: #FFF;">
+        <div id="div-boat-job-image" style="background-color: #FFF;">
             <!-- Header starts -->
             <div class="card-body pb-0">
                 <div class="row">
@@ -411,7 +411,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
         }
     }
     ?>
-    <div class="job-sheet" id="div-boat-job-image" style="background-color: #FFF;">
+    <div id="div-boat-job-image" style="background-color: #FFF;">
         <!-- Header starts -->
         <div class="card-body pb-0">
             <div class="row">
@@ -561,7 +561,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
             }
         }
     ?>
-        <div class="job-sheet" id="div-boat-job-image" style="background-color: #FFF;">
+        <div id="div-boat-job-image" style="background-color: #FFF;">
             <!-- Header starts -->
             <div class="card-body pb-0">
                 <div class="row">

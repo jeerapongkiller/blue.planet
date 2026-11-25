@@ -327,7 +327,7 @@ function check_in($var)
                             </div>
                         </div>
                         <hr class="pb-0 pt-0">
-                        <div class="job-sheet" id="order-guide-image-table" style="background-color: #FFF;">
+                        <div id="order-guide-image-table" style="background-color: #FFF;">
                             <!-- Header starts -->
                             <div class="card-body pb-0">
                                 <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing text-black">

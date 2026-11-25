@@ -393,7 +393,7 @@ foreach ($manages as $manage) {
                                 <button type="button" class="btn btn-info waves-effect waves-float waves-light btn-page-block-spinner" onclick="download_image(1);">Image</button>
                                 <a href='./?pages=order-driver/excel<?php echo $href; ?>&action=excel' target="_blank"><button class="btn btn-info waves-effect waves-float waves-light btn-page-block-spinner">Excel</button></a>
                             </div>
-                            <div class="job-sheet" id="div-driver-job-pickup" style="background-color: #FFF;">
+                            <div id="div-driver-job-pickup" style="background-color: #FFF;">
                                 <!-- Header starts -->
                                 <div class="card-body pb-0 pt-0 text-black">
                                     <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing">
@@ -590,7 +590,7 @@ foreach ($manages as $manage) {
                                 <a href='./?pages=order-driver/print&date_travel=<?php echo $get_date; ?>&search_product=<?php echo $search_product; ?>&retrun=2&action=print' target="_blank"><button class="btn btn-info" id="print-btn">Print</button></a>
                                 <button type="button" class="btn btn-info waves-effect waves-float waves-light btn-page-block-spinner" onclick="download_image(2);">Image</button>
                             </div>
-                            <div class="job-sheet" id="div-driver-job-dropoff" style="background-color: #FFF;">
+                            <div id="div-driver-job-dropoff" style="background-color: #FFF;">
                                 <!-- Header starts -->
                                 <div class="card-body pb-0 pt-0">
                                     <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing">

@@ -83,7 +83,7 @@ $tomorrow = date("Y-m-d", strtotime(" +1 day"));
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="job-sheet modal-body" id="div-checkin-image" style="background-color: #FFF !important;">
+                        <div class="modal-body" id="div-checkin-image" style="background-color: #FFF !important;">
                             <div class="table-responsive">
                                 <div class="text-center mb-50">
                                     <h4><b id="text-travel">Travel date</b></h4>

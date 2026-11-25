@@ -44,7 +44,7 @@
     <!-- END: Page CSS-->
 
     <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . "/../../assets/css/style.css"); ?>">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <!-- END: Custom CSS-->
 </head>
 <!-- END: Head-->
@@ -94,7 +94,6 @@
     <script src="app-assets/vendors/js/forms/cleave/addons/cleave-phone.us.js"></script>
     <script src="app-assets/fonts/fontawesome/js/all.js"></script>
     <script src="app-assets/js/scripts/node_modules/dom-to-image/src/dom-to-image.js"></script>
-    <script src="assets/js/job-sheet-export.js?v=<?php echo filemtime(__DIR__ . "/../../assets/js/job-sheet-export.js"); ?>"></script>
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN Sweetalert2 JS -->
@@ -1645,7 +1644,15 @@
                     var node = document.getElementById('div-inc-print');
                     break;
             }
-            exportNodeAsJpeg(node, img_name);
+            domtoimage.toJpeg(node, {
+                    quality: 0.99
+                })
+                .then(function(dataUrl) {
+                    var link = document.createElement('a');
+                    link.download = img_name + '.jpg';
+                    link.href = dataUrl;
+                    link.click();
+                });
         }
     </script>
     <!-- END: Page JS-->

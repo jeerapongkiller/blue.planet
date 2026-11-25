@@ -83,13 +83,12 @@
             border: none !important;
         }
     </style>
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . "/../../assets/css/style.css"); ?>">
 </head>
 <!-- END: Head-->
 
 <!-- BEGIN: Body-->
 
-<body class="job-sheet vertical-layout vertical-menu-modern blank-page navbar-floating footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="blank-page" style="background-color: #FFF; color: #000;">
+<body class="vertical-layout vertical-menu-modern blank-page navbar-floating footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="blank-page" style="background-color: #FFF; color: #000;">
 
     <!-- BEGIN: Content-->
     <?php include 'pages/' . $_GET['pages'] . '.php'; ?>

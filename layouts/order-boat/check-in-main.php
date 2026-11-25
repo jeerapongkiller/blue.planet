@@ -44,7 +44,7 @@
     <!-- END: Page CSS-->
 
     <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css?v=<?php echo filemtime(__DIR__ . "/../../assets/css/style.css"); ?>">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <!-- END: Custom CSS-->
 
     <style>
@@ -102,7 +102,6 @@
     <script src="app-assets/vendors/js/forms/cleave/addons/cleave-phone.us.js"></script>
     <script src="app-assets/vendors/js/forms/wizard/bs-stepper.min.js"></script>
     <script src="app-assets/js/scripts/node_modules/dom-to-image/src/dom-to-image.js"></script>
-    <script src="assets/js/job-sheet-export.js?v=<?php echo filemtime(__DIR__ . "/../../assets/js/job-sheet-export.js"); ?>"></script>
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN Sweetalert2 JS -->
@@ -385,7 +384,15 @@
         function download_image() {
             var img_name = document.getElementById('name_img').value;
             var node = document.getElementById('div-checkin-image');
-            exportNodeAsJpeg(node, img_name);
+            domtoimage.toJpeg(node, {
+                    quality: 0.95
+                })
+                .then(function(dataUrl) {
+                    var link = document.createElement('a');
+                    link.download = img_name + '.jpg';
+                    link.href = dataUrl;
+                    link.click();
+                });
         }
     </script>
     <!-- END: Page JS-->

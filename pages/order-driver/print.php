@@ -196,7 +196,7 @@ if (isset($_GET['action']) && $_GET['action'] == "print" && !empty($_GET['date_t
         }
     }
 ?>
-    <div class="job-sheet" id="div-driver-job-image" style="background-color: #FFF;">
+    <div id="div-driver-job-image" style="background-color: #FFF;">
         <!-- Body starts -->
         <?php
         if (!empty($mange['id']) && $search_retrun == 1) {
