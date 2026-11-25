@@ -116,6 +116,7 @@
     <script src="app-assets/vendors/js/forms/validation/jquery.validate.min.js"></script>
     <script src="app-assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
     <script src="app-assets/js/scripts/node_modules/dom-to-image/src/dom-to-image.js"></script>
+    <script src="assets/js/job-sheet-export.js?v=<?php echo filemtime(__DIR__ . "/../../assets/js/job-sheet-export.js"); ?>"></script>
     <script src="app-assets/fonts/fontawesome/js/all.js"></script>
     <script src="app-assets/vendors/js/forms/wizard/bs-stepper.min.js"></script>
     <script src="app-assets/vendors/js/forms/cleave/cleave.min.js"></script>
@@ -933,15 +934,7 @@
         function download_image() {
             var img_name = document.getElementById('name_img').value;
             var node = document.getElementById('div-driver-job-image');
-            domtoimage.toJpeg(node, {
-                    quality: 0.95
-                })
-                .then(function(dataUrl) {
-                    var link = document.createElement('a');
-                    link.download = img_name + '.jpg';
-                    link.href = dataUrl;
-                    link.click();
-                });
+            exportNodeAsJpeg(node, img_name);
         }
     </script>
     <!-- END: Page JS-->

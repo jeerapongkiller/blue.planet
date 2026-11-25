@@ -40,3 +40,15 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
     .ai-scan__tabs .btn { width: 100%; margin: 2px 0; }
     .ai-scan__review { font-size: 0.85rem; }
 }
+
+/* === Job Sheet (ใบงาน: screen modal, print page, JPG export) === */
+/* Default text is solid black for print legibility. Elements that carry their own
+   color (.text-danger, .text-info, .badge-light-*, inline style, bgcolor headers) keep it,
+   because those rules are !important / inline or set directly on the element. */
+.job-sheet,
+.job-sheet.table,
+.job-sheet table,
+.job-sheet .table,
+.job-sheet .card-text,
+.job-sheet h1, .job-sheet h2, .job-sheet h3, .job-sheet h4, .job-sheet h5, .job-sheet h6,
+.job-sheet .h1, .job-sheet .h2, .job-sheet .h3, .job-sheet .h4, .job-sheet .h5, .job-sheet .h6 { color: #000; }

@@ -89,7 +89,7 @@ if (isset($_POST['action']) && $_POST['action'] == "search" && !empty($_POST['ag
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body text-black" id="order-agent-image-table" style="background-color: #fff;">
+    <div class="job-sheet modal-body text-black" id="order-agent-image-table" style="background-color: #fff;">
 
         <div class="row mb-50">
             <span class="col-6 brand-logo"><img src="app-assets/images/logo/logo-500.png" height="50"></span>

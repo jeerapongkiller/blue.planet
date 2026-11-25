@@ -448,7 +448,7 @@ $get_date = !empty($_GET['date']) ? $_GET['date'] : $today;
                                     }
                                 }
                                 ?>
-                                <div id="div-driver-job-image" style="background-color: #FFF;">
+                                <div class="job-sheet" id="div-driver-job-image" style="background-color: #FFF;">
                                     <!-- Header starts -->
                                     <div class="card-body pb-0">
                                         <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0 mb-1">
