@@ -334,7 +334,7 @@ if (!empty($_GET['id']) && $_GET['id'] > 0) {
                                                                                 <option value="1" <?php echo $customers['cus_age'][$i] == 1 ? 'selected' : ''; ?>>Adult</option>
                                                                                 <option value="2" <?php echo $customers['cus_age'][$i] == 2 ? 'selected' : ''; ?>>Child</option>
                                                                                 <option value="3" <?php echo $customers['cus_age'][$i] == 3 ? 'selected' : ''; ?>>Infant</option>
-                                                                                <option value="3" <?php echo $customers['cus_age'][$i] == 4 ? 'selected' : ''; ?>>FOC</option>
+                                                                                <option value="4" <?php echo $customers['cus_age'][$i] == 4 ? 'selected' : ''; ?>>FOC</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>

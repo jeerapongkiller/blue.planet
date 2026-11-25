@@ -259,7 +259,7 @@ $times = date("H:i:s");
                                                                         <option value="1">Adult (ผู้ใหญ่)</option>
                                                                         <option value="2">Child (เด็ก)</option>
                                                                         <option value="3">Infant (ทารก)</option>
-                                                                        <option value="3">FOC</option>
+                                                                        <option value="4">FOC</option>
                                                                     </select>
                                                                 </div>
                                                             </div>

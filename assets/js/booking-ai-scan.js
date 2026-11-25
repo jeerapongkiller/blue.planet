@@ -679,7 +679,7 @@
         if (p.passport_no) r.$idCard.val(p.passport_no);
         if (p.birth_date) r.$birth.val(p.birth_date);
         if (p.nationality_id) r.$nation.val(String(p.nationality_id)).trigger('change');
-        if (r.$age && p.age) r.$age.val(String(p.age === 4 ? 3 : p.age)); // edit page select has no value 4 (FOC shares 3)
+        if (r.$age && p.age) r.$age.val(String(p.age));
         flash(r.$name);
     }
 
